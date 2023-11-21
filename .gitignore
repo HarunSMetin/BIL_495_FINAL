@@ -1,0 +1,53 @@
+# Flutter related
+**/build/
+**/ios/Flutter/.last_build_id
+*.lock
+*.iml
+*.log
+*.hprof
+*.swp
+*.swo
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.generated/
+local.properties
+
+# FastAPI / Python related
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+.pytest_cache/
+.venv/
+venv/
+ENV/
+env/
+*.sqlite3
+/api/venv/
+
+# VSCode related
+.vscode/
+.history/
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Misc
+.DS_Store
+Thumbs.db
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+
+
+gezbot-112ee-firebase-adminsdk-2ul3v-1fcd537c05.json
