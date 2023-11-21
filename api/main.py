@@ -43,6 +43,12 @@ def accept_friend_request(request_id, sender_id, receiver_id):
         transaction.set(db.collection('users').document(sender_id).collection('friends').document(receiver_id), {'friendId': receiver_id, 'friendSince': firestore.SERVER_TIMESTAMP})
         transaction.set(db.collection('users').document(receiver_id).collection('friends').document(sender_id), {'friendId': sender_id, 'friendSince': firestore.SERVER_TIMESTAMP})
 
+#home
+@app.get("/")
+async def root():
+    return {"message": "gezBot API"}
+
+
 # FastAPI Endpoints
 @app.post("/register")
 async def create_user(user: UserCreate):
