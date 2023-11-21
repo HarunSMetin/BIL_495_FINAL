@@ -12,7 +12,7 @@ TEST_CREATOR_ID = "test_creator_id"
 # POST Endpoint Tests
 def test_create_user():
     user_data = {
-        "email": "testuser@example.com",
+        "email": "testuser3ssss@example.com",
         "password": "testpassword",
         "name": "Test User",
         "profilePic": "http://example.com/profile.jpg"
@@ -29,9 +29,9 @@ def test_send_friend_request():
 
 def test_create_travel():
     travel_data = {
-        "title": "Test Travel",
-        "description": "A test travel",
-        "creator_id": "test_creator_id",
+        "title": "Test Travelss",
+        "description": "A test travels",
+        "creator_id": "test_creator_id1",
         "travel_details": {"destination": "Testville"},
         "visibility": "everyone"
     }

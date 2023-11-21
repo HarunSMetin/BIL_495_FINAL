@@ -79,7 +79,7 @@ async def accept_request(request_id: str, sender_id: str, receiver_id: str):
         raise HTTPException(status_code=400, detail=str(e))
 
 @app.post("/travels")
-async def create_travel(title: str, description: str, creator_id: str, travel_details: dict, visibility: str, visible_to: list = None):
+async def create_travel(title: str, description: str, creator_id: str, travel_details: dict, visibility: str):
     travel_data = {
         'title': title,
         'description': description,
@@ -87,7 +87,6 @@ async def create_travel(title: str, description: str, creator_id: str, travel_de
         'createdAt': firestore.SERVER_TIMESTAMP,
         'travelDetails': travel_details,
         'visibility': visibility,  # 'friends' or 'everyone'
-        'visibleTo': visible_to if visibility == 'friends' else None
     }
     travel_ref = db.collection('travels').add(travel_data)
     return {"travelId": travel_ref[1].id}
