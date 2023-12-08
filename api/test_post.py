@@ -4,15 +4,15 @@ from main import app  # Adjust this import based on your project structure
 client = TestClient(app)
 
 # Test data - replace with valid test data
-TEST_USER_ID = "test_user_id"
-TEST_TRAVEL_ID = "test_travel_id"
-TEST_CREATOR_ID = "test_creator_id"
+TEST_USER_ID = "test_user_ids"
+TEST_TRAVEL_ID = "test_travel_idss"
+TEST_CREATOR_ID = "test_creator_ids"
 
 
 # POST Endpoint Tests
 def test_create_user():
     user_data = {
-        "email": "testuser@example.com",
+        "email": "testuser32@example.com",
         "password": "testpassword",
         "name": "Test User",
         "profilePic": "http://example.com/profile.jpg"
