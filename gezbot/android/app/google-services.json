@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1027985224810",
+    "project_id": "gezbot-112ee",
+    "storage_bucket": "gezbot-112ee.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1027985224810:android:57e468075dd35bf9aa8613",
+        "android_client_info": {
+          "package_name": "com.example.gezbot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1027985224810-jeioofe75dtanigd4r1vtgv4v4glemis.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyChOsZB-uVwP5WyNF0mdFYHg7J0rQZM-vI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1027985224810-jeioofe75dtanigd4r1vtgv4v4glemis.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

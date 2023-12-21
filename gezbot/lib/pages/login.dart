@@ -1,64 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
-import 'pages/register.dart';
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  runApp(MyApp());
-}
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: HomePage(),
-      routes: {
-        '/login': (context) => LoginScreen(),
-    '/register': (context) => RegisterScreen(), 
-      },
-    );
-  }
-}
-
-class HomePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Home'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            ElevatedButton(
-              child: Text('Go to Login'),
-              onPressed: () {
-                Navigator.pushNamed(context, '/login');
-              },
-            ),
-            SizedBox(height: 20), // Spacing between buttons
-            ElevatedButton(
-              child: Text('Go to Register'),
-              onPressed: () {
-                Navigator.pushNamed(context, '/register');
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -75,6 +16,7 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       setState(() => _isLoading = true);
       await _auth.signInWithEmailAndPassword(email: _email, password: _password);
+      print('Signed in');
       
       // Navigator.pushReplacementNamed(context, '/home');
     } on FirebaseAuthException catch (e) {

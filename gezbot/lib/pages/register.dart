@@ -1,82 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
-import 'pages/register.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  runApp(MyApp());
-}
-class MyApp extends StatelessWidget {
+class RegisterScreen extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: HomePage(),
-      routes: {
-        '/login': (context) => LoginScreen(),
-    '/register': (context) => RegisterScreen(), 
-      },
-    );
-  }
+  _RegisterScreenState createState() => _RegisterScreenState();
 }
 
-class HomePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Home'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            ElevatedButton(
-              child: Text('Go to Login'),
-              onPressed: () {
-                Navigator.pushNamed(context, '/login');
-              },
-            ),
-            SizedBox(height: 20), // Spacing between buttons
-            ElevatedButton(
-              child: Text('Go to Register'),
-              onPressed: () {
-                Navigator.pushNamed(context, '/register');
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-
-class LoginScreen extends StatefulWidget {
-  @override
-  _LoginScreenState createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   final _auth = FirebaseAuth.instance;
   String _email = '';
   String _password = '';
   bool _isLoading = false;
 
-  void _signIn() async {
+  void _register() async {
     try {
       setState(() => _isLoading = true);
-      await _auth.signInWithEmailAndPassword(email: _email, password: _password);
+      UserCredential userCredential = await _auth.createUserWithEmailAndPassword(email: _email, password: _password);
+      print('User registered: ${userCredential.user?.email}');
       
-      // Navigator.pushReplacementNamed(context, '/home');
+      // Navigator.pushReplacementNamed(context, '/home'); // Navigate to home screen after registration
     } on FirebaseAuthException catch (e) {
       _showErrorDialog(e.message);
     } finally {
@@ -106,7 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login'),
+        title: Text('Register'),
       ),
       body: Padding(
         padding: EdgeInsets.all(16),
@@ -133,8 +75,8 @@ class _LoginScreenState extends State<LoginScreen> {
               Center(child: CircularProgressIndicator())
             else
               ElevatedButton(
-                child: Text('Login'),
-                onPressed: _signIn,
+                child: Text('Register'),
+                onPressed: _register,
               ),
           ],
         ),
