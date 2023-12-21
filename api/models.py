@@ -5,3 +5,7 @@ class UserCreate(BaseModel):
     password: str
     name: str
     profilePic: str  # URL to the user's profile picture
+    
+class UserLogin(BaseModel):
+    email: str
+    password: str

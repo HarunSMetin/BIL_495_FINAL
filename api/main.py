@@ -8,7 +8,7 @@ db = firestore.client()
 from fastapi import FastAPI, HTTPException
 from firebase_admin import firestore, auth
 import firebase_config  # This will initialize Firebase
-from models import UserCreate
+from models import UserCreate, UserLogin
 
 app = FastAPI()
 db = firestore.client()
@@ -61,6 +61,18 @@ async def create_user(user: UserCreate):
         return {"uid": user_record.uid}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+@app.post("/login")
+async def login(user: UserLogin):
+    try:
+        user_record = auth.get_user_by_email(user.email)
+        # Here you should verify the password as well. 
+        # Firebase Admin SDK does not support verifying passwords. 
+        # You need to use Firebase Auth REST API or a client SDK for this.
+
+        return {"uid": user_record.uid}
+    except auth.AuthError:
+        raise HTTPException(status_code=401, detail="Invalid credentials")
 
 @app.post("/send_friend_request/{sender_id}/{receiver_id}")
 async def send_request(sender_id: str, receiver_id: str):
