@@ -74,6 +74,17 @@ async def login(user: UserLogin):
     except auth.AuthError:
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
+@app.post("/verifyToken")
+async def verify_token(id_token: str):
+    try:
+        decoded_token = auth.verify_id_token(id_token, check_revoked=True)
+        uid = decoded_token['uid']
+        return {"uid": uid}
+    except auth.RevokedIdTokenError:
+        raise HTTPException(status_code=401, detail="Token revoked, please reauthenticate")
+    except auth.InvalidIdTokenError:
+        raise HTTPException(status_code=401, detail="Invalid token")
+
 @app.post("/send_friend_request/{sender_id}/{receiver_id}")
 async def send_request(sender_id: str, receiver_id: str):
     try:
@@ -98,7 +109,7 @@ async def create_travel(title: str, description: str, creator_id: str, travel_de
         'creatorId': creator_id,
         'createdAt': firestore.SERVER_TIMESTAMP,
         'travelDetails': travel_details,
-        'visibility': visibility,  # 'friends' or 'everyone'
+        'visibility': visibility,  
         'visibleTo': 0 if visibility == 'friends' else 1    
     }
     travel_ref = db.collection('travels').add(travel_data)
