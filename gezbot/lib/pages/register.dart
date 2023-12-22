@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterScreen extends StatefulWidget {
   @override
@@ -17,8 +18,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
       setState(() => _isLoading = true);
       UserCredential userCredential = await _auth.createUserWithEmailAndPassword(email: _email, password: _password);
       print('User registered: ${userCredential.user?.email}');
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('isLoggedIn', true);
+      await prefs.setString('userEmail', _email);
+
       
-      // Navigator.pushReplacementNamed(context, '/home'); // Navigate to home screen after registration
+      Navigator.pushReplacementNamed(context, '/home');
     } on FirebaseAuthException catch (e) {
       _showErrorDialog(e.message);
     } finally {
@@ -78,6 +84,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 child: Text('Register'),
                 onPressed: _register,
               ),
+            SizedBox(height: 20),
+            Center(
+              child: GestureDetector(
+                onTap: () {
+                  Navigator.pushReplacementNamed(context, '/login'); // Navigate to the login screen
+                },
+                child: Text(
+                  'Already have an account? Log in',
+                  style: TextStyle(
+                    color: Colors.blue,
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),

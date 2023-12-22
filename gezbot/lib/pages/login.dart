@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -17,8 +18,12 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() => _isLoading = true);
       await _auth.signInWithEmailAndPassword(email: _email, password: _password);
       print('Signed in');
-      
-      // Navigator.pushReplacementNamed(context, '/home');
+
+      // Save logged-in state
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('isLoggedIn', true);
+
+      Navigator.pushReplacementNamed(context, '/home'); // Navigate to home after login
     } on FirebaseAuthException catch (e) {
       _showErrorDialog(e.message);
     } finally {

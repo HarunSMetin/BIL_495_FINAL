@@ -1,17 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'pages/register.dart';
-
+import 'pages/login.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'pages/homepage.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  runApp(MyApp());
+
+  final prefs = await SharedPreferences.getInstance();
+  final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+
+  runApp(MyApp(isLoggedIn: isLoggedIn));
 }
+
 class MyApp extends StatelessWidget {
+  final bool isLoggedIn;
+
+  MyApp({required this.isLoggedIn});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -19,126 +29,12 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomePage(),
+      home: isLoggedIn ? HomePage() : RegisterScreen(), 
       routes: {
         '/login': (context) => LoginScreen(),
-    '/register': (context) => RegisterScreen(), 
+        '/register': (context) => RegisterScreen(),
+        '/home': (context) => HomePage(), 
       },
-    );
-  }
-}
-
-class HomePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Home'),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            ElevatedButton(
-              child: Text('Go to Login'),
-              onPressed: () {
-                Navigator.pushNamed(context, '/login');
-              },
-            ),
-            SizedBox(height: 20), // Spacing between buttons
-            ElevatedButton(
-              child: Text('Go to Register'),
-              onPressed: () {
-                Navigator.pushNamed(context, '/register');
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-
-class LoginScreen extends StatefulWidget {
-  @override
-  _LoginScreenState createState() => _LoginScreenState();
-}
-
-class _LoginScreenState extends State<LoginScreen> {
-  final _auth = FirebaseAuth.instance;
-  String _email = '';
-  String _password = '';
-  bool _isLoading = false;
-
-  void _signIn() async {
-    try {
-      setState(() => _isLoading = true);
-      await _auth.signInWithEmailAndPassword(email: _email, password: _password);
-      
-      // Navigator.pushReplacementNamed(context, '/home');
-    } on FirebaseAuthException catch (e) {
-      _showErrorDialog(e.message);
-    } finally {
-      setState(() => _isLoading = false);
-    }
-  }
-
-  void _showErrorDialog(String? message) {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text('An error occurred'),
-        content: Text(message ?? 'Unknown error'),
-        actions: <Widget>[
-          TextButton(
-            child: Text('Okay'),
-            onPressed: () {
-              Navigator.of(ctx).pop();
-            },
-          )
-        ],
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Login'),
-      ),
-      body: Padding(
-        padding: EdgeInsets.all(16),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            TextFormField(
-              keyboardType: TextInputType.emailAddress,
-              decoration: InputDecoration(labelText: 'Email'),
-              onChanged: (value) {
-                _email = value.trim();
-              },
-            ),
-            TextFormField(
-              obscureText: true,
-              decoration: InputDecoration(labelText: 'Password'),
-              onChanged: (value) {
-                _password = value.trim();
-              },
-            ),
-            SizedBox(height: 20),
-            if (_isLoading)
-              Center(child: CircularProgressIndicator())
-            else
-              ElevatedButton(
-                child: Text('Login'),
-                onPressed: _signIn,
-              ),
-          ],
-        ),
-      ),
     );
   }
 }
