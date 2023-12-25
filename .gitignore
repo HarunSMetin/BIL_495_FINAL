@@ -95,3 +95,52 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+
+#####FLUTTER
+
+# Miscellaneous
+/gezbot/*.class
+/gezbot/*.log
+/gezbot/*.pyc
+/gezbot/*.swp
+/gezbot/.DS_Store
+/gezbot/.atom/
+/gezbot/.buildlog/
+/gezbot/.history
+/gezbot/.svn/
+/gezbot/migrate_working_dir/
+
+# IntelliJ related
+/gezbot/*.iml
+/gezbot/*.ipr
+/gezbot/*.iws
+/gezbot/.idea/
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
+
+# Flutter/Dart/Pub related
+/gezbot/**/doc/api/
+/gezbot/**/ios/Flutter/.last_build_id
+/gezbot/.dart_tool/
+/gezbot/.flutter-plugins
+/gezbot/.flutter-plugins-dependencies
+/gezbot/.pub-cache/
+/gezbot/.pub/
+/gezbot/build/
+
+# Symbolication related
+/gezbot/app.*.symbols
+
+# Obfuscation related
+/gezbot/app.*.map.json
+
+# Android Studio will place build artifacts here
+/gezbot/android/app/debug
+/gezbot/android/app/profile
+/gezbot/android/app/release
+
+/gezbot/lib/firebase_options.dart
