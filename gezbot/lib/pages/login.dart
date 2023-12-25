@@ -130,10 +130,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 onPressed: _signIn,
               ),
             SizedBox(height: 20),
-            ElevatedButton(
-              child: Text('Sign in with Google'),
-              onPressed: _signInWithGoogle,
-            ),
+            ElevatedButton.icon(
+                    icon: Image.network(
+                      'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1024px-Google_%22G%22_logo.svg.png', // Replace with the actual URL of the Google icon
+                      height: 24.0, // Adjust the size as needed
+                    ),
+                    label: Text('Sign in with Google'),
+                    onPressed: _signInWithGoogle,
+                  ),
           ],
         ),
       ),

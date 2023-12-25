@@ -1,6 +1,10 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -10,16 +14,40 @@ class RegisterScreen extends StatefulWidget {
 
 class _RegisterScreenState extends State<RegisterScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseStorage _storage = FirebaseStorage.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn(clientId: "1027985224810-jeioofe75dtanigd4r1vtgv4v4glemis.apps.googleusercontent.com");
+  final ImagePicker _picker = ImagePicker();
+
   String _email = '';
   String _password = '';
   bool _isLoading = false;
+  XFile? _imageFile;
 
   void _register() async {
+    if (_imageFile == null) {
+      // Handle case where the user hasn't taken a photo
+      return;
+    }
+
     try {
       setState(() => _isLoading = true);
       UserCredential userCredential = await _auth.createUserWithEmailAndPassword(email: _email, password: _password);
-      print('User registered: ${userCredential.user?.email}');
+
+      String photoUrl = '';
+      // Upload image to Firebase Storage
+      File imageFile = File(_imageFile!.path);
+      String fileName = 'user_images/${userCredential.user!.uid}/profile.jpg';
+      await _storage.ref(fileName).putFile(imageFile).then((taskSnapshot) async {
+        photoUrl = await taskSnapshot.ref.getDownloadURL();
+      });
+
+      // Add user details to Firestore
+      await _firestore.collection('users').doc(userCredential.user?.uid).set({
+        'email': _email,
+        'photoUrl': photoUrl,
+        // Add other user details as needed
+      });
 
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('isLoggedIn', true);
@@ -51,15 +79,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
       UserCredential userCredential = await _auth.signInWithCredential(credential);
       User? user = userCredential.user;
-      print('User signed in with Google: ${user?.email}');
 
-      // Saving user details
+      // Save user details
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('isLoggedIn', true);
       await prefs.setString('userEmail', user?.email ?? '');
-      await prefs.setString('userName', user?.displayName ?? '');
-      await prefs.setString('userPhotoUrl', user?.photoURL ?? '');
-      await prefs.setString('userSurname', user?.displayName?.split(' ')?.last ?? '');
 
       Navigator.pushReplacementNamed(context, '/home');
     } on FirebaseAuthException catch (e) {
@@ -67,6 +91,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
     } finally {
       setState(() => _isLoading = false);
     }
+  }
+
+  Future<void> _pickImage() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.camera);
+    setState(() {
+      _imageFile = pickedFile;
+    });
   }
 
   void _showErrorDialog(String? message) {
@@ -99,6 +130,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
+            if (_imageFile != null)
+              Image.file(File(_imageFile!.path)),
+            ElevatedButton(
+              onPressed: _pickImage,
+              child: Text('Take Photo'),
+            ),
             TextFormField(
               keyboardType: TextInputType.emailAddress,
               decoration: InputDecoration(labelText: 'Email'),
@@ -124,10 +161,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     onPressed: _register,
                   ),
                   SizedBox(height: 20),
-                  ElevatedButton(
-                    child: Text('Sign in with Google'),
+                  ElevatedButton.icon(
+                    icon: Image.network(
+                      'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1024px-Google_%22G%22_logo.svg.png', // Replace with the actual URL of the Google icon
+                      height: 24.0, // Adjust the size as needed
+                    ),
+                    label: Text('Sign up with Google'),
                     onPressed: _signInWithGoogle,
                   ),
+
                 ],
               ),
             SizedBox(height: 20),
