@@ -13,7 +13,7 @@ void main() async {
 
   final prefs = await SharedPreferences.getInstance();
   final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
-
+  
   runApp(MyApp(isLoggedIn: isLoggedIn));
 }
 

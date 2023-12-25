@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -8,7 +9,9 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn(clientId: "1027985224810-jeioofe75dtanigd4r1vtgv4v4glemis.apps.googleusercontent.com");
+
   String _email = '';
   String _password = '';
   bool _isLoading = false;
@@ -16,14 +19,51 @@ class _LoginScreenState extends State<LoginScreen> {
   void _signIn() async {
     try {
       setState(() => _isLoading = true);
-      await _auth.signInWithEmailAndPassword(email: _email, password: _password);
-      print('Signed in');
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(email: _email, password: _password);
+      User? user = userCredential.user;
 
-      // Save logged-in state
+      // Save logged-in state and email
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('isLoggedIn', true);
+      await prefs.setString('userEmail', user?.email ?? '');
+      await prefs.setString('userName', user?.displayName ?? 'Not available');
+      await prefs.setString('userPhotoUrl', user?.photoURL ?? '');
 
       Navigator.pushReplacementNamed(context, '/home'); // Navigate to home after login
+    } on FirebaseAuthException catch (e) {
+      _showErrorDialog(e.message);
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _signInWithGoogle() async {
+    try {
+      setState(() => _isLoading = true);
+
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) {
+        setState(() => _isLoading = false);
+        return; // User cancelled the sign-in process
+      }
+
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      UserCredential userCredential = await _auth.signInWithCredential(credential);
+      User? user = userCredential.user;
+
+      // Save logged-in state and user details
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('isLoggedIn', true);
+      await prefs.setString('userEmail', user?.email ?? '');
+      await prefs.setString('userName', user?.displayName ?? 'Not available');
+      await prefs.setString('userPhotoUrl', user?.photoURL ?? '');
+
+      Navigator.pushReplacementNamed(context, '/home');
     } on FirebaseAuthException catch (e) {
       _showErrorDialog(e.message);
     } finally {
@@ -89,6 +129,11 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Text('Login'),
                 onPressed: _signIn,
               ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              child: Text('Sign in with Google'),
+              onPressed: _signInWithGoogle,
+            ),
           ],
         ),
       ),

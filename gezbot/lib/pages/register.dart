@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -8,7 +9,8 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  final _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final GoogleSignIn _googleSignIn = GoogleSignIn(clientId: "1027985224810-jeioofe75dtanigd4r1vtgv4v4glemis.apps.googleusercontent.com");
   String _email = '';
   String _password = '';
   bool _isLoading = false;
@@ -23,7 +25,42 @@ class _RegisterScreenState extends State<RegisterScreen> {
       await prefs.setBool('isLoggedIn', true);
       await prefs.setString('userEmail', _email);
 
-      
+      Navigator.pushReplacementNamed(context, '/home');
+    } on FirebaseAuthException catch (e) {
+      _showErrorDialog(e.message);
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _signInWithGoogle() async {
+    try {
+      setState(() => _isLoading = true);
+
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      if (googleUser == null) {
+        setState(() => _isLoading = false);
+        return; // User cancelled the sign-in process
+      }
+
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final AuthCredential credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      UserCredential userCredential = await _auth.signInWithCredential(credential);
+      User? user = userCredential.user;
+      print('User signed in with Google: ${user?.email}');
+
+      // Saving user details
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('isLoggedIn', true);
+      await prefs.setString('userEmail', user?.email ?? '');
+      await prefs.setString('userName', user?.displayName ?? '');
+      await prefs.setString('userPhotoUrl', user?.photoURL ?? '');
+      await prefs.setString('userSurname', user?.displayName?.split(' ')?.last ?? '');
+
       Navigator.pushReplacementNamed(context, '/home');
     } on FirebaseAuthException catch (e) {
       _showErrorDialog(e.message);
@@ -80,15 +117,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
             if (_isLoading)
               Center(child: CircularProgressIndicator())
             else
-              ElevatedButton(
-                child: Text('Register'),
-                onPressed: _register,
+              Column(
+                children: [
+                  ElevatedButton(
+                    child: Text('Register'),
+                    onPressed: _register,
+                  ),
+                  SizedBox(height: 20),
+                  ElevatedButton(
+                    child: Text('Sign in with Google'),
+                    onPressed: _signInWithGoogle,
+                  ),
+                ],
               ),
             SizedBox(height: 20),
             Center(
               child: GestureDetector(
                 onTap: () {
-                  Navigator.pushReplacementNamed(context, '/login'); // Navigate to the login screen
+                  Navigator.pushReplacementNamed(context, '/login');
                 },
                 child: Text(
                   'Already have an account? Log in',
