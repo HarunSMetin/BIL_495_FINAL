@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -16,20 +17,39 @@ class _LoginScreenState extends State<LoginScreen> {
   String _password = '';
   bool _isLoading = false;
 
+   Future<void> _fetchAndStoreUserDetails(String userId) async {
+    DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(userId).get();
+    print(userDoc.data());
+    if (userDoc.exists) {
+      Map<String, dynamic> userDetails = userDoc.data() as Map<String, dynamic>;
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('birthDate', userDetails['birthDate'] ?? 'Not available');
+      await prefs.setString('createdAt', userDetails['createdAt'] ?? 'Not available');
+      await prefs.setString('gender', userDetails['gender'] ?? 'Not available');
+      await prefs.setString('photoUrl', userDetails['photoUrl'] ?? '');
+      await prefs.setString('username', userDetails['username'] ?? 'Not available');
+      // Store other details as needed
+    }
+  }
+
   void _signIn() async {
     try {
       setState(() => _isLoading = true);
       UserCredential userCredential = await _auth.signInWithEmailAndPassword(email: _email, password: _password);
       User? user = userCredential.user;
 
-      // Save logged-in state and email
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('isLoggedIn', true);
-      await prefs.setString('userEmail', user?.email ?? '');
-      await prefs.setString('userName', user?.displayName ?? 'Not available');
-      await prefs.setString('userPhotoUrl', user?.photoURL ?? '');
+      if (user != null) {
+        // Save logged-in state and email
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('isLoggedIn', true);
+        await prefs.setString('userEmail', user.email ?? '');
 
-      Navigator.pushReplacementNamed(context, '/home'); // Navigate to home after login
+        // Fetch and store additional user details
+        await _fetchAndStoreUserDetails(user.uid);
+
+        Navigator.pushReplacementNamed(context, '/home'); // Navigate to home after login
+      }
     } on FirebaseAuthException catch (e) {
       _showErrorDialog(e.message);
     } finally {
@@ -56,14 +76,17 @@ class _LoginScreenState extends State<LoginScreen> {
       UserCredential userCredential = await _auth.signInWithCredential(credential);
       User? user = userCredential.user;
 
-      // Save logged-in state and user details
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('isLoggedIn', true);
-      await prefs.setString('userEmail', user?.email ?? '');
-      await prefs.setString('userName', user?.displayName ?? 'Not available');
-      await prefs.setString('userPhotoUrl', user?.photoURL ?? '');
+      if (user != null) {
+        // Save logged-in state and user details
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('isLoggedIn', true);
+        await prefs.setString('userEmail', user.email ?? '');
 
-      Navigator.pushReplacementNamed(context, '/home');
+        // Fetch and store additional user details
+        await _fetchAndStoreUserDetails(user.uid);
+
+        Navigator.pushReplacementNamed(context, '/home');
+      }
     } on FirebaseAuthException catch (e) {
       _showErrorDialog(e.message);
     } finally {
