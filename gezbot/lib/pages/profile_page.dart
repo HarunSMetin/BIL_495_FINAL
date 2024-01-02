@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class ProfilePage extends StatelessWidget {
   Future<Map<String, String>> _getUserDetails() async {
     final prefs = await SharedPreferences.getInstance();
     String userEmail = prefs.getString('userEmail') ?? 'Not available';
-    String userName = prefs.getString('username') ?? 'Not available';
+    String userName = prefs.getString('userName') ?? 'Not available';
     String userPhotoUrl = prefs.getString('photoUrl') ?? '';
     String userBirthDate = prefs.getString('birthDate') ?? 'Not available';
     String userGender = prefs.getString('gender') ?? 'Not available';
-    print('userEmail: $userEmail');
-    print('userName: $userName');
-    print('userPhotoUrl: $userPhotoUrl');
-    print('userBirthDate: $userBirthDate');
-    print('userGender: $userGender');
 
     return {
       'email': userEmail,
@@ -25,6 +21,7 @@ class ProfilePage extends StatelessWidget {
     };
   }
 
+  
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Map<String, String>>(
@@ -52,8 +49,11 @@ class ProfilePage extends StatelessWidget {
                 ElevatedButton(
                   onPressed: () async {
                     await FirebaseAuth.instance.signOut();
+                    final GoogleSignIn _googleSignIn = GoogleSignIn(clientId: "1027985224810-jeioofe75dtanigd4r1vtgv4v4glemis.apps.googleusercontent.com");
+
                     final prefs = await SharedPreferences.getInstance();
                     await prefs.clear();
+                    await _googleSignIn.signOut();
                     Navigator.pushReplacementNamed(context, '/login');
                   },
                   child: Text('Logout'),

@@ -4,11 +4,15 @@ import 'package:gezbot/services/database.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart'; 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:uuid/uuid.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
+enum Gender { Male, Female, Other }
 
 class _LoginScreenState extends State<LoginScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -17,6 +21,8 @@ class _LoginScreenState extends State<LoginScreen> {
   String _email = '';
   String _password = '';
   bool _isLoading = false;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
 
    Future<void> _fetchAndStoreUserDetails(String userId) async {
     DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(userId).get();
@@ -26,11 +32,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('birthDate', userDetails['birthDate'] ?? 'Not available');
-      await prefs.setString('createdAt', userDetails['createdAt'] ?? 'Not available');
       await prefs.setString('gender', userDetails['gender'] ?? 'Not available');
       await prefs.setString('photoUrl', userDetails['photoUrl'] ?? '');
-      await prefs.setString('username', userDetails['username'] ?? 'Not available');
-      // Store other details as needed
+      await prefs.setString('userName', userDetails['userName'] ?? 'Not available');
+      await prefs.setString('userEmail', userDetails['email'] ?? 'Not available');
+      
     }
   }
 
@@ -59,25 +65,29 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _signInWithGoogle() async {
-    try {
-      setState(() => _isLoading = true);
+  try {
+    setState(() => _isLoading = true);
 
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      if (googleUser == null) {
-        setState(() => _isLoading = false);
-        return; // User cancelled the sign-in process
-      }
+    final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+    if (googleUser == null) {
+      setState(() => _isLoading = false);
+      return; // User cancelled the sign-in process
+    }
 
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-      final AuthCredential credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
+    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+    final AuthCredential credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
 
-      UserCredential userCredential = await _auth.signInWithCredential(credential);
-      User? user = userCredential.user;
+    UserCredential userCredential = await _auth.signInWithCredential(credential);
+    User? user = userCredential.user;
 
-      if (user != null) {
+    if (user != null) {
+      final docSnapshot = await _firestore.collection('users').doc(user.uid).get();
+      if (!docSnapshot.exists) {
+        await _signUpWithGoogle(); // If user does not exist, sign up
+      } else {
         // Save logged-in state and user details
         final prefs = await SharedPreferences.getInstance();
         await prefs.setBool('isLoggedIn', true);
@@ -88,12 +98,75 @@ class _LoginScreenState extends State<LoginScreen> {
 
         Navigator.pushReplacementNamed(context, '/home');
       }
-    } on FirebaseAuthException catch (e) {
-      _showErrorDialog(e.message);
-    } finally {
-      setState(() => _isLoading = false);
     }
+  } on FirebaseAuthException catch (e) {
+    _showErrorDialog(e.message);
+  } finally {
+    setState(() => _isLoading = false);
   }
+}
+
+
+  Future<void> _signUpWithGoogle() async {
+  try {
+    setState(() => _isLoading = true);
+    final prefs = await SharedPreferences.getInstance();
+    final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+    if (googleUser == null) {
+      setState(() => _isLoading = false);
+      return; // User cancelled the sign-in process
+    }
+
+    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+    final AuthCredential credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    UserCredential userCredential = await _auth.signInWithCredential(credential);
+    User? user = userCredential.user;
+
+    if (user != null) {
+      final docSnapshot = await _firestore.collection('users').doc(user.uid).get();
+      if (!docSnapshot.exists) {
+        var uuid = const Uuid();
+        String defaultUsername = 'User_${uuid.v4()}';
+        String defaultBirthDate = DateTime.now().toIso8601String();
+        String defaultGender = Gender.Other.toString().split('.').last;
+       
+        await _firestore.collection('users').doc(user.uid).set({
+          'email': user.email ?? '',
+          'photoUrl': user.photoURL ?? '',
+          'userName': defaultUsername,
+          'birthDate': defaultBirthDate,
+          'gender': defaultGender,
+          'createdAt': DateTime.now().toIso8601String(), 
+        });
+
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.setString('userName', defaultUsername);
+        await prefs.setString('birthDate', defaultBirthDate);
+        await prefs.setString('gender', defaultGender);
+        await prefs.setString('photoUrl', user.photoURL ?? '');
+        await prefs.setString('userEmail', user.email ?? '');
+        await prefs.setString('createdAt', DateTime.now().toIso8601String());
+      }
+
+      // Update login status
+      await prefs.setBool('isLoggedIn', true);
+    } 
+    print("hello");
+    Navigator.pushReplacementNamed(context, '/home');
+  } on FirebaseAuthException catch (e) {
+    _showErrorDialog(e.message);
+  }on Exception catch (e) {
+    print(e.toString());
+    _showErrorDialog(e.toString());
+  }
+   finally {
+    setState(() => _isLoading = false);
+  }
+}
 
   void _showErrorDialog(String? message) {
     showDialog(
