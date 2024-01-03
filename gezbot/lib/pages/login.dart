@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gezbot/services/database.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:shared_preferences/shared_preferences.dart'; 
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -12,24 +12,30 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn(clientId: "1027985224810-jeioofe75dtanigd4r1vtgv4v4glemis.apps.googleusercontent.com");
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+      clientId:
+          "1027985224810-jeioofe75dtanigd4r1vtgv4v4glemis.apps.googleusercontent.com");
 
   String _email = '';
   String _password = '';
   bool _isLoading = false;
 
-   Future<void> _fetchAndStoreUserDetails(String userId) async {
-    DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(userId).get();
+  Future<void> _fetchAndStoreUserDetails(String userId) async {
+    DocumentSnapshot userDoc =
+        await FirebaseFirestore.instance.collection('users').doc(userId).get();
     print(userDoc.data());
     if (userDoc.exists) {
       Map<String, dynamic> userDetails = userDoc.data() as Map<String, dynamic>;
 
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('birthDate', userDetails['birthDate'] ?? 'Not available');
-      await prefs.setString('createdAt', userDetails['createdAt'] ?? 'Not available');
-      await prefs.setString('gender', userDetails['gender'] ?? 'Not available');
+      // await prefs.setString(
+      //     'birthDate', userDetails['birthDate'] ?? 'Not available');
+      await prefs.setString(
+          'createdAt', userDetails['createdAt'] ?? 'Not available');
+      //await prefs.setString('gender', userDetails['gender'] ?? 'Not available');
       await prefs.setString('photoUrl', userDetails['photoUrl'] ?? '');
-      await prefs.setString('username', userDetails['username'] ?? 'Not available');
+      await prefs.setString(
+          'username', userDetails['username'] ?? 'Not available');
       // Store other details as needed
     }
   }
@@ -37,7 +43,8 @@ class _LoginScreenState extends State<LoginScreen> {
   void _signIn() async {
     try {
       setState(() => _isLoading = true);
-      UserCredential userCredential = await _auth.signInWithEmailAndPassword(email: _email, password: _password);
+      UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+          email: _email, password: _password);
       User? user = userCredential.user;
 
       if (user != null) {
@@ -49,7 +56,8 @@ class _LoginScreenState extends State<LoginScreen> {
         // Fetch and store additional user details
         await _fetchAndStoreUserDetails(user.uid);
 
-        Navigator.pushReplacementNamed(context, '/home'); // Navigate to home after login
+        Navigator.pushReplacementNamed(
+            context, '/home'); // Navigate to home after login
       }
     } on FirebaseAuthException catch (e) {
       _showErrorDialog(e.message);
@@ -68,13 +76,15 @@ class _LoginScreenState extends State<LoginScreen> {
         return; // User cancelled the sign-in process
       }
 
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
       final AuthCredential credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
 
-      UserCredential userCredential = await _auth.signInWithCredential(credential);
+      UserCredential userCredential =
+          await _auth.signInWithCredential(credential);
       User? user = userCredential.user;
 
       if (user != null) {
@@ -120,7 +130,9 @@ class _LoginScreenState extends State<LoginScreen> {
         title: Row(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            BackButton(onPressed: () => Navigator.pushReplacementNamed(context, '/register')),
+            BackButton(
+                onPressed: () =>
+                    Navigator.pushReplacementNamed(context, '/register')),
             Text('Login'),
           ],
         ),
@@ -155,13 +167,13 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
             SizedBox(height: 20),
             ElevatedButton.icon(
-                    icon: Image.network(
-                      'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1024px-Google_%22G%22_logo.svg.png', // Replace with the actual URL of the Google icon
-                      height: 24.0, // Adjust the size as needed
-                    ),
-                    label: Text('Sign in with Google'),
-                    onPressed: _signInWithGoogle,
-                  ),
+              icon: Image.network(
+                'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/1024px-Google_%22G%22_logo.svg.png', // Replace with the actual URL of the Google icon
+                height: 24.0, // Adjust the size as needed
+              ),
+              label: Text('Sign in with Google'),
+              onPressed: _signInWithGoogle,
+            ),
           ],
         ),
       ),
