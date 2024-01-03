@@ -1,13 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 class DatabaseService {
-  final CollectionReference userCollection = FirebaseFirestore.instance.collection('users');
-  final CollectionReference chatCollection = FirebaseFirestore.instance.collection('chats');
-  final CollectionReference userOptionsCollection = FirebaseFirestore.instance.collection('userOptions');
-  final CollectionReference travelsCollection = FirebaseFirestore.instance.collection('travels');
-  final CollectionReference travelOptionsCollection = FirebaseFirestore.instance.collection('travelOptions');
-  final CollectionReference friendRequestsCollection = FirebaseFirestore.instance.collection('friendRequests');
+  final CollectionReference userCollection =
+      FirebaseFirestore.instance.collection('users');
+  final CollectionReference chatCollection =
+      FirebaseFirestore.instance.collection('chats');
+  final CollectionReference userOptionsCollection =
+      FirebaseFirestore.instance.collection('userOptions');
+  final CollectionReference travelsCollection =
+      FirebaseFirestore.instance.collection('travels');
+  final CollectionReference travelOptionsCollection =
+      FirebaseFirestore.instance.collection('travelOptions');
 
+  final CollectionReference friendRequestsCollection =
+      FirebaseFirestore.instance.collection('friendRequests');
+
+//CHAT
   Future<Map<String, dynamic>> GetAllChats() async {
     //nested collection structure
     Map<String, dynamic> jsonData = {};
@@ -75,7 +84,8 @@ class DatabaseService {
     });
 
     jsonData[TravelID] = {
-      'members': (await chatCollection.doc(TravelID).get()).data() as Map<String, dynamic>,
+      'members': (await chatCollection.doc(TravelID).get()).data()
+          as Map<String, dynamic>,
       'messages': messages,
     };
     return jsonData;
@@ -115,12 +125,76 @@ class DatabaseService {
     }) as bool;
   }
 
+//TRAVELS
+
   Future<Map<String, dynamic>> GetAllTravelsOfUser(String UserID) async {
-    QuerySnapshot querySnapshot = await travelsCollection.where('creatorId', isEqualTo: UserID).get();
+    QuerySnapshot querySnapshot =
+        await travelsCollection.where('creatorId', isEqualTo: UserID).get();
     Map<String, dynamic> jsonData = {};
     await Future.forEach(querySnapshot.docs, (result) async {
       jsonData[result.id] = result.data() as Map<String, dynamic>;
     });
-    return jsonData  ;
+    return jsonData;
+  }
+
+//FRIENDS
+  Future<Map<String, dynamic>> GetFollowingsOfUser(String UserID) async {
+    QuerySnapshot querySnapshot = await friendRequestsCollection
+        .where('senderId', isEqualTo: UserID)
+        .where('status', isEqualTo: 'accepted')
+        .get();
+    Map<String, dynamic> jsonData = {};
+    await Future.forEach(querySnapshot.docs, (result) async {
+      jsonData[result.id] = result.data() as Map<String, dynamic>;
+    });
+    return jsonData;
+  }
+
+  Future<Map<String, dynamic>> GetFollowersOfUser(String UserID) async {
+    QuerySnapshot querySnapshot = await friendRequestsCollection
+        .where('receiverId', isEqualTo: UserID)
+        .where('status', isEqualTo: 'accepted')
+        .get();
+    Map<String, dynamic> jsonData = {};
+    await Future.forEach(querySnapshot.docs, (result) async {
+      jsonData[result.id] = result.data() as Map<String, dynamic>;
+    });
+    return jsonData;
+  }
+//FRIEND REQUESTS
+
+  Future<Map<String, dynamic>> GetFriendRequestsOfUser(String UserID) async {
+    QuerySnapshot querySnapshot = await friendRequestsCollection
+        .where('receiverId', isEqualTo: UserID)
+        .where('status', isEqualTo: 'pending')
+        .get();
+    Map<String, dynamic> jsonData = {};
+    await Future.forEach(querySnapshot.docs, (result) async {
+      jsonData[result.id] = result.data() as Map<String, dynamic>;
+    });
+    return jsonData;
+  }
+
+  Future<Map<String, dynamic>> GetSentFriendRequestsOfUser(
+      String UserID) async {
+    QuerySnapshot querySnapshot = await friendRequestsCollection
+        .where('senderId', isEqualTo: UserID)
+        .where('status', isEqualTo: 'pending')
+        .get();
+    Map<String, dynamic> jsonData = {};
+    await Future.forEach(querySnapshot.docs, (result) async {
+      jsonData[result.id] = result.data() as Map<String, dynamic>;
+    });
+    return jsonData;
+  }
+
+  Future<bool> SendFriendRequest(String SenderID, String ReceiverID) async {
+    return await friendRequestsCollection.add({
+      'senderId': SenderID,
+      'receiverId': ReceiverID,
+      'status': 'pending',
+      'sentAt': DateTime.now(),
+      'statusChangedAt': DateTime.now(),
+    }) as bool;
   }
 }
