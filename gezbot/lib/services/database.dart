@@ -5,6 +5,7 @@ class DatabaseService {
   final CollectionReference chatCollection = FirebaseFirestore.instance.collection('chats');
   final CollectionReference userOptionsCollection = FirebaseFirestore.instance.collection('userOptions');
   final CollectionReference travelsCollection = FirebaseFirestore.instance.collection('travels');
+  final CollectionReference travelOptionsCollection = FirebaseFirestore.instance.collection('travelOptions');
   final CollectionReference friendRequestsCollection = FirebaseFirestore.instance.collection('friendRequests');
 
   Future<Map<String, dynamic>> GetAllChats() async {
@@ -114,5 +115,12 @@ class DatabaseService {
     }) as bool;
   }
 
-
+  Future<Map<String, dynamic>> GetAllTravelsOfUser(String UserID) async {
+    QuerySnapshot querySnapshot = await travelsCollection.where('creatorId', isEqualTo: UserID).get();
+    Map<String, dynamic> jsonData = {};
+    await Future.forEach(querySnapshot.docs, (result) async {
+      jsonData[result.id] = result.data() as Map<String, dynamic>;
+    });
+    return jsonData  ;
+  }
 }
