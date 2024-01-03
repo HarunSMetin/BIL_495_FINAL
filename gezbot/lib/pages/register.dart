@@ -104,8 +104,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 }
 
+void printWarning(String text) {
+  print('\x1B[33m$text\x1B[0m');
+}
 
-  Future<void> _signUpWithGoogle() async {
+void printError(String text) {
+  print('\x1B[31m$text\x1B[0m');
+}
+Future<void> _signUpWithGoogle() async {
   try {
     setState(() => _isLoading = true);
     final prefs = await SharedPreferences.getInstance();
@@ -131,13 +137,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
         String defaultUsername = 'User_${uuid.v4()}';
         String defaultBirthDate = DateTime.now().toIso8601String();
         String defaultGender = Gender.Other.toString().split('.').last;
-
+       
         await _firestore.collection('users').doc(user.uid).set({
           'email': user.email ?? '',
           'photoUrl': user.photoURL ?? '',
-          'username': defaultUsername,
+          'userName': defaultUsername,
           'birthDate': defaultBirthDate,
           'gender': defaultGender,
+          'createdAt': DateTime.now().toIso8601String(), 
         });
 
         final prefs = await SharedPreferences.getInstance();
@@ -146,6 +153,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         await prefs.setString('gender', defaultGender);
         await prefs.setString('photoUrl', user.photoURL ?? '');
         await prefs.setString('userEmail', user.email ?? '');
+        await prefs.setString('createdAt', DateTime.now().toIso8601String());
       }
 
       // Update login status
@@ -155,7 +163,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
     Navigator.pushReplacementNamed(context, '/home');
   } on FirebaseAuthException catch (e) {
     _showErrorDialog(e.message);
-  } finally {
+  }on Exception catch (e) {
+    printError(e.toString());
+    _showErrorDialog(e.toString());
+  }
+   finally {
     setState(() => _isLoading = false);
   }
 }
