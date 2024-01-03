@@ -53,7 +53,8 @@ class DatabaseService {
       if (members.contains(UserID)) {
         QuerySnapshot nestedQuerySnapshot = await chatCollection
             .doc(result.id)
-            .collection('messages') // Replace with your nested collection name
+            .collection('messages')
+            .orderBy('time', descending: false)
             .get();
 
         List<Map<String, dynamic>> messages = [];
@@ -75,7 +76,8 @@ class DatabaseService {
     Map<String, dynamic> jsonData = {};
     QuerySnapshot nestedQuerySnapshot = await chatCollection
         .doc(TravelID)
-        .collection('messages') // Replace with your nested collection name
+        .collection('messages')
+        .orderBy('time', descending: false)
         .get();
 
     List<Map<String, dynamic>> messages = [];
@@ -122,7 +124,7 @@ class DatabaseService {
       'message': Message,
       'sender': SenderID,
       'time': DateTime.now(),
-    }) as bool;
+    });
   }
 
 //TRAVELS

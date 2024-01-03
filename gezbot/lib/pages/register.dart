@@ -8,8 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 //import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
-
-enum Gender { Male, Female, Other }
+import 'package:gezbot/services/user_service.dart';
 
 class RegisterScreen extends StatefulWidget {
   @override
@@ -20,15 +19,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn(clientId: "1027985224810-jeioofe75dtanigd4r1vtgv4v4glemis.apps.googleusercontent.com");
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+      clientId:
+          "1027985224810-jeioofe75dtanigd4r1vtgv4v4glemis.apps.googleusercontent.com");
   final ImagePicker _picker = ImagePicker();
 
   String _email = '';
   String _password = '';
   String _confirmPassword = '';
-  Gender? _gender = Gender.Male;
+  Gender? _gender = Gender.Other;
   String _username = '';
   DateTime? _birthDate;
+  final UserService _userService = UserService(); // Instance of UserService
 
   bool _isLoading = false;
   XFile? _imageFile;
@@ -48,131 +50,52 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   void _register() async {
-  try {
-    setState(() => _isLoading = true);
-    if (_password != _confirmPassword) {
-        _showErrorDialog('Passwords do not match.');
-        return;
-    }
-    UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
-        email: _email, password: _password);
+    try {
+      setState(() => _isLoading = true);
 
-    String photoUrl = ''; // Default image URL
-    if (_imageFile != null) {
-      File imageFile = File(_imageFile!.path);
-      String fileName = 'user_images/${userCredential.user!.uid}/profile.jpg';
-
-      try {
-        TaskSnapshot taskSnapshot = await _storage.ref(fileName).putFile(imageFile);
-        photoUrl = await taskSnapshot.ref.getDownloadURL();
-      } on FirebaseException catch (e) {
-        _showErrorDialog('Failed to upload image: ${e.message}');
-        return;
-      }
-    } else {
-      photoUrl = 'https://w7.pngwing.com/pngs/178/595/png-transparent-user-profile-computer-icons-login-user-avatars-thumbnail.png'; // Replace with your default image URL
-    }
-
-    DateTime now = DateTime.now();
-      await _firestore.collection('users').doc(userCredential.user?.uid).set({
-        'email': _email,
-        'photoUrl': photoUrl,
-        'username': _username,
-        'birthDate': _birthDate?.toIso8601String(),
-        'gender': _gender.toString().split('.').last,
-        'createdAt': now.toIso8601String(), // Store the creation time
-      });
-
-
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isLoggedIn', true);
-    await prefs.setString('userEmail', _email);
-
-    Navigator.pushReplacementNamed(context, '/home');
-  } on FirebaseAuthException catch (e) {
-    if (e.code == 'weak-password') {
-      _showErrorDialog('The password provided is too weak.');
-    } else if (e.code == 'email-already-in-use') {
-      _showErrorDialog('An account already exists for that email.');
-    } else {
-      _showErrorDialog(e.message);
-    }
-  } catch (e) {
-    _showErrorDialog('An error occurred. Please try again.');
-  } finally {
-    setState(() => _isLoading = false);
-  }
-}
-
-void printWarning(String text) {
-  print('\x1B[33m$text\x1B[0m');
-}
-
-void printError(String text) {
-  print('\x1B[31m$text\x1B[0m');
-}
-Future<void> _signUpWithGoogle() async {
-  try {
-    setState(() => _isLoading = true);
-    final prefs = await SharedPreferences.getInstance();
-    final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-    if (googleUser == null) {
+      await _userService.registerUser(
+        email: _email,
+        password: _password,
+        confirmPassword: _confirmPassword,
+        username: _username,
+        birthDate: _birthDate,
+        gender: _gender!,
+        imagePath: _imageFile?.path,
+        showErrorDialog: _showErrorDialog,
+        context: context,
+      );
+    } catch (e) {
+      _showErrorDialog('An error occurred. Please try again.');
+    } finally {
       setState(() => _isLoading = false);
-      return; // User cancelled the sign-in process
     }
-
-    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-    final AuthCredential credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
-    );
-
-    UserCredential userCredential = await _auth.signInWithCredential(credential);
-    User? user = userCredential.user;
-
-    if (user != null) {
-      final docSnapshot = await _firestore.collection('users').doc(user.uid).get();
-      if (!docSnapshot.exists) {
-        var uuid = const Uuid();
-        String defaultUsername = 'User_${uuid.v4()}';
-        String defaultBirthDate = DateTime.now().toIso8601String();
-        String defaultGender = Gender.Other.toString().split('.').last;
-       
-        await _firestore.collection('users').doc(user.uid).set({
-          'email': user.email ?? '',
-          'photoUrl': user.photoURL ?? '',
-          'userName': defaultUsername,
-          'birthDate': defaultBirthDate,
-          'gender': defaultGender,
-          'createdAt': DateTime.now().toIso8601String(), 
-        });
-
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('userName', defaultUsername);
-        await prefs.setString('birthDate', defaultBirthDate);
-        await prefs.setString('gender', defaultGender);
-        await prefs.setString('photoUrl', user.photoURL ?? '');
-        await prefs.setString('userEmail', user.email ?? '');
-        await prefs.setString('createdAt', DateTime.now().toIso8601String());
-      }
-
-      // Update login status
-      await prefs.setBool('isLoggedIn', true);
-    } 
-    print("hello");
-    Navigator.pushReplacementNamed(context, '/home');
-  } on FirebaseAuthException catch (e) {
-    _showErrorDialog(e.message);
-  }on Exception catch (e) {
-    printError(e.toString());
-    _showErrorDialog(e.toString());
   }
-   finally {
-    setState(() => _isLoading = false);
+
+  void printWarning(String text) {
+    print('\x1B[33m$text\x1B[0m');
   }
-}
- Future<void> _pickImage() async {
-  /*var permissionStatus = await Permission.photos.status;
+
+  void printError(String text) {
+    print('\x1B[31m$text\x1B[0m');
+  }
+
+  Future<void> _signUpWithGoogle() async {
+    try {
+      setState(() => _isLoading = true);
+      await _userService.signUpWithGoogle(
+        showErrorDialog: _showErrorDialog,
+        context: context,
+      );
+      Navigator.pushReplacementNamed(context, '/home');
+    } catch (e) {
+      _showErrorDialog('An error occurred. Please try again.');
+    } finally {
+      setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _pickImage() async {
+    /*var permissionStatus = await Permission.photos.status;
   
   if (!permissionStatus.isGranted) {
     await Permission.photos.request();
@@ -180,8 +103,9 @@ Future<void> _signUpWithGoogle() async {
   }
 
   if (permissionStatus.isGranted) {*/
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
-    
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+
     if (pickedFile != null) {
       setState(() {
         _imageFile = pickedFile;
@@ -192,12 +116,10 @@ Future<void> _signUpWithGoogle() async {
         }
       });
     }
-  /*} else {
+    /*} else {
     _showErrorDialog('Gallery access is needed to select an image');
   }*/
-}
-
-
+  }
 
   void _showErrorDialog(String? message) {
     showDialog(
@@ -220,145 +142,149 @@ Future<void> _signUpWithGoogle() async {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        title: const Text('Register'),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            ClipRRect(
-    borderRadius: BorderRadius.circular(8.0),
-    child: (_imageFile!=null)?Image.file(File(_imageFile!.path), height:MediaQuery.of(context).size.height/4 ):Image.network("https://w7.pngwing.com/pngs/178/595/png-transparent-user-profile-computer-icons-login-user-avatars-thumbnail.png", height:MediaQuery.of(context).size.height/4),
-),
-            
-            ElevatedButton(
-              onPressed: _pickImage,
-              child: const Text('Select Photo'),
-            ),
-            TextFormField(
-        decoration: const InputDecoration(labelText: 'Username'),
-        onChanged: (value) => _username = value.trim(),
-      ),
-      ListTile(
-              title: Text("Birth Date: ${_birthDate?.toLocal().toString().split(' ')[0] ?? 'Not set'}"),
-              trailing: Icon(Icons.calendar_today),
-              onTap: () => _pickBirthDate(context),
-            ),
-      ListTile(
-              title: const Text('Male'),
-              leading: Radio<Gender>(
-                value: Gender.Male,
-                groupValue: _gender,
-                onChanged: (Gender? value) {
-                  setState(() {
-                    _gender = value;
-                  });
+        resizeToAvoidBottomInset: false,
+        appBar: AppBar(
+          title: const Text('Register'),
+        ),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              ClipRRect(
+                borderRadius: BorderRadius.circular(8.0),
+                child: (_imageFile != null)
+                    ? Image.file(File(_imageFile!.path),
+                        height: MediaQuery.of(context).size.height / 4)
+                    : Image.network(
+                        "https://w7.pngwing.com/pngs/178/595/png-transparent-user-profile-computer-icons-login-user-avatars-thumbnail.png",
+                        height: MediaQuery.of(context).size.height / 4),
+              ),
+              ElevatedButton(
+                onPressed: _pickImage,
+                child: const Text('Select Photo'),
+              ),
+              TextFormField(
+                decoration: const InputDecoration(labelText: 'Username'),
+                onChanged: (value) => _username = value.trim(),
+              ),
+              ListTile(
+                title: Text(
+                    "Birth Date: ${_birthDate?.toLocal().toString().split(' ')[0] ?? 'Not set'}"),
+                trailing: Icon(Icons.calendar_today),
+                onTap: () => _pickBirthDate(context),
+              ),
+              ListTile(
+                title: const Text('Male'),
+                leading: Radio<Gender>(
+                  value: Gender.Male,
+                  groupValue: _gender,
+                  onChanged: (Gender? value) {
+                    setState(() {
+                      _gender = value;
+                    });
+                  },
+                ),
+              ),
+              ListTile(
+                title: const Text('Female'),
+                leading: Radio<Gender>(
+                  value: Gender.Female,
+                  groupValue: _gender,
+                  onChanged: (Gender? value) {
+                    setState(() {
+                      _gender = value;
+                    });
+                  },
+                ),
+              ),
+              ListTile(
+                title: const Text('Other'),
+                leading: Radio<Gender>(
+                  value: Gender.Other,
+                  groupValue: _gender,
+                  onChanged: (Gender? value) {
+                    setState(() {
+                      _gender = value;
+                    });
+                  },
+                ),
+              ),
+              TextFormField(
+                keyboardType: TextInputType.emailAddress,
+                decoration: const InputDecoration(labelText: 'Email'),
+                onChanged: (value) {
+                  _email = value.trim();
+                },
+                // Add email validation
+                validator: (value) {
+                  if (value!.isEmpty || !value.contains('@')) {
+                    return 'Please enter a valid email address.';
+                  }
+                  return null;
                 },
               ),
-            ),
-            ListTile(
-              title: const Text('Female'),
-              leading: Radio<Gender>(
-                value: Gender.Female,
-                groupValue: _gender,
-                onChanged: (Gender? value) {
-                  setState(() {
-                    _gender = value;
-                  });
+              TextFormField(
+                obscureText: true,
+                decoration: const InputDecoration(labelText: 'Password'),
+                onChanged: (value) {
+                  _password = value.trim();
+                },
+                validator: (value) {
+                  if (value!.isEmpty || value.length < 6) {
+                    return 'Password must be at least 6 characters long.';
+                  }
+                  return null;
                 },
               ),
-            ),
-            ListTile(
-              title: const Text('Other'),
-              leading: Radio<Gender>(
-                value: Gender.Other,
-                groupValue: _gender,
-                onChanged: (Gender? value) {
-                  setState(() {
-                    _gender = value;
-                  });
+              TextFormField(
+                obscureText: true,
+                decoration:
+                    const InputDecoration(labelText: 'Confirm Password'),
+                onChanged: (value) => _confirmPassword = value.trim(),
+                validator: (value) {
+                  if (value!.isEmpty || value.length < 6) {
+                    return 'Password must be at least 6 characters long.';
+                  }
+                  return null;
                 },
               ),
-            ),
-            TextFormField(
-              keyboardType: TextInputType.emailAddress,
-              decoration: const InputDecoration(labelText: 'Email'),
-              onChanged: (value) {
-                _email = value.trim();
-              },
-              // Add email validation
-              validator: (value) {
-                if (value!.isEmpty || !value.contains('@')) {
-                  return 'Please enter a valid email address.';
-                }
-                return null;
-              },
-            ),
-            TextFormField(
-              obscureText: true,
-              decoration: const InputDecoration(labelText: 'Password'),
-              onChanged: (value) {
-                _password = value.trim();
-              },
-              
-              validator: (value) {
-                if (value!.isEmpty || value.length < 6) {
-                  return 'Password must be at least 6 characters long.';
-                }
-                return null;
-              },
-            ),
-            TextFormField(
-        obscureText: true,
-        decoration: const InputDecoration(labelText: 'Confirm Password'),
-        onChanged: (value) => _confirmPassword = value.trim(),
-        validator: (value) {
-                if (value!.isEmpty || value.length < 6) {
-                  return 'Password must be at least 6 characters long.';
-                }
-                return null;
-              },
-      ),
-            const SizedBox(height: 20),
-            if (_isLoading)
-              const Center(child:  CircularProgressIndicator())
-            else
-              Column(
-                children: [
-                  ElevatedButton(
-                    child: const Text('Register'),
-                    onPressed: _register,
-                  ),
-                  SizedBox(height: 20),
-                  ElevatedButton.icon(
-                    icon: const Icon(Icons.login),
-                    label: const Text('Sign up with Google'),
-                    onPressed: _signUpWithGoogle,
-                  ),
-                ],
-              ),
-            const SizedBox(height: 20),
-            Center(
-              child: GestureDetector(
-                onTap: () {
-                  Navigator.pushReplacementNamed(context, '/login');
-                },
-                child: const Text(
-                  'Already have an account? Log in',
-                  style: TextStyle(
-                    color: Colors.blue,
-                    decoration: TextDecoration.underline,
+              const SizedBox(height: 20),
+              if (_isLoading)
+                const Center(child: CircularProgressIndicator())
+              else
+                Column(
+                  children: [
+                    ElevatedButton(
+                      child: const Text('Register'),
+                      onPressed: _register,
+                    ),
+                    SizedBox(height: 20),
+                    ElevatedButton.icon(
+                      icon: const Icon(Icons.login),
+                      label: const Text('Sign up with Google'),
+                      onPressed: _signUpWithGoogle,
+                    ),
+                  ],
+                ),
+              const SizedBox(height: 20),
+              Center(
+                child: GestureDetector(
+                  onTap: () {
+                    Navigator.pushReplacementNamed(context, '/login');
+                  },
+                  child: const Text(
+                    'Already have an account? Log in',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      decoration: TextDecoration.underline,
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
-        ),
-      )
-    );
+            ],
+          ),
+        ));
   }
 }

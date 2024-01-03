@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import './profile_page.dart';
+import 'package:gezbot/pages/profile_page.dart';
+import 'package:gezbot/pages/chat_page.dart';
+import 'package:gezbot/pages/travel_page.dart';
+
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -11,7 +14,7 @@ class _HomePageState extends State<HomePage> {
   final List<Widget> _widgetOptions = [
     Text('Home Tab'),
     Text('Search Tab'),
-    Text('Notifications Tab'),
+    TravelsScreen(),
     ProfilePage(),
   ];
 
@@ -41,8 +44,8 @@ class _HomePageState extends State<HomePage> {
             label: 'Search',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
-            label: 'Notifications',
+            icon: Icon(Icons.card_travel),
+            label: 'Travels',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
@@ -50,8 +53,8 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.blue, 
-        unselectedItemColor: Colors.grey, 
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.grey,
         onTap: _onItemTapped,
       ),
     );
