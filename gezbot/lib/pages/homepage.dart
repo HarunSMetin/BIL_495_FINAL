@@ -44,8 +44,8 @@ class _HomePageState extends State<HomePage> {
             label: 'Search',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
-            label: 'Notifications',
+            icon: Icon(Icons.card_travel),
+            label: 'Travels',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),

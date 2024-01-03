@@ -36,7 +36,7 @@ class UserService {
         password: password,
       );
 
-      String photoUrl = ''; // Default image URL
+      String photoUrl = '';
       if (imagePath != null) {
         File imageFile = File(imagePath);
         String fileName = 'user_images/${userCredential.user!.uid}/profile.jpg';
@@ -64,6 +64,10 @@ class UserService {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool('isLoggedIn', true);
       await prefs.setString('userEmail', email);
+      await prefs.setString('userName', username);
+      await prefs.setString('photoUrl', photoUrl);
+      await prefs.setString('birthDate', birthDate!.toIso8601String());
+      await prefs.setString('gender', gender.toString().split('.').last);
 
       Navigator.pushReplacementNamed(context, '/home');
     } on FirebaseAuthException catch (e) {
