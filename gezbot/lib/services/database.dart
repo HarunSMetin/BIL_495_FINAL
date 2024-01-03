@@ -1,12 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DatabaseService {
-  final CollectionReference userCollection = FirebaseFirestore.instance.collection('users');
-  final CollectionReference chatCollection = FirebaseFirestore.instance.collection('chats');
-  final CollectionReference userOptionsCollection = FirebaseFirestore.instance.collection('userOptions');
-  final CollectionReference travelsCollection = FirebaseFirestore.instance.collection('travels');
-  final CollectionReference travelOptionsCollection = FirebaseFirestore.instance.collection('travelOptions');
-  final CollectionReference friendRequestsCollection = FirebaseFirestore.instance.collection('friendRequests');
+  final CollectionReference userCollection =
+      FirebaseFirestore.instance.collection('users');
+  final CollectionReference chatCollection =
+      FirebaseFirestore.instance.collection('chats');
+  final CollectionReference userOptionsCollection =
+      FirebaseFirestore.instance.collection('userOptions');
+  final CollectionReference travelsCollection =
+      FirebaseFirestore.instance.collection('travels');
+  final CollectionReference travelOptionsCollection =
+      FirebaseFirestore.instance.collection('travelOptions');
+  final CollectionReference friendRequestsCollection =
+      FirebaseFirestore.instance.collection('friendRequests');
 
   Future<Map<String, dynamic>> GetAllChats() async {
     //nested collection structure
@@ -75,7 +81,8 @@ class DatabaseService {
     });
 
     jsonData[TravelID] = {
-      'members': (await chatCollection.doc(TravelID).get()).data() as Map<String, dynamic>,
+      'members': (await chatCollection.doc(TravelID).get()).data()
+          as Map<String, dynamic>,
       'messages': messages,
     };
     return jsonData;
@@ -116,11 +123,12 @@ class DatabaseService {
   }
 
   Future<Map<String, dynamic>> GetAllTravelsOfUser(String UserID) async {
-    QuerySnapshot querySnapshot = await travelsCollection.where('creatorId', isEqualTo: UserID).get();
+    QuerySnapshot querySnapshot =
+        await travelsCollection.where('creatorId', isEqualTo: UserID).get();
     Map<String, dynamic> jsonData = {};
     await Future.forEach(querySnapshot.docs, (result) async {
       jsonData[result.id] = result.data() as Map<String, dynamic>;
     });
-    return jsonData  ;
+    return jsonData;
   }
 }
