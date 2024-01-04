@@ -40,7 +40,7 @@ class QuestionWidget extends StatelessWidget {
       children: <Widget>[
         Text(question.question),
         ...question.answers.map((answer) => Text(answer)).toList(),
-        // Add logic to display different types of answers (e.g., calendar, checkboxes)
+        // TODO: Add logic to display different types of answers (e.g., calendar, checkboxes)
       ],
     );
   }
@@ -76,7 +76,7 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
         _currentQuestionIndex++;
       });
     } else {
-      // Handle 'Create Travel' action
+      //TODO: Handle 'Create Travel' action
     }
   }
 
