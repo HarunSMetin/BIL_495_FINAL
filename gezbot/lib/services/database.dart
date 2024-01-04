@@ -178,13 +178,19 @@ class DatabaseService {
 
 //TRAVELS
 
-  Future<Map<String, dynamic>> GetAllTravelsOfUser(String UserID) async {
+  Future<Map<String, Map<String, dynamic>>> GetAllTravelsOfUser(
+      String UserID) async {
     QuerySnapshot querySnapshot =
         await travelsCollection.where('creatorId', isEqualTo: UserID).get();
-    Map<String, dynamic> jsonData = {};
-    await Future.forEach(querySnapshot.docs, (result) async {
-      jsonData[result.id] = result.data() as Map<String, dynamic>;
-    });
+    Map<String, Map<String, dynamic>> jsonData = {};
+
+    for (var doc in querySnapshot.docs) {
+      // Add the document ID inside the data map
+      Map<String, dynamic> travelData = doc.data() as Map<String, dynamic>;
+      travelData['id'] = doc.id; // Include the document ID
+      jsonData[doc.id] = travelData;
+    }
+
     return jsonData;
   }
 
