@@ -58,6 +58,16 @@ class DatabaseService {
     */
   }
 */
+//fetch travel questions
+  Future<Map<String, dynamic>> GetTravelQuestions() async {
+    QuerySnapshot querySnapshot = await travelOptionsCollection.get();
+    Map<String, dynamic> jsonData = {};
+    await Future.forEach(querySnapshot.docs, (result) async {
+      jsonData[result.id] = result.data() as Map<String, dynamic>;
+    });
+    return jsonData;
+  }
+
   Future SetUserOptions(String UserID, String QuestionID, String AnswerID) {
     //TODO: Düzenleme yapılacak
     return userOptionsCollection.doc(UserID).set({

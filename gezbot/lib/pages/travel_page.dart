@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:gezbot/pages/create_travel.dart';
 import 'package:gezbot/services/database_service.dart';
 import 'package:gezbot/pages/chat_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -103,6 +104,16 @@ class _TravelsScreenState extends State<TravelsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Travels')),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => TravelQuestionnaireForm()),
+          );
+        },
+        child: Icon(Icons.add),
+        tooltip: 'Add Travel',
+      ),
       body: RefreshIndicator(
         onRefresh: _refreshTravels,
         child: FutureBuilder<List<Travel>>(
