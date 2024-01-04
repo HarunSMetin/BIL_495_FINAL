@@ -5,6 +5,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:uuid/uuid.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class UserService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -102,15 +104,37 @@ class UserService {
     UserCredential userCredential =
         await _auth.signInWithCredential(credential);
     User? user = userCredential.user;
+    final prefs = await SharedPreferences.getInstance();
 
     if (user != null) {
       final docSnapshot =
           await _firestore.collection('users').doc(user.uid).get();
       if (!docSnapshot.exists) {
-        // Your user creation logic here
+        var uuid = const Uuid();
+        String defaultUsername = 'User_${uuid.v4()}';
+        String defaultBirthDate = DateTime.now().toIso8601String();
+        String defaultGender = Gender.Other.toString().split('.').last;
+
+        await _firestore.collection('users').doc(user.uid).set({
+          'email': user.email ?? '',
+          'photoUrl': user.photoURL ?? '',
+          'userName': defaultUsername,
+          'birthDate': defaultBirthDate,
+          'gender': defaultGender,
+          'createdAt': DateTime.now().toIso8601String(),
+        });
+
+        await prefs.setString('uid', user.uid);
+        await prefs.setString('userName', defaultUsername);
+        await prefs.setString('birthDate', defaultBirthDate);
+        await prefs.setString('gender', defaultGender);
+        await prefs.setString('photoUrl', user.photoURL ?? '');
+        await prefs.setString('userEmail', user.email ?? '');
+        await prefs.setString('createdAt', DateTime.now().toIso8601String());
       }
 
-      // Update login status in SharedPreferences and other operations
+      // Update login status
+      await prefs.setBool('isLoggedIn', true);
     }
   }
 
@@ -179,9 +203,7 @@ class UserService {
             await _firestore.collection('users').doc(user.uid).get();
         if (!docSnapshot.exists) {
           await signUpWithGoogle(
-              context: context,
-              showErrorDialog:
-                  showErrorDialog); // signUpWithGoogle needs to be implemented
+              context: context, showErrorDialog: showErrorDialog);
         } else {
           final prefs = await SharedPreferences.getInstance();
           await prefs.setBool('isLoggedIn', true);
