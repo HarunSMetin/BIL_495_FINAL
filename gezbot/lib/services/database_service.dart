@@ -185,9 +185,8 @@ class DatabaseService {
     Map<String, Map<String, dynamic>> jsonData = {};
 
     for (var doc in querySnapshot.docs) {
-      // Add the document ID inside the data map
       Map<String, dynamic> travelData = doc.data() as Map<String, dynamic>;
-      travelData['id'] = doc.id; // Include the document ID
+      travelData['id'] = doc.id;
       jsonData[doc.id] = travelData;
     }
 

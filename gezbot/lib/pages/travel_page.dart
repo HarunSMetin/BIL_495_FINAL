@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:gezbot/services/database.dart';
+import 'package:gezbot/services/database_service.dart';
 import 'package:gezbot/pages/chat_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

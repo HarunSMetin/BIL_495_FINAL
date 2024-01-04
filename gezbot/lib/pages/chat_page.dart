@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gezbot/services/database.dart';
+import 'package:gezbot/services/database_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ChatScreen extends StatefulWidget {
