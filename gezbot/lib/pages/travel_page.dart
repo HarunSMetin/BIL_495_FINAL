@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gezbot/services/database_service.dart';
 import 'package:gezbot/pages/chat_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:gezbot/pages/travel_info.dart';
 
 class TravelsScreen extends StatefulWidget {
   @override
@@ -17,6 +18,7 @@ class Travel {
   final DateTime startDate;
   final DateTime endDate;
   final String id;
+
   // Add other fields as needed
 
   Travel({
@@ -27,7 +29,6 @@ class Travel {
     required this.endLocation,
     required this.startDate,
     required this.endDate,
-
     // Initialize other fields in constructor
   });
 
@@ -49,6 +50,7 @@ class _TravelsScreenState extends State<TravelsScreen> {
   final DatabaseService dbService = DatabaseService();
   Future<List<Travel>>? travelsFuture;
   final ScrollController _scrollController = ScrollController();
+  bool isFetchingMore = false;
 
   @override
   void initState() {
@@ -69,7 +71,6 @@ class _TravelsScreenState extends State<TravelsScreen> {
     String? userId = prefs.getString('uid');
     if (userId != null) {
       var travelsData = await dbService.GetAllTravelsOfUser(userId);
-      print(travelsData.entries.map((entry) => entry.value).toList());
       return travelsData.entries.map<Travel>((entry) {
         return Travel.fromMap({...entry.value, 'id': entry.key});
       }).toList();
@@ -80,14 +81,21 @@ class _TravelsScreenState extends State<TravelsScreen> {
 
   void _onScroll() {
     if (_scrollController.position.pixels ==
-        _scrollController.position.maxScrollExtent) {
+            _scrollController.position.maxScrollExtent &&
+        !isFetchingMore) {
       _refreshTravels();
     }
   }
 
   Future<void> _refreshTravels() async {
     setState(() {
+      isFetchingMore = true;
+    });
+    await Future.delayed(
+        Duration(seconds: 2)); // Replace with actual fetch logic
+    setState(() {
       travelsFuture = _fetchTravels();
+      isFetchingMore = false;
     });
   }
 
@@ -124,7 +132,7 @@ class _TravelsScreenState extends State<TravelsScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ChatScreen(travelId: travel.id),
+                        builder: (context) => TravelInformation(travel: travel),
                       ),
                     );
                   },
