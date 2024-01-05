@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gezbot/pages/chat_page.dart';
-import 'package:gezbot/pages/travel_page.dart';
+import 'package:gezbot/pages/chat/chat_page.dart';
+import 'package:gezbot/pages/travel/travel_page.dart';
 
 class TravelInformation extends StatelessWidget {
   final Travel travel;

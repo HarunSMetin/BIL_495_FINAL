@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:gezbot/pages/create_travel.dart';
+import 'package:gezbot/pages/travel/create_travel.dart';
 import 'package:gezbot/services/database_service.dart';
-import 'package:gezbot/pages/chat_page.dart';
+import 'package:gezbot/pages/chat/chat_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:gezbot/pages/travel_info.dart';
+import 'package:gezbot/pages/travel/travel_info.dart';
 
 class TravelsScreen extends StatefulWidget {
   @override
