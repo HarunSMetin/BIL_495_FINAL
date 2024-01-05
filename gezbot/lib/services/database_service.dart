@@ -60,6 +60,7 @@ class DatabaseService {
 */
 
 //USER_OPTIONS
+
   Future? SetUserOptions(String UserID, String QuestionID, String Answer) {
     return userCollection.doc(UserID).set({
       'userOptions': {QuestionID.substring(3): Answer},
@@ -117,10 +118,12 @@ class DatabaseService {
           messages.add(nestedResult.data() as Map<String, dynamic>);
         });
 
+        Map<String, dynamic> chatData = result.data() as Map<String, dynamic>;
+
         jsonData[result.id] = {
-          'id': result.id,
-          'lastUpdate': (result.data() as Map<String, dynamic>)['lastUpdate'],
-          'members': (result.data() as Map<String, dynamic>)['members'],
+          'id': chatData['id'],
+          'lastUpdate': chatData['lastUpdate'],
+          'members': chatData['members'],
           'messages': messages,
         };
       }
@@ -140,11 +143,12 @@ class DatabaseService {
     nestedQuerySnapshot.docs.forEach((nestedResult) {
       messages.add(nestedResult.data() as Map<String, dynamic>);
     });
-
+    Map<String, dynamic> chatData = (await chatCollection.doc(TravelID).get())
+        .data() as Map<String, dynamic>;
     jsonData[TravelID] = {
-      'id': TravelID,
-      'members': (await chatCollection.doc(TravelID).get()).data()
-          as Map<String, dynamic>,
+      'id': chatData['id'],
+      'members': chatData['members'],
+      'lastUpdate': chatData['lastUpdate'],
       'messages': messages,
     };
     return jsonData;
@@ -152,7 +156,6 @@ class DatabaseService {
 
   Future SendMessage(String TravelID, String Message, String SenderID) async {
     await chatCollection.doc(TravelID).set({
-      'id': TravelID,
       'lastUpdate': DateTime.now(),
       'members': [],
     }, SetOptions(merge: true));
@@ -178,11 +181,15 @@ class DatabaseService {
       }
     });
     // Chat Message Add
-    return await chatCollection.doc(TravelID).collection('messages').add({
+    DocumentReference doc =
+        await chatCollection.doc(TravelID).collection('messages').add({
       'message': Message,
       'sender': SenderID,
       'time': DateTime.now(),
     });
+    chatCollection.doc(TravelID).collection('messages').doc(doc.id).set({
+      'id': doc.id,
+    }, SetOptions(merge: true));
   }
 
 //TRAVELS
@@ -193,22 +200,24 @@ class DatabaseService {
     Map<String, Map<String, dynamic>> jsonData = {};
 
     for (var doc in querySnapshot.docs) {
-      Map<String, dynamic> travelData = doc.data() as Map<String, dynamic>;
-      travelData['id'] = doc.id;
-      jsonData[doc.id] = travelData;
+      jsonData[doc.id] = doc.data() as Map<String, dynamic>;
     }
 
     return jsonData;
+  }
+
+  Future<Map<String, dynamic>> GetTravelOfUser(
+      String UserID, String TravelID) async {
+    DocumentSnapshot doc = await travelsCollection.doc(TravelID).get();
+    Map<String, dynamic> travelData = doc.data() as Map<String, dynamic>;
+    return travelData;
   }
 
   Future<Map<String, dynamic>> GetTravelQuestions() async {
     QuerySnapshot querySnapshot = await travelOptionsCollection.get();
     Map<String, dynamic> jsonData = {};
     await Future.forEach(querySnapshot.docs, (result) async {
-      Map<String, dynamic> travelQuestionData =
-          result.data() as Map<String, dynamic>;
-      travelQuestionData['id'] = result.id;
-      jsonData[result.id] = travelQuestionData;
+      jsonData[result.id] = result.data() as Map<String, dynamic>;
     });
     return jsonData;
   }
