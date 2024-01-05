@@ -1,25 +1,18 @@
-import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
-import 'pages/register.dart';
-import 'pages/login_screen/login_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'pages/homepage.dart';
 import 'dart:math' as math;
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+import 'package:flutter/material.dart';
 
-  final prefs = await SharedPreferences.getInstance();
-  final isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+import 'components/center_widget/center_widget.dart';
+import 'components/login_content.dart';
 
-  runApp(MyApp(isLoggedIn: isLoggedIn));
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({Key? key}) : super(key: key);
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class MyApp extends StatelessWidget {
+class _LoginScreenState extends State<LoginScreen> {
   Widget topWidget(double screenWidth) {
     return Transform.rotate(
       angle: -35 * math.pi / 180,
@@ -59,25 +52,28 @@ class MyApp extends StatelessWidget {
     );
   }
 
-  final bool isLoggedIn;
-
-  MyApp({required this.isLoggedIn});
-
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
 
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: Stack(
+        children: [
+          Positioned(
+            top: -160,
+            left: -30,
+            child: topWidget(screenSize.width),
+          ),
+          Positioned(
+            bottom: -180,
+            left: -40,
+            child: bottomWidget(screenSize.width),
+          ),
+          CenterWidget(size: screenSize),
+          const LoginContent(),
+        ],
       ),
-      home: isLoggedIn ? HomePage() : RegisterScreen(),
-      routes: {
-        '/login': (context) => LoginScreen(),
-        '/register': (context) => RegisterScreen(),
-        '/home': (context) => HomePage(),
-      },
     );
   }
 }
