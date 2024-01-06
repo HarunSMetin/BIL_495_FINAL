@@ -222,17 +222,29 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text('${snapshot.data?['name'] ?? 'Not available'}',
-                              style: TextStyle(fontSize: 20)),
-                          IconButton(
-                            icon: Icon(Icons.edit),
-                            onPressed: () =>
-                                _updateProfile(context, 'username', userId),
-                          ),
-                        ],
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(
+                            MediaQuery.of(context).size.width / 4,
+                            MediaQuery.of(context).size.height / 5,
+                            MediaQuery.of(context).size.width / 4,
+                            0), // Adjust the value as needed
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Flexible(
+                              child: Text(
+                                '${snapshot.data?['name'] ?? 'Not available'}',
+                                style: TextStyle(fontSize: 20),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.edit),
+                              onPressed: () =>
+                                  _updateProfile(context, 'username', userId),
+                            ),
+                          ],
+                        ),
                       ),
                       SizedBox(height: 20),
                       if (snapshot.data?['photoUrl'] != '')
