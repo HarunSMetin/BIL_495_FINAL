@@ -15,10 +15,10 @@ class UserService {
   final GoogleSignIn _googleSignIn = GoogleSignIn(
       clientId:
           "1027985224810-jeioofe75dtanigd4r1vtgv4v4glemis.apps.googleusercontent.com");
+
   Future<void> registerUser({
     required String email,
     required String password,
-    required String confirmPassword,
     required String username,
     DateTime? birthDate,
     required Gender gender, // Assuming Gender is an enum
@@ -27,11 +27,6 @@ class UserService {
     required BuildContext context,
   }) async {
     try {
-      if (password != confirmPassword) {
-        showErrorDialog('Passwords do not match.');
-        return;
-      }
-
       UserCredential userCredential =
           await _auth.createUserWithEmailAndPassword(
         email: email,
@@ -131,10 +126,13 @@ class UserService {
         await prefs.setString('photoUrl', user.photoURL ?? '');
         await prefs.setString('userEmail', user.email ?? '');
         await prefs.setString('createdAt', DateTime.now().toIso8601String());
+      } else {
+        await fetchAndStoreUserDetails(user.uid);
       }
 
       // Update login status
       await prefs.setBool('isLoggedIn', true);
+      Navigator.pushReplacementNamed(context, '/home');
     }
   }
 

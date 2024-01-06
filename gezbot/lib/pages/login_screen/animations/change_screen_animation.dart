@@ -3,19 +3,20 @@ import 'package:flutter/material.dart';
 import '../components/login_content.dart';
 
 class ChangeScreenAnimation {
-  static late final AnimationController topTextController;
-  static late final Animation<Offset> topTextAnimation;
+  static late AnimationController topTextController;
+  static late Animation<Offset> topTextAnimation;
 
-  static late final AnimationController bottomTextController;
-  static late final Animation<Offset> bottomTextAnimation;
+  static late AnimationController bottomTextController;
+  static late Animation<Offset> bottomTextAnimation;
 
-  static final List<AnimationController> createAccountControllers = [];
-  static final List<Animation<Offset>> createAccountAnimations = [];
+  static List<AnimationController> createAccountControllers = [];
+  static List<Animation<Offset>> createAccountAnimations = [];
 
-  static final List<AnimationController> loginControllers = [];
-  static final List<Animation<Offset>> loginAnimations = [];
+  static List<AnimationController> loginControllers = [];
+  static List<Animation<Offset>> loginAnimations = [];
 
   static var isPlaying = false;
+  static bool isInitialized = false;
   static var currentScreen = Screens.createAccount;
 
   static Animation<Offset> _createAnimation({
@@ -36,6 +37,9 @@ class ChangeScreenAnimation {
     required int createAccountItems,
     required int loginItems,
   }) {
+    if (isInitialized) {
+      return;
+    }
     topTextController = AnimationController(
       vsync: vsync,
       duration: const Duration(milliseconds: 200),
@@ -91,6 +95,11 @@ class ChangeScreenAnimation {
         ),
       );
     }
+    isInitialized = true;
+  }
+
+  static void printError(String text) {
+    print('\x1B[31m$text\x1B[0m');
   }
 
   static void dispose() {
@@ -102,6 +111,7 @@ class ChangeScreenAnimation {
     ]) {
       controller.dispose();
     }
+    isInitialized = false;
   }
 
   static Future<void> forward() async {

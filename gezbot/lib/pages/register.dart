@@ -56,7 +56,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       await _userService.registerUser(
         email: _email,
         password: _password,
-        confirmPassword: _confirmPassword,
         username: _username,
         birthDate: _birthDate,
         gender: _gender!,

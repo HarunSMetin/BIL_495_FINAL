@@ -33,7 +33,7 @@ class _LoginContentState extends State<LoginContent>
   ) async {
     if (ChangeScreenAnimation.currentScreen == Screens.createAccount) {
       try {
-        await _userService.signInWithGoogle(
+        await _userService.signUpWithGoogle(
           context: context,
           showErrorDialog: _showErrorDialog,
         );
@@ -186,8 +186,13 @@ class _LoginContentState extends State<LoginContent>
     );
   }
 
+  void printError(String text) {
+    print('\x1B[31m$text\x1B[0m');
+  }
+
   @override
   void initState() {
+    printError("LoginContent init");
     createAccountContent = [
       inputField('Name', Ionicons.person_outline),
       inputField('Email', Ionicons.mail_outline),
@@ -230,7 +235,7 @@ class _LoginContentState extends State<LoginContent>
 
   @override
   void dispose() {
-    ChangeScreenAnimation.dispose();
+    //ChangeScreenAnimation.dispose();
 
     super.dispose();
   }
