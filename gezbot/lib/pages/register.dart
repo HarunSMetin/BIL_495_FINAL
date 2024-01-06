@@ -57,9 +57,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
         email: _email,
         password: _password,
         username: _username,
-        birthDate: _birthDate,
-        gender: _gender!,
-        imagePath: _imageFile?.path,
         showErrorDialog: _showErrorDialog,
         context: context,
       );
