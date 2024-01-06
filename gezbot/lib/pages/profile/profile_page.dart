@@ -217,71 +217,73 @@ class _ProfilePageState extends State<ProfilePage> {
           future: _getUserDetails(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
-              return Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text('${snapshot.data?['name'] ?? 'Not available'}',
-                            style: TextStyle(fontSize: 20)),
-                        IconButton(
-                          icon: Icon(Icons.edit),
-                          onPressed: () =>
-                              _updateProfile(context, 'username', userId),
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 20),
-                    if (snapshot.data?['photoUrl'] != '')
-                      Stack(
-                        alignment: Alignment.bottomRight,
+              return SafeArea(
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          CircleAvatar(
-                            backgroundImage:
-                                NetworkImage(snapshot.data!['photoUrl']!),
-                            radius: MediaQuery.of(context).size.width / 5,
-                          ),
+                          Text('${snapshot.data?['name'] ?? 'Not available'}',
+                              style: TextStyle(fontSize: 20)),
                           IconButton(
-                            icon: Icon(Icons.camera_alt),
-                            onPressed: _pickImage,
-                            color: Theme.of(context).primaryColor,
-                            iconSize: 30,
+                            icon: Icon(Icons.edit),
+                            onPressed: () =>
+                                _updateProfile(context, 'username', userId),
                           ),
                         ],
                       ),
-                    SizedBox(height: 10),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Age: ${_calculateAge(snapshot.data?['birthDate'] ?? 'Not available') != -1 ? _calculateAge(snapshot.data?['birthDate'] ?? 'Not available').toString() : 'Not available'}',
+                      SizedBox(height: 20),
+                      if (snapshot.data?['photoUrl'] != '')
+                        Stack(
+                          alignment: Alignment.bottomRight,
+                          children: [
+                            CircleAvatar(
+                              backgroundImage:
+                                  NetworkImage(snapshot.data!['photoUrl']!),
+                              radius: MediaQuery.of(context).size.width / 5,
+                            ),
+                            IconButton(
+                              icon: Icon(Icons.camera_alt),
+                              onPressed: _pickImage,
+                              color: Theme.of(context).primaryColor,
+                              iconSize: 30,
+                            ),
+                          ],
                         ),
-                        IconButton(
-                          icon: Icon(Icons.edit),
-                          onPressed: () =>
-                              _updateProfile(context, 'birth date', userId),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                            'Gender: ${snapshot.data?['gender'] ?? 'Not available'}'),
-                        IconButton(
-                          icon: Icon(Icons.edit),
-                          onPressed: () =>
-                              _updateProfile(context, 'gender', userId),
-                        ),
-                      ],
-                    ),
-                    ElevatedButton(
-                      onPressed: logout,
-                      child: Text('Logout'),
-                    ),
-                  ],
+                      SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Age: ${_calculateAge(snapshot.data?['birthDate'] ?? 'Not available') != -1 ? _calculateAge(snapshot.data?['birthDate'] ?? 'Not available').toString() : 'Not available'}',
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.edit),
+                            onPressed: () =>
+                                _updateProfile(context, 'birth date', userId),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                              'Gender: ${snapshot.data?['gender'] ?? 'Not available'}'),
+                          IconButton(
+                            icon: Icon(Icons.edit),
+                            onPressed: () =>
+                                _updateProfile(context, 'gender', userId),
+                          ),
+                        ],
+                      ),
+                      ElevatedButton(
+                        onPressed: logout,
+                        child: Text('Logout'),
+                      ),
+                    ],
+                  ),
                 ),
               );
             } else {
