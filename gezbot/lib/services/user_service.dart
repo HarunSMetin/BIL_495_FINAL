@@ -88,6 +88,22 @@ class UserService {
     }
   }
 
+  Future<void> updateUsername({
+    required String userId,
+    required String username,
+  }) async {
+    try {
+      await _firestore.collection('users').doc(userId).update({
+        'username': username,
+      });
+
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('userName', username);
+    } catch (e) {
+      throw Exception('Failed to update username: $e');
+    }
+  }
+
   Future<void> updateUserProfilePhoto({
     required String userId,
     required String imagePath,
@@ -125,6 +141,15 @@ class UserService {
 
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('birthDate', birthDate.toIso8601String());
+  }
+
+  Future<void> updateGender(
+      {required String userId, required String gender}) async {
+    await _firestore.collection('users').doc(userId).update({
+      'gender': gender,
+    });
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('gender', gender);
   }
 
   Future<void> signInWithEmailAndPassword({
