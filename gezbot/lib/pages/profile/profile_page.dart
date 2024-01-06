@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:gezbot/services/user_service.dart'; // Import UserService
@@ -12,7 +13,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   final UserService _userService = UserService(); // Instance of UserService
   late Future<Map<String, String>> userDetailsFuture;
-
+  XFile? _imageFile;
   @override
   void initState() {
     super.initState();
@@ -60,6 +61,16 @@ class _ProfilePageState extends State<ProfilePage> {
           ],
         ),
       );
+    }
+
+    void logout() async {
+      final GoogleSignIn googleSignIn = GoogleSignIn(
+          clientId:
+              "1027985224810-jeioofe75dtanigd4r1vtgv4v4glemis.apps.googleusercontent.com");
+      final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+      await googleSignIn.signOut();
+      await firebaseAuth.signOut();
+      Navigator.pushReplacementNamed(context, '/login');
     }
 
     void _updateProfile(
@@ -158,6 +169,29 @@ class _ProfilePageState extends State<ProfilePage> {
       }
     }
 
+    Future<void> _pickImage() async {
+      final pickedFile =
+          await ImagePicker().pickImage(source: ImageSource.gallery);
+
+      if (pickedFile != null) {
+        setState(() => _imageFile = pickedFile);
+
+        try {
+          await _userService.updateUserProfilePhoto(
+            userId: FirebaseAuth.instance.currentUser?.uid ?? '',
+            imagePath: _imageFile!.path,
+            showErrorDialog: _showErrorDialog,
+          );
+          // Refresh the profile
+          await _refreshUserDetails();
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Image Updated Successfully')));
+        } catch (e) {
+          _showErrorDialog('Failed to update image: ${e.toString()}');
+        }
+      }
+    }
+
     String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
     return RefreshIndicator(
       onRefresh: _refreshUserDetails,
@@ -185,10 +219,21 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     SizedBox(height: 20),
                     if (snapshot.data?['photoUrl'] != '')
-                      CircleAvatar(
-                        backgroundImage:
-                            NetworkImage(snapshot.data!['photoUrl']!),
-                        radius: MediaQuery.of(context).size.width / 5,
+                      Stack(
+                        alignment: Alignment.bottomRight,
+                        children: [
+                          CircleAvatar(
+                            backgroundImage:
+                                NetworkImage(snapshot.data!['photoUrl']!),
+                            radius: MediaQuery.of(context).size.width / 5,
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.camera_alt),
+                            onPressed: _pickImage,
+                            color: Theme.of(context).primaryColor,
+                            iconSize: 30,
+                          ),
+                        ],
                       ),
                     SizedBox(height: 10),
                     Row(
@@ -216,9 +261,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       ],
                     ),
                     ElevatedButton(
-                      onPressed: () async {
-                        // ... logout logic
-                      },
+                      onPressed: logout,
                       child: Text('Logout'),
                     ),
                   ],
