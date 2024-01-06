@@ -27,6 +27,18 @@ class _LoginContentState extends State<LoginContent>
   late final List<Widget> loginContent;
   final _userService = UserService();
 
+// Registration Controllers
+  final TextEditingController _registerEmailController =
+      TextEditingController();
+  final TextEditingController _registerPasswordController =
+      TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+
+// Login Controllers
+  final TextEditingController _loginEmailController = TextEditingController();
+  final TextEditingController _loginPasswordController =
+      TextEditingController();
+
   void login_or_register(
     BuildContext context,
     void Function(String) _showErrorDialog,
@@ -38,7 +50,7 @@ class _LoginContentState extends State<LoginContent>
           showErrorDialog: _showErrorDialog,
         );
       } catch (e) {
-        _showErrorDialog('An error occurred. Please try again.');
+        printError(e.toString());
       }
     } else {
       try {
@@ -47,12 +59,65 @@ class _LoginContentState extends State<LoginContent>
           showErrorDialog: _showErrorDialog,
         );
       } catch (e) {
-        _showErrorDialog('An error occurred. Please try again.');
+        printError(e.toString());
       }
     }
   }
 
-  Widget inputField(String hint, IconData iconData) {
+  void _showErrorDialog(String? message) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('An error occurred'),
+        content: Text(message ?? 'Unknown error'),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('Okay'),
+            onPressed: () {
+              Navigator.of(ctx).pop();
+            },
+          )
+        ],
+      ),
+    );
+  }
+
+  void _registerUser() async {
+    // Use the _userService to register the user
+    // Use _nameController.text, _emailController.text, _passwordController.text
+    UserService _userService = UserService();
+    try {
+      await _userService.registerUser(
+        email: _registerEmailController.text,
+        password: _registerPasswordController.text,
+        username: _nameController.text,
+        showErrorDialog: _showErrorDialog,
+        context: context,
+      );
+    } catch (e) {
+      printError(e.toString());
+    }
+  }
+
+  void _signInUser() async {
+    // Use the _userService to sign in the user
+    // Use _emailController.text, _passwordController.text
+    UserService _userService = UserService();
+    try {
+      await _userService.signInWithEmailAndPassword(
+        email: _loginEmailController.text,
+        password: _loginPasswordController.text,
+        showErrorDialog: _showErrorDialog,
+        context: context,
+      );
+    } catch (e) {
+      printError(e.toString());
+    }
+  }
+
+  Widget inputField(
+      String hint, IconData iconData, TextEditingController controller,
+      {bool isPassword = false}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 8),
       child: SizedBox(
@@ -63,7 +128,8 @@ class _LoginContentState extends State<LoginContent>
           color: Colors.transparent,
           borderRadius: BorderRadius.circular(30),
           child: TextField(
-            textAlignVertical: TextAlignVertical.bottom,
+            controller: controller,
+            obscureText: isPassword,
             decoration: InputDecoration(
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(30),
@@ -84,7 +150,13 @@ class _LoginContentState extends State<LoginContent>
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 75, vertical: 16),
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: () {
+          if (ChangeScreenAnimation.currentScreen == Screens.createAccount) {
+            _registerUser();
+          } else {
+            _signInUser();
+          }
+        },
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.symmetric(vertical: 14),
           shape: const StadiumBorder(),
@@ -192,24 +264,26 @@ class _LoginContentState extends State<LoginContent>
 
   @override
   void initState() {
-    printError("LoginContent init");
     createAccountContent = [
-      inputField('Name', Ionicons.person_outline),
-      inputField('Email', Ionicons.mail_outline),
-      inputField('Password', Ionicons.lock_closed_outline),
+      inputField('Name', Ionicons.person_outline, _nameController),
+      inputField('Email', Ionicons.mail_outline, _registerEmailController),
+      inputField(
+          'Password', Ionicons.lock_closed_outline, _registerPasswordController,
+          isPassword: true),
       loginButton('Sign Up'),
       orDivider(),
       logos(),
     ];
 
     loginContent = [
-      inputField('Email', Ionicons.mail_outline),
-      inputField('Password', Ionicons.lock_closed_outline),
+      inputField('Email', Ionicons.mail_outline, _loginEmailController),
+      inputField(
+          'Password', Ionicons.lock_closed_outline, _loginPasswordController,
+          isPassword: true),
       loginButton('Log In'),
       forgotPassword(),
       logos(),
     ];
-
     ChangeScreenAnimation.initialize(
       vsync: this,
       createAccountItems: createAccountContent.length,
@@ -235,6 +309,11 @@ class _LoginContentState extends State<LoginContent>
 
   @override
   void dispose() {
+    _nameController.dispose();
+    _registerEmailController.dispose();
+    _registerPasswordController.dispose();
+    _loginEmailController.dispose();
+    _loginPasswordController.dispose();
     //ChangeScreenAnimation.dispose();
 
     super.dispose();
