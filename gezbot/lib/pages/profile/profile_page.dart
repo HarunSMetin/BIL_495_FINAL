@@ -20,6 +20,23 @@ class _ProfilePageState extends State<ProfilePage> {
     userDetailsFuture = _getUserDetails();
   }
 
+  int _calculateAge(String birthDateString) {
+    if (birthDateString == 'Not available') {
+      return -1; // Indicates age is not available
+    }
+
+    DateTime birthDate = DateTime.parse(birthDateString);
+    DateTime currentDate = DateTime.now();
+    int age = currentDate.year - birthDate.year;
+    if (birthDate.month > currentDate.month ||
+        (birthDate.month == currentDate.month &&
+            birthDate.day > currentDate.day)) {
+      age--;
+    }
+
+    return age;
+  }
+
   Future<Map<String, String>> _getUserDetails() async {
     final prefs = await SharedPreferences.getInstance();
     String userEmail = prefs.getString('userEmail') ?? 'Not available';
@@ -78,7 +95,6 @@ class _ProfilePageState extends State<ProfilePage> {
       TextEditingController _controller = TextEditingController();
       late Future<void> Function() updateFunction;
 
-      // Define the update function based on the field
       switch (field) {
         case 'username':
           updateFunction = () async {
@@ -240,7 +256,8 @@ class _ProfilePageState extends State<ProfilePage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                            'Birth Date: ${snapshot.data?['birthDate'] ?? 'Not available'}'),
+                          'Age: ${_calculateAge(snapshot.data?['birthDate'] ?? 'Not available') != -1 ? _calculateAge(snapshot.data?['birthDate'] ?? 'Not available').toString() : 'Not available'}',
+                        ),
                         IconButton(
                           icon: Icon(Icons.edit),
                           onPressed: () =>
