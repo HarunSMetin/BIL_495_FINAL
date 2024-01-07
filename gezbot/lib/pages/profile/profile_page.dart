@@ -87,6 +87,9 @@ class _ProfilePageState extends State<ProfilePage> {
       final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
       await googleSignIn.signOut();
       await firebaseAuth.signOut();
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      prefs.clear();
+      
       Navigator.pushReplacementNamed(context, '/login');
     }
 
