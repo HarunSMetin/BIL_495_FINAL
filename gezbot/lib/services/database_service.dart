@@ -320,42 +320,15 @@ class DatabaseService {
     return jsonData;
   }
 
-  Future<Map<String, dynamic>> GetLastNotComplatedTravelOfUser(
-      String UserID) async {
+  Future<Map<String, dynamic>> GetLastNotCompletedTravelOfUser(
+      String userId) async {
     QuerySnapshot querySnapshot = await travelsCollection
-        .where('creatorId', isEqualTo: UserID)
+        .where('creatorId', isEqualTo: userId)
         .where('isCompleted', isEqualTo: false)
-        .orderBy('lastUpdate', descending: true)
-        .limit(1)
         .get();
     Map<String, dynamic> jsonData = {};
-
-    for (var doc in querySnapshot.docs) {
-      jsonData[doc.id] = doc.data() as Map<String, dynamic>;
-    }
-    jsonData['lastUnansweredQuestion'] = (await GetLastUnansweredQuestion(
-        UserID, querySnapshot.docs[0].id))['id'];
-    return jsonData;
-  }
-
-  Future<Map<String, dynamic>> GetLastUnansweredQuestion(
-      String UserID, String TravelID) async {
-    Map<String, dynamic> jsonData = {};
-    QuerySnapshot querySnapshot = await travelOptionsCollection.get();
-    Map<String, dynamic> travelData = {};
     await Future.forEach(querySnapshot.docs, (result) async {
-      travelData = result.data() as Map<String, dynamic>;
-      if (!(await travelsCollection
-              .doc(TravelID)
-              .get())['${result.id.substring(3)}'] &&
-          travelData['id'] != 'name' &&
-          travelData['id'] != 'description' &&
-          travelData['id'] != 'isPublic' &&
-          travelData['id'] != 'isCompleted') {
-        jsonData['id'] = travelData['id'];
-        jsonData['question'] = travelData['question'];
-        jsonData['answers'] = travelData['answers'];
-      }
+      jsonData[result.id] = result.data() as Map<String, dynamic>;
     });
     return jsonData;
   }
@@ -454,7 +427,7 @@ class DatabaseService {
       default:
         break;
     }
-
+    updateData['lastUpdatedQuestionId'] = QuestionId;
     updateData['lastUpdate'] = DateTime.now();
 
     return await travelsCollection
