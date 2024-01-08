@@ -15,7 +15,77 @@ class DatabaseService {
   final CollectionReference friendRequestsCollection =
       FirebaseFirestore.instance.collection('friendRequests');
 
-/*
+  void printInlinedJson(Map<String, dynamic> jsonData, {String indent = ''}) {
+    jsonData.forEach((key, value) {
+      if (value is Map<String, dynamic>) {
+        print('$indent$key: {');
+        printInlinedJson(value, indent: '$indent  ');
+        print('$indent}');
+      } else if (value is List) {
+        print('$indent$key: [');
+        for (var item in value) {
+          if (item is Map<String, dynamic>) {
+            printInlinedJson(item, indent: '$indent  ');
+          } else {
+            print('$indent  $item,');
+          }
+        }
+        print('$indent]');
+      } else {
+        print('$indent$key: $value,');
+      }
+    });
+  }
+
+  Future<Map<String, dynamic>> GetAllUsers() async {
+    QuerySnapshot querySnapshot = await userCollection.get();
+    Map<String, dynamic> jsonData = {};
+    await Future.forEach(querySnapshot.docs, (result) async {
+      jsonData[result.id] = result.data() as Map<String, dynamic>;
+    });
+    return jsonData;
+  }
+
+  Future<Map<String, dynamic>> GetUser(String UserID) async {
+    DocumentSnapshot doc = await userCollection.doc(UserID).get();
+    Map<String, dynamic> userData = doc.data() as Map<String, dynamic>;
+    return userData;
+  }
+
+  Future<Map<String, dynamic>> GetUserQuestions() async {
+    QuerySnapshot querySnapshot = await userOptionsCollection.get();
+    Map<String, dynamic> jsonData = {};
+    await Future.forEach(querySnapshot.docs, (result) async {
+      jsonData[result.id] = result.data() as Map<String, dynamic>;
+    });
+    return jsonData;
+  }
+
+  Future<Map<String, dynamic>> GetUserAnswersOfUser(String UserID) async {
+    Map<String, dynamic> jsonData = {};
+    QuerySnapshot querySnapshot =
+        await userCollection.where('id', isEqualTo: UserID).get();
+
+    Map<String, dynamic> userData = {};
+    await Future.forEach(querySnapshot.docs, (result) async {
+      userData = result.data() as Map<String, dynamic>;
+      jsonData[result.id] = {
+        'name': userData['name'],
+        '01_SpeedOfTravel': userData['speedOfTravel'],
+        '02_PreferredDestinations': userData['preferredDestinations'],
+        '03_MainTravelGoal': userData['mainTravelGoal'],
+        '04_TravelingPreferences': userData['travelingPreferences'],
+        '05_EveningPreferences': userData['eveningPreferences'],
+        '06_ExcitingActivities': userData['excitingActivities'],
+        '07_BudgetConsideration': userData['budgetConsideration'],
+        '08_AccommodationPreferences': userData['accommodationPreferences'],
+        '09_ExoticFoodsAttitude': userData['exoticFoodsAttitude'],
+        '10_TravelPlanningApproach': userData['travelPlanningApproach'],
+      };
+    });
+    return jsonData;
+  }
+
   Future AddQuestionToUser(
       String QuestionID, String Question, List<String> Answers) async {
     return await userOptionsCollection.doc(QuestionID).set({
@@ -57,7 +127,6 @@ class DatabaseService {
     db.AddQuestionToTravel("12_LocalRecommendations","Would you like recommendations for local events or activities happening during your stay?", ["Yes","No"]);
     */
   }
-*/
 
 //USER_OPTIONS
 
@@ -222,28 +291,98 @@ class DatabaseService {
     return jsonData;
   }
 
-  Future CreateTravel(String UserID) async {
+  Future<Map<String, dynamic>> GetTravelAnswersOfUser(String UserID) async {
+    //get this fields an values :
+    //['01_DepartureDate','02_ReturnDate','03_DesiredDestination','04_TravelTransportation','06_PurposeOfVisit','05_EstimatedBudget','07_AccommodationPreferences','08_ActivitiesPreferences','09_DietaryRestrictions','10_TravelingWithOthers','11_SpecialComment','12_LocalRecommendations']
+
+    Map<String, dynamic> jsonData = {};
+    QuerySnapshot querySnapshot =
+        await travelsCollection.where('creatorId', isEqualTo: UserID).get();
+
+    Map<String, dynamic> travelData = {};
+    await Future.forEach(querySnapshot.docs, (result) async {
+      travelData = result.data() as Map<String, dynamic>;
+      jsonData[result.id] = {
+        '01_DepartureDate': travelData['startDate'],
+        '02_ReturnDate': travelData['endDate'],
+        '03_DesiredDestination': travelData['endLocation'],
+        '04_TravelTransportation': travelData['transportation'],
+        '06_PurposeOfVisit': travelData['purpose'],
+        '05_EstimatedBudget': travelData['budget'],
+        '07_AccommodationPreferences': travelData['accommodation'],
+        '08_ActivitiesPreferences': travelData['activities'],
+        '09_DietaryRestrictions': travelData['dietaryRestrictions'],
+        '10_TravelingWithOthers': travelData['travelingWithOthers'],
+        '11_SpecialComment': travelData['specialComment'],
+        '12_LocalRecommendations': travelData['localRecommendations'],
+      };
+    });
+    return jsonData;
+  }
+
+  Future<Map<String, dynamic>> GetLastNotComplatedTravelOfUser(
+      String UserID) async {
+    QuerySnapshot querySnapshot = await travelsCollection
+        .where('creatorId', isEqualTo: UserID)
+        .where('isCompleted', isEqualTo: false)
+        .orderBy('lastUpdate', descending: true)
+        .limit(1)
+        .get();
+    Map<String, dynamic> jsonData = {};
+
+    for (var doc in querySnapshot.docs) {
+      jsonData[doc.id] = doc.data() as Map<String, dynamic>;
+    }
+    jsonData['lastUnansweredQuestion'] = (await GetLastUnansweredQuestion(
+        UserID, querySnapshot.docs[0].id))['id'];
+    return jsonData;
+  }
+
+  Future<Map<String, dynamic>> GetLastUnansweredQuestion(
+      String UserID, String TravelID) async {
+    Map<String, dynamic> jsonData = {};
+    QuerySnapshot querySnapshot = await travelOptionsCollection.get();
+    Map<String, dynamic> travelData = {};
+    await Future.forEach(querySnapshot.docs, (result) async {
+      travelData = result.data() as Map<String, dynamic>;
+      if (!(await travelsCollection
+              .doc(TravelID)
+              .get())['${result.id.substring(3)}'] &&
+          travelData['id'] != 'name' &&
+          travelData['id'] != 'description' &&
+          travelData['id'] != 'isPublic' &&
+          travelData['id'] != 'isCompleted') {
+        jsonData['id'] = travelData['id'];
+        jsonData['question'] = travelData['question'];
+        jsonData['answers'] = travelData['answers'];
+      }
+    });
+    return jsonData;
+  }
+
+  Future CreateTravel(String UserID, String travelName) async {
     var documentReference = await travelsCollection.add({
       'creatorId': UserID,
       'createdAt': DateTime.now(),
       'lastUpdate': DateTime.now(),
       'members': [UserID],
-      'name': 'New Travel',
-      'description': 'New Travel Description',
-      'startDate': DateTime.now(),
-      'endDate': DateTime.now(),
-      'startLocation': 'New Travel Start Location',
-      'endLocation': 'New Travel End Location',
+      'name': travelName,
+      'description': '',
+      'startDate': DateTime(1010, 10, 10),
+      'endDate': DateTime(1010, 10, 10),
+      'startLocation': '',
+      'endLocation': '',
       'isPublic': false,
-      'transportation': 'New Travel Transportation',
-      'purpose': 'New Travel Purpose',
-      'budget': 'New Travel Budget',
-      'accommodation': 'New Travel Accommodation',
-      'activities': 'New Travel Activities',
-      'dietaryRestrictions': 'New Travel Dietary Restrictions',
-      'travelingWithOthers': 'New Travel Traveling With Others',
-      'specialComment': 'New Travel Special Comment',
-      'localRecommendations': 'New Travel Local Recommendations',
+      'transportation': '',
+      'purpose': '',
+      'budget': '',
+      'accommodation': '',
+      'activities': '',
+      'dietaryRestrictions': '',
+      'travelingWithOthers': '',
+      'specialComment': '',
+      'localRecommendations': '',
+      'isCompleted': false,
     });
     travelOptionsCollection.doc(documentReference.id).set({
       'id': documentReference.id,
@@ -309,7 +448,9 @@ class DatabaseService {
       case 'isPublic':
         updateData['isPublic'] = answer;
         break;
-
+      case 'isCompleted':
+        updateData['isCompleted'] = answer;
+        break;
       default:
         break;
     }
