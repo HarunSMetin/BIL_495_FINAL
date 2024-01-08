@@ -28,7 +28,15 @@ class DatabaseService {
     '10_TravelPlanningApproach',
   ];
 
-  final List<String> travelQuestions = [
+  final List<String> travelFields = [
+    'lastUpdatedQuestionId',
+    'creatorId',
+    'name',
+    'description',
+    'isPublic',
+    'isCompleted',
+    'lastUpdate',
+    'members',
     '01_DepartureDate',
     '02_ReturnDate',
     '03_DesiredDestination',
