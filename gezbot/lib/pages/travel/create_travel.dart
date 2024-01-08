@@ -1,16 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gezbot/services/database_service.dart';
-
-class TravelQuestion {
-  String questionId;
-  String question;
-  List<String> answers;
-
-  TravelQuestion(
-      {required this.questionId,
-      required this.question,
-      required this.answers});
-}
+import 'package:gezbot/models/question.model.dart';
+import 'package:gezbot/components/Question.dart';
 
 class TravelQuestionService {
   final _database_service = DatabaseService();
@@ -18,31 +9,15 @@ class TravelQuestionService {
   Future<List<TravelQuestion>> fetchQuestions() async {
     Map<String, dynamic> jsonData =
         await _database_service.GetTravelQuestions();
+
     return jsonData.entries.map<TravelQuestion>((entry) {
       return TravelQuestion(
         questionId: entry.key,
         question: entry.value['question'],
         answers: List<String>.from(entry.value['answers']),
+        questionType: entry.value['questionType'],
       );
     }).toList();
-  }
-}
-
-class QuestionWidget extends StatelessWidget {
-  final TravelQuestion question;
-
-  QuestionWidget({required Key key, required this.question}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text(question.question),
-        ...question.answers.map((answer) => Text(answer)).toList(),
-        // TODO: Add logic to display different types of answers (e.g., calendar, checkboxes)
-      ],
-    );
   }
 }
 
@@ -65,6 +40,10 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
 
   void _loadQuestions() async {
     var questions = await _service.fetchQuestions();
+    questions.forEach((element) {
+      print(element.question);
+      print(element.answers);
+    });
     setState(() {
       _questions = questions;
     });

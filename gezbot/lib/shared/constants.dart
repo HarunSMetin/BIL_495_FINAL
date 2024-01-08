@@ -14,3 +14,5 @@ const TextInputDecoration = InputDecoration(
 const kBackgroundColor = Color(0xFFD2FFF4);
 const kPrimaryColor = Color(0xFF2D5D70);
 const kSecondaryColor = Color(0xFF265DAB);
+
+enum QuestionType { openEnded, date, multipleChoice, numberInput, yesNo }
