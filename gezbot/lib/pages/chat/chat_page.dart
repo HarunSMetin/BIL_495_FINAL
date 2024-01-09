@@ -16,8 +16,8 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   final DatabaseService dbService = DatabaseService();
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-  late Future<Map<String, dynamic>> messagesFuture;
-  late Future<Map<String, dynamic>> travelInfoFuture;
+  late Future<Map<String, dynamic>?> messagesFuture;
+  late Future<Map<String, dynamic>?> travelInfoFuture;
   late final prefs;
   @override
   void initState() {
@@ -75,7 +75,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
     }
   }
 
-  void _updateMessagesAndScroll() {
+  void _updateMessagesAndScroll() async {
     setState(() {
       messagesFuture = dbService.GetMessagesOfChat(widget.travelId);
     });
@@ -91,14 +91,14 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: FutureBuilder<Map<String, dynamic>>(
+        title: FutureBuilder<Map<String, dynamic>?>(
           future: travelInfoFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Text('Loading...');
             }
             if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
+              return Text('Error : ${snapshot.error}');
             }
             if (!snapshot.hasData) {
               return Text('No Data');
@@ -117,18 +117,19 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
       body: Column(
         children: <Widget>[
           Expanded(
-            child: FutureBuilder<Map<String, dynamic>>(
+            child: FutureBuilder<Map<String, dynamic>?>(
               future: messagesFuture,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return Center(child: CircularProgressIndicator());
                 }
-                if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                }
                 if (!snapshot.hasData ||
+                    snapshot.data == null ||
                     snapshot.data![widget.travelId]['messages'] == null) {
                   return Center(child: Text('No Messages'));
+                }
+                if (snapshot.hasError) {
+                  return Center(child: Text('Error : ${snapshot.error}'));
                 }
 
                 var messages = snapshot.data![widget.travelId]['messages']
@@ -146,8 +147,8 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                           ? MessageBoxSenderMessage
                           : MessageBoxRecieverMessage,
                       margin: isCurrentUser
-                          ? EdgeInsets.only(left: 50.0)
-                          : EdgeInsets.only(right: 50.0),
+                          ? EdgeInsets.only(right: 5.0, left: 50.0, top: 8.0)
+                          : EdgeInsets.only(right: 50.0, left: 5.0, top: 8.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

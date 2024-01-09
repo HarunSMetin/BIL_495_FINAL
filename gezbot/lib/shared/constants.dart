@@ -17,10 +17,10 @@ TextStyle MessageBoxMessage = const TextStyle(
   color: Colors.white,
 );
 BoxDecoration MessageBoxSenderMessage = BoxDecoration(
-    color: Color.fromARGB(255, 140, 203, 245),
+    color: Color.fromARGB(255, 127, 184, 223),
     borderRadius: BorderRadius.circular(10.0));
 BoxDecoration MessageBoxRecieverMessage = BoxDecoration(
-    color: Color.fromARGB(255, 255, 255, 255),
+    color: Color.fromARGB(255, 153, 153, 153),
     borderRadius: BorderRadius.circular(10.0));
 
 const kBackgroundColor = Color(0xFFD2FFF4);

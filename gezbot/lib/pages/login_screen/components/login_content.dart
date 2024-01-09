@@ -153,9 +153,6 @@ class _LoginContentState extends State<LoginContent>
       padding: const EdgeInsets.symmetric(horizontal: 75, vertical: 16),
       child: ElevatedButton(
         onPressed: () {
-          DatabaseService databaseService = DatabaseService();
-          databaseService.CreateTravel(
-              'etRuUvcetZNpuu7r8cq6tcKJAxJ2', 'Harun\'s Travel');
           if (ChangeScreenAnimation.currentScreen == Screens.createAccount) {
             _registerUser();
           } else {
