@@ -15,6 +15,41 @@ class DatabaseService {
   final CollectionReference friendRequestsCollection =
       FirebaseFirestore.instance.collection('friendRequests');
 
+  final List<String> userQuestions = [
+    '01_SpeedOfTravel',
+    '02_PreferredDestinations',
+    '03_MainTravelGoal',
+    '04_TravelingPreferences',
+    '05_EveningPreferences',
+    '06_ExcitingActivities',
+    '07_BudgetConsideration',
+    '08_AccommodationPreferences',
+    '09_ExoticFoodsAttitude',
+    '10_TravelPlanningApproach',
+  ];
+
+  final List<String> travelFields = [
+    'lastUpdatedQuestionId',
+    'creatorId',
+    'name',
+    'description',
+    'isPublic',
+    'isCompleted',
+    'lastUpdate',
+    'members',
+    '01_DepartureDate',
+    '02_ReturnDate',
+    '03_DesiredDestination',
+    '04_TravelTransportation',
+    '06_PurposeOfVisit',
+    '05_EstimatedBudget',
+    '07_AccommodationPreferences',
+    '08_ActivitiesPreferences',
+    '09_DietaryRestrictions',
+    '10_TravelingWithOthers',
+    '11_SpecialComment',
+    '12_LocalRecommendations'
+  ];
   void printInlinedJson(Map<String, dynamic> jsonData, {String indent = ''}) {
     jsonData.forEach((key, value) {
       if (value is Map<String, dynamic>) {
@@ -61,31 +96,7 @@ class DatabaseService {
     return jsonData;
   }
 
-  Future<Map<String, dynamic>> GetUserAnswersOfUser(String UserID) async {
-    Map<String, dynamic> jsonData = {};
-    QuerySnapshot querySnapshot =
-        await userCollection.where('id', isEqualTo: UserID).get();
-
-    Map<String, dynamic> userData = {};
-    await Future.forEach(querySnapshot.docs, (result) async {
-      userData = result.data() as Map<String, dynamic>;
-      jsonData[result.id] = {
-        'name': userData['name'],
-        '01_SpeedOfTravel': userData['speedOfTravel'],
-        '02_PreferredDestinations': userData['preferredDestinations'],
-        '03_MainTravelGoal': userData['mainTravelGoal'],
-        '04_TravelingPreferences': userData['travelingPreferences'],
-        '05_EveningPreferences': userData['eveningPreferences'],
-        '06_ExcitingActivities': userData['excitingActivities'],
-        '07_BudgetConsideration': userData['budgetConsideration'],
-        '08_AccommodationPreferences': userData['accommodationPreferences'],
-        '09_ExoticFoodsAttitude': userData['exoticFoodsAttitude'],
-        '10_TravelPlanningApproach': userData['travelPlanningApproach'],
-      };
-    });
-    return jsonData;
-  }
-
+/*
   Future AddQuestionToUser(
       String QuestionID, String Question, List<String> Answers) async {
     return await userOptionsCollection.doc(QuestionID).set({
@@ -127,10 +138,11 @@ class DatabaseService {
     db.AddQuestionToTravel("12_LocalRecommendations","Would you like recommendations for local events or activities happening during your stay?", ["Yes","No"]);
     */
   }
+*/
 
 //USER_OPTIONS
 
-  Future? SetUserOptions(String UserID, String QuestionID, String Answer) {
+  Future SetUserOptions(String UserID, String QuestionID, String Answer) async {
     return userCollection.doc(UserID).set({
       'userOptions': {QuestionID.substring(3): Answer},
     }, SetOptions(merge: true));
@@ -262,6 +274,7 @@ class DatabaseService {
   }
 
 //TRAVELS
+
   Future<Map<String, Map<String, dynamic>>> GetAllTravelsOfUser(
       String UserID) async {
     QuerySnapshot querySnapshot =
@@ -292,7 +305,6 @@ class DatabaseService {
   }
 
   Future<Map<String, dynamic>> GetTravelAnswersOfUser(String UserID) async {
-    //get this fields an values :
     //['01_DepartureDate','02_ReturnDate','03_DesiredDestination','04_TravelTransportation','06_PurposeOfVisit','05_EstimatedBudget','07_AccommodationPreferences','08_ActivitiesPreferences','09_DietaryRestrictions','10_TravelingWithOthers','11_SpecialComment','12_LocalRecommendations']
 
     Map<String, dynamic> jsonData = {};
@@ -303,18 +315,19 @@ class DatabaseService {
     await Future.forEach(querySnapshot.docs, (result) async {
       travelData = result.data() as Map<String, dynamic>;
       jsonData[result.id] = {
-        '01_DepartureDate': travelData['startDate'],
-        '02_ReturnDate': travelData['endDate'],
-        '03_DesiredDestination': travelData['endLocation'],
-        '04_TravelTransportation': travelData['transportation'],
-        '06_PurposeOfVisit': travelData['purpose'],
-        '05_EstimatedBudget': travelData['budget'],
-        '07_AccommodationPreferences': travelData['accommodation'],
-        '08_ActivitiesPreferences': travelData['activities'],
-        '09_DietaryRestrictions': travelData['dietaryRestrictions'],
-        '10_TravelingWithOthers': travelData['travelingWithOthers'],
-        '11_SpecialComment': travelData['specialComment'],
-        '12_LocalRecommendations': travelData['localRecommendations'],
+        '01_DepartureDate': travelData['01_DepartureDate'],
+        '02_ReturnDate': travelData['02_ReturnDate'],
+        '03_DesiredDestination': travelData['03_DesiredDestination'],
+        '04_TravelTransportation': travelData['04_TravelTransportation'],
+        '06_PurposeOfVisit': travelData['06_PurposeOfVisit'],
+        '05_EstimatedBudget': travelData['05_EstimatedBudget'],
+        '07_AccommodationPreferences':
+            travelData['07_AccommodationPreferences'],
+        '08_ActivitiesPreferences': travelData['08_ActivitiesPreferences'],
+        '09_DietaryRestrictions': travelData['09_DietaryRestrictions'],
+        '10_TravelingWithOthers': travelData['10_TravelingWithOthers'],
+        '11_SpecialComment': travelData['11_SpecialComment'],
+        '12_LocalRecommendations': travelData['12_LocalRecommendations'],
       };
     });
     return jsonData;
@@ -335,27 +348,26 @@ class DatabaseService {
 
   Future CreateTravel(String UserID, String travelName) async {
     var documentReference = await travelsCollection.add({
+      'lastUpdatedQuestionId': '',
       'creatorId': UserID,
-      'createdAt': DateTime.now(),
-      'lastUpdate': DateTime.now(),
-      'members': [UserID],
       'name': travelName,
       'description': '',
-      'startDate': DateTime(1010, 10, 10),
-      'endDate': DateTime(1010, 10, 10),
-      'startLocation': '',
-      'endLocation': '',
       'isPublic': false,
-      'transportation': '',
-      'purpose': '',
-      'budget': '',
-      'accommodation': '',
-      'activities': '',
-      'dietaryRestrictions': '',
-      'travelingWithOthers': '',
-      'specialComment': '',
-      'localRecommendations': '',
       'isCompleted': false,
+      'lastUpdate': DateTime.now(),
+      'members': [UserID],
+      '01_DepartureDate': DateTime(1010, 10, 10),
+      '02_ReturnDate': DateTime(1010, 10, 10),
+      '03_DesiredDestination': '',
+      '04_TravelTransportation': '',
+      '06_PurposeOfVisit': '',
+      '05_EstimatedBudget': '',
+      '07_AccommodationPreferences': '',
+      '08_ActivitiesPreferences': '',
+      '09_DietaryRestrictions': '',
+      '10_TravelingWithOthers': '',
+      '11_SpecialComment': '',
+      '12_LocalRecommendations': '',
     });
     travelOptionsCollection.doc(documentReference.id).set({
       'id': documentReference.id,
@@ -372,61 +384,8 @@ class DatabaseService {
   Future UpdateTravel(
       String TravelID, String QuestionId, dynamic answer) async {
     Map<String, dynamic> updateData = {};
-    switch (QuestionId) {
-      case '01_DepartureDate':
-        updateData['startDate'] = answer;
-        break;
-      case '02_ReturnDate':
-        updateData['endDate'] = answer;
-        break;
-      case '03_DesiredDestination':
-        updateData['endLocation'] = answer;
-        break;
-      case 'startLocation':
-        updateData['startLocation'] = answer;
-        break;
-      case '04_TravelTransportation':
-        updateData['transportation'] = answer;
-        break;
-      case '06_PurposeOfVisit':
-        updateData['purpose'] = answer;
-        break;
-      case '05_EstimatedBudget':
-        updateData['budget'] = answer;
-        break;
-      case '07_AccommodationPreferences':
-        updateData['accommodation'] = answer;
-        break;
-      case '08_ActivitiesPreferences':
-        updateData['activities'] = answer;
-        break;
-      case '09_DietaryRestrictions':
-        updateData['dietaryRestrictions'] = answer;
-        break;
-      case '10_TravelingWithOthers':
-        updateData['travelingWithOthers'] = answer;
-        break;
-      case '11_SpecialComment':
-        updateData['specialComment'] = answer;
-        break;
-      case '12_LocalRecommendations':
-        updateData['localRecommendations'] = answer;
-        break;
-      case 'name':
-        updateData['name'] = answer;
-        break;
-      case 'description':
-        updateData['description'] = answer;
-        break;
-      case 'isPublic':
-        updateData['isPublic'] = answer;
-        break;
-      case 'isCompleted':
-        updateData['isCompleted'] = answer;
-        break;
-      default:
-        break;
-    }
+
+    updateData['QuestionId'] = answer;
     updateData['lastUpdatedQuestionId'] = QuestionId;
     updateData['lastUpdate'] = DateTime.now();
 
