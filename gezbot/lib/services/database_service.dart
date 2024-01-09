@@ -346,6 +346,8 @@ class DatabaseService {
     return jsonData;
   }
 
+  //Get lastCompletedQuestionOfTravel database contaions: lastUpdatedQuestionId on travels
+
   Future CreateTravel(String UserID, String travelName) async {
     var documentReference = await travelsCollection.add({
       'lastUpdatedQuestionId': '',
@@ -392,6 +394,12 @@ class DatabaseService {
     return await travelsCollection
         .doc(TravelID)
         .set(updateData, SetOptions(merge: true));
+  }
+
+  Future getLastQuestionOfTravel(String TravelID) async {
+    return (await travelsCollection
+        .doc(TravelID)
+        .get())['lastUpdatedQuestionId'];
   }
 
   Future AddFriendToTravel(
