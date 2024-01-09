@@ -278,7 +278,7 @@ class DatabaseService {
   Future<Map<String, Map<String, dynamic>>> GetAllTravelsOfUser(
       String UserID) async {
     QuerySnapshot querySnapshot =
-        await travelsCollection.where('creatorId', isEqualTo: UserID).get();
+        await travelsCollection.where('members', arrayContains: UserID).get();
     Map<String, Map<String, dynamic>> jsonData = {};
 
     for (var doc in querySnapshot.docs) {
@@ -288,8 +288,7 @@ class DatabaseService {
     return jsonData;
   }
 
-  Future<Map<String, dynamic>> GetTravelOfUser(
-      String UserID, String TravelID) async {
+  Future<Map<String, dynamic>> GetTravelOfUser(String TravelID) async {
     DocumentSnapshot doc = await travelsCollection.doc(TravelID).get();
     Map<String, dynamic> travelData = doc.data() as Map<String, dynamic>;
     return travelData;

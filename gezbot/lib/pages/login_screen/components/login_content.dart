@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:gezbot/pages/travel/travel_page.dart';
+import 'package:gezbot/services/database_service.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:gezbot/utils/helper_functions.dart';
 
@@ -151,6 +153,9 @@ class _LoginContentState extends State<LoginContent>
       padding: const EdgeInsets.symmetric(horizontal: 75, vertical: 16),
       child: ElevatedButton(
         onPressed: () {
+          DatabaseService databaseService = DatabaseService();
+          databaseService.CreateTravel(
+              'etRuUvcetZNpuu7r8cq6tcKJAxJ2', 'Harun\'s Travel');
           if (ChangeScreenAnimation.currentScreen == Screens.createAccount) {
             _registerUser();
           } else {
