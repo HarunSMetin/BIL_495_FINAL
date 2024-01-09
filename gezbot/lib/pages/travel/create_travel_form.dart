@@ -40,10 +40,7 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
 
   void _loadQuestions() async {
     var questions = await _service.fetchQuestions();
-    questions.forEach((element) {
-      print(element.question);
-      print(element.answers);
-    });
+
     setState(() {
       _questions = questions;
     });
@@ -69,7 +66,7 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
               children: <Widget>[
                 Expanded(
                   child: QuestionWidget(
-                      key: UniqueKey(), // Providing a unique key
+                      key: UniqueKey(),
                       question: _questions[_currentQuestionIndex]),
                 ),
                 LinearProgressIndicator(

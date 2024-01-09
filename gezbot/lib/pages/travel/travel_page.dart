@@ -1,50 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:gezbot/pages/travel/create_travel.dart';
+import 'package:gezbot/pages/travel/create_travel_form.dart';
 import 'package:gezbot/services/database_service.dart';
 import 'package:gezbot/pages/chat/chat_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gezbot/pages/travel/travel_info.dart';
+import 'package:gezbot/pages/travel/pre_create_travel.dart';
+import 'package:gezbot/models/travel.model.dart';
 
 class TravelsScreen extends StatefulWidget {
   @override
   _TravelsScreenState createState() => _TravelsScreenState();
-}
-
-class Travel {
-  final String name;
-  final String description;
-  final String startLocation;
-  final String endLocation;
-  final DateTime startDate;
-  final DateTime endDate;
-  final String id;
-
-  // Add other fields as needed
-
-  Travel({
-    required this.id,
-    required this.name,
-    required this.description,
-    required this.startLocation,
-    required this.endLocation,
-    required this.startDate,
-    required this.endDate,
-    // Initialize other fields in constructor
-  });
-
-  factory Travel.fromMap(Map<String, dynamic> map) {
-    return Travel(
-      id: map['id'],
-      name: map['name'],
-      description: map['description'],
-      startLocation: map['startLocation'],
-      endLocation: map['endLocation'],
-      startDate: (map['startDate'] as Timestamp).toDate(),
-      endDate: (map['endDate'] as Timestamp).toDate(),
-      // Initialize other fields using the map
-    );
-  }
 }
 
 class _TravelsScreenState extends State<TravelsScreen> {
@@ -52,6 +18,7 @@ class _TravelsScreenState extends State<TravelsScreen> {
   Future<List<Travel>>? travelsFuture;
   final ScrollController _scrollController = ScrollController();
   bool isFetchingMore = false;
+  late final prefs;
 
   @override
   void initState() {
@@ -68,7 +35,7 @@ class _TravelsScreenState extends State<TravelsScreen> {
   }
 
   Future<List<Travel>> _fetchTravels() async {
-    final prefs = await SharedPreferences.getInstance();
+    prefs = await SharedPreferences.getInstance();
     String? userId = prefs.getString('uid');
     if (userId != null) {
       var travelsData = await dbService.GetAllTravelsOfUser(userId);
@@ -105,11 +72,37 @@ class _TravelsScreenState extends State<TravelsScreen> {
     return Scaffold(
       appBar: AppBar(title: Text('Travels')),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
+        onPressed: () async {
+          print("here");
+          await dbService.GetLastNotCompletedTravelOfUser(
+                  prefs.getString('uid'))
+              .then((value) {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                if (value.values.isEmpty) {
+                  return const Dialog(
+                    child: PreTravelCreation(
+                      travel: null,
+                    ),
+                  );
+                } else {
+                  return Dialog(
+                    child: PreTravelCreation(
+                      travel: Travel.fromMap(
+                          {...value.values.first, 'id': value.keys.first}),
+                    ),
+                  );
+                }
+              },
+            );
+          });
+          /*
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => TravelQuestionnaireForm()),
           );
+          */
         },
         child: Icon(Icons.add),
         tooltip: 'Add Travel',

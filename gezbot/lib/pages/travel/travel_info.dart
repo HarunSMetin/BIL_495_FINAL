@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gezbot/pages/chat/chat_page.dart';
 import 'package:gezbot/pages/travel/travel_page.dart';
+import 'package:gezbot/models/travel.model.dart';
 
 class TravelInformation extends StatelessWidget {
   final Travel travel;
@@ -18,14 +19,6 @@ class TravelInformation extends StatelessWidget {
           children: <Widget>[
             Text("Description: ${travel.description}"),
             SizedBox(height: 8),
-            Text("Start Location: ${travel.startLocation}"),
-            SizedBox(height: 8),
-            Text("End Location: ${travel.endLocation}"),
-            SizedBox(height: 8),
-            Text("Start Date: ${travel.startDate}"),
-            SizedBox(height: 8),
-            Text("End Date: ${travel.endDate}"),
-            SizedBox(height: 20),
             ElevatedButton(
               onPressed: () => _openChatScreen(context, travel.id),
               child: Text('Chat about this travel'),
