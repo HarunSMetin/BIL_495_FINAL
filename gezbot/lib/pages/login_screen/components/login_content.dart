@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gezbot/pages/travel/travel_page.dart';
 import 'package:gezbot/services/database_service.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:gezbot/utils/helper_functions.dart';

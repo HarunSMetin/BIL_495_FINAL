@@ -114,110 +114,118 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
           ),
         ],
       ),
-      body: Column(
-        children: <Widget>[
-          Expanded(
-            child: FutureBuilder<Map<String, dynamic>?>(
-              future: messagesFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                }
-                if (!snapshot.hasData ||
-                    snapshot.data == null ||
-                    snapshot.data![widget.travelId]['messages'] == null) {
-                  return Center(child: Text('No Messages'));
-                }
-                if (snapshot.hasError) {
-                  return Center(child: Text('Error : ${snapshot.error}'));
-                }
-
-                var messages = snapshot.data![widget.travelId]['messages']
-                    as List<Map<String, dynamic>>;
-                return ListView.builder(
-                  controller: _scrollController,
-                  itemCount: messages.length,
-                  itemBuilder: (context, index) {
-                    //TODO : check if the message is from the current user (async problem)
-                    final isCurrentUser =
-                        (messages[index]['sender'] == prefs.getString('uid'));
-                    return Container(
-                      padding: EdgeInsets.all(12.0),
-                      decoration: isCurrentUser
-                          ? MessageBoxSenderMessage
-                          : MessageBoxRecieverMessage,
-                      margin: isCurrentUser
-                          ? EdgeInsets.only(right: 5.0, left: 50.0, top: 8.0)
-                          : EdgeInsets.only(right: 50.0, left: 5.0, top: 8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          FutureBuilder<Map<String, dynamic>>(
-                            future:
-                                dbService.GetUser(messages[index]['sender']),
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return Text(
-                                  'Loading...',
-                                  style: MessageBoxName,
-                                );
-                              }
-                              if (snapshot.hasError) {
-                                return Text(
-                                  'Error: ${snapshot.error}',
-                                  style: MessageBoxName,
-                                );
-                              }
-                              if (!snapshot.hasData) {
-                                return Text(
-                                  'No Data',
-                                  style: MessageBoxName,
-                                );
-                              }
-                              var senderName = snapshot.data!;
-                              return Text(
-                                senderName['userName'] + ' :',
-                                style: MessageBoxName,
-                              );
-                            },
-                          ),
-                          SizedBox(height: 4.0),
-                          Text(messages[index]['message'],
-                              style: MessageBoxMessage),
-                        ],
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
+      body: Container(
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: AssetImage("assets/images/chat_background.jpg"),
+            fit: BoxFit.cover,
           ),
-          Padding(
-            padding: EdgeInsets.all(8.0),
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: TextField(
-                    controller: _messageController,
-                    decoration: InputDecoration(
-                      labelText: 'Type a message...',
-                      filled: true,
-                      fillColor: Colors.white,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(25.0),
+        ),
+        child: Column(
+          children: <Widget>[
+            Expanded(
+              child: FutureBuilder<Map<String, dynamic>?>(
+                future: messagesFuture,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  }
+                  if (!snapshot.hasData ||
+                      snapshot.data == null ||
+                      snapshot.data![widget.travelId]['messages'] == null) {
+                    return Center(child: Text('No Messages'));
+                  }
+                  if (snapshot.hasError) {
+                    return Center(child: Text('Error : ${snapshot.error}'));
+                  }
+
+                  var messages = snapshot.data![widget.travelId]['messages']
+                      as List<Map<String, dynamic>>;
+                  return ListView.builder(
+                    controller: _scrollController,
+                    itemCount: messages.length,
+                    itemBuilder: (context, index) {
+                      //TODO : check if the message is from the current user (async problem)
+                      final isCurrentUser =
+                          (messages[index]['sender'] == prefs.getString('uid'));
+                      return Container(
+                        padding: EdgeInsets.all(12.0),
+                        decoration: isCurrentUser
+                            ? MessageBoxSenderMessage
+                            : MessageBoxRecieverMessage,
+                        margin: isCurrentUser
+                            ? EdgeInsets.only(right: 5.0, left: 50.0, top: 8.0)
+                            : EdgeInsets.only(right: 50.0, left: 5.0, top: 8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            FutureBuilder<Map<String, dynamic>>(
+                              future:
+                                  dbService.GetUser(messages[index]['sender']),
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return Text(
+                                    'Loading...',
+                                    style: MessageBoxName,
+                                  );
+                                }
+                                if (snapshot.hasError) {
+                                  return Text(
+                                    'Error: ${snapshot.error}',
+                                    style: MessageBoxName,
+                                  );
+                                }
+                                if (!snapshot.hasData) {
+                                  return Text(
+                                    'No Data',
+                                    style: MessageBoxName,
+                                  );
+                                }
+                                var senderName = snapshot.data!;
+                                return Text(
+                                  senderName['userName'] + ' :',
+                                  style: MessageBoxName,
+                                );
+                              },
+                            ),
+                            SizedBox(height: 4.0),
+                            Text(messages[index]['message'],
+                                style: MessageBoxMessage),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: TextField(
+                      controller: _messageController,
+                      decoration: InputDecoration(
+                        labelText: 'Type a message...',
+                        filled: true,
+                        fillColor: Colors.white,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(25.0),
+                        ),
                       ),
                     ),
                   ),
-                ),
-                IconButton(
-                  icon: Icon(Icons.send),
-                  onPressed: _sendMessage,
-                ),
-              ],
+                  IconButton(
+                    icon: Icon(Icons.send),
+                    onPressed: _sendMessage,
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
