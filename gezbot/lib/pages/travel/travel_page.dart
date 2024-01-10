@@ -59,93 +59,90 @@ class _TravelsScreenState extends State<TravelsScreen> {
     setState(() {
       isFetchingMore = true;
     });
-    await Future.delayed(
-        Duration(seconds: 2)); // TODO:Replace with actual fetch logic
+
     setState(() {
       travelsFuture = _fetchTravels();
       isFetchingMore = false;
     });
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text('Image Updated Successfully')));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Travels')),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          print("here");
-          await dbService.GetLastNotCompletedTravelOfUser(
-                  prefs.getString('uid'))
-              .then((value) {
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                if (value.values.isEmpty) {
-                  return const Dialog(
-                    child: PreTravelCreation(
-                      travel: null,
-                    ),
-                  );
-                } else {
-                  return Dialog(
-                    child: PreTravelCreation(
-                      travel: Travel.fromMap(
-                          {...value.values.first, 'id': value.keys.first}),
-                    ),
-                  );
-                }
-              },
-            );
-          });
-          /*
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => TravelQuestionnaireForm()),
-          );
-          */
-        },
-        child: Icon(Icons.add),
-        tooltip: 'Add Travel',
-      ),
-      body: RefreshIndicator(
-        onRefresh: _refreshTravels,
-        child: FutureBuilder<List<Travel>>(
-          future: travelsFuture,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator());
-            }
-            if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
-            }
-            if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return Center(child: Text('No Travels Found'));
-            }
-
-            List<Travel> travels = snapshot.data!;
-            return ListView.builder(
-              controller: _scrollController,
-              itemCount: travels.length,
-              itemBuilder: (context, index) {
-                Travel travel = travels[index];
-                return ListTile(
-                  key: ValueKey(travel.id),
-                  title: Text(travel.name),
-                  subtitle: Text(travel.description),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => TravelInformation(travel: travel),
+        appBar: AppBar(title: Text('Travels')),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+            print("here");
+            await dbService.GetLastNotCompletedTravelOfUser(
+                    prefs.getString('uid'))
+                .then((value) {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  if (value.values.isEmpty) {
+                    return const Dialog(
+                      child: PreTravelCreation(
+                        travel: null,
                       ),
                     );
-                  },
-                );
-              },
-            );
+                  } else {
+                    return Dialog(
+                      child: PreTravelCreation(
+                        travel: Travel.fromMap(
+                            {...value.values.last, 'id': value.keys.last}),
+                      ),
+                    );
+                  }
+                },
+              );
+            });
           },
+          child: Icon(Icons.add),
+          tooltip: 'Add Travel',
         ),
-      ),
-    );
+        body: RefreshIndicator(
+          onRefresh: _refreshTravels,
+          child: FutureBuilder<List<Travel>>(
+            future: travelsFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              }
+              if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              }
+              if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return Center(child: Text('No Travels Found'));
+              }
+
+              List<Travel> travels = snapshot.data!;
+              return Expanded(
+                child: ListView.builder(
+                  controller: _scrollController,
+                  itemCount: travels.length,
+                  itemBuilder: (context, index) {
+                    Travel travel = travels[index];
+                    return ListTile(
+                      key: ValueKey(travel.id),
+                      title: Text(travel.name),
+                      subtitle: Text(travel.description),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                TravelInformation(travel: travel),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
+              );
+            },
+          ),
+        ));
   }
 }

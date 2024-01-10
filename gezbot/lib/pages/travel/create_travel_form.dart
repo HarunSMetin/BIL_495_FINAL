@@ -11,17 +11,24 @@ class TravelQuestionService {
         await _database_service.GetTravelQuestions();
 
     return jsonData.entries.map<TravelQuestion>((entry) {
+      // Use the null-aware operator to provide a fallback for potential null values
       return TravelQuestion(
         questionId: entry.key,
-        question: entry.value['question'],
-        answers: List<String>.from(entry.value['answers']),
-        questionType: entry.value['questionType'],
+        question:
+            entry.value['question'] ?? 'Default Question', // Fallback if null
+        answers:
+            List<String>.from(entry.value['answers'] ?? []), // Fallback if null
+        questionType:
+            entry.value['questionType'] ?? 'Default Type', // Fallback if null
       );
     }).toList();
   }
 }
 
 class TravelQuestionnaireForm extends StatefulWidget {
+  final String travelId;
+
+  const TravelQuestionnaireForm({super.key, required this.travelId});
   @override
   _TravelQuestionnaireFormState createState() =>
       _TravelQuestionnaireFormState();
@@ -56,6 +63,14 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
     }
   }
 
+  void _previousQuestion() {
+    if (_currentQuestionIndex > 0) {
+      setState(() {
+        _currentQuestionIndex--;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     bool isLastQuestion = _currentQuestionIndex == _questions.length - 1;
@@ -77,10 +92,23 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
                   child: Text(
                       '${_currentQuestionIndex + 1} of ${_questions.length} questions'),
                 ),
-                ElevatedButton(
-                  onPressed: _nextQuestion,
-                  child: Text(isLastQuestion ? 'Create Travel' : 'Next'),
-                )
+                Row(
+                  mainAxisAlignment: MainAxisAlignment
+                      .spaceEvenly, // This will space out the buttons evenly
+                  children: [
+                    // Only show the Back button if not on the first question
+                    if (_currentQuestionIndex > 0)
+                      ElevatedButton(
+                        onPressed: _previousQuestion,
+                        child: Text('Back'),
+                      ),
+
+                    ElevatedButton(
+                      onPressed: _nextQuestion,
+                      child: Text(isLastQuestion ? 'Create Travel' : 'Next'),
+                    ),
+                  ],
+                ),
               ],
             )
           : CircularProgressIndicator(),
