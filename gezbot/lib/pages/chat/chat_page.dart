@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:gezbot/models/chat.model.dart';
+import 'package:gezbot/models/message.model.dart';
+import 'package:gezbot/models/travel.model.dart';
 import 'package:gezbot/services/database_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gezbot/shared/constants.dart';
@@ -16,14 +19,14 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   final DatabaseService dbService = DatabaseService();
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-  late Future<Map<String, dynamic>?> messagesFuture;
-  late Future<Map<String, dynamic>?> travelInfoFuture;
+  late Future<Chat?> messagesFuture;
+  late Future<Travel?> travelInfoFuture;
   late final prefs;
   @override
   void initState() {
     super.initState();
     _fetchPrefs();
-    messagesFuture = dbService.GetMessagesOfChat(widget.travelId);
+    messagesFuture = dbService.GetChat(widget.travelId);
     travelInfoFuture = dbService.GetTravelOfUser(widget.travelId);
 
     WidgetsBinding.instance.addObserver(this);
@@ -77,7 +80,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
 
   void _updateMessagesAndScroll() async {
     setState(() {
-      messagesFuture = dbService.GetMessagesOfChat(widget.travelId);
+      messagesFuture = dbService.GetChat(widget.travelId);
     });
 
     messagesFuture.then((_) {
@@ -91,20 +94,20 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: FutureBuilder<Map<String, dynamic>?>(
+        title: FutureBuilder<Travel?>(
           future: travelInfoFuture,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Text('Loading...');
             }
             if (snapshot.hasError) {
-              return Text('Error : ${snapshot.error}');
+              return Text('Error 2: ${snapshot.error}');
             }
             if (!snapshot.hasData) {
               return Text('No Data');
             }
             var travelInfo = snapshot.data!;
-            return Text('Chat Of ${travelInfo['name']}');
+            return Text('Chat Of ${travelInfo.name}');
           },
         ),
         actions: <Widget>[
@@ -115,7 +118,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         ],
       ),
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           image: DecorationImage(
             image: AssetImage("assets/images/chat_background.jpg"),
             fit: BoxFit.cover,
@@ -124,30 +127,27 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
         child: Column(
           children: <Widget>[
             Expanded(
-              child: FutureBuilder<Map<String, dynamic>?>(
+              child: FutureBuilder<Chat?>(
                 future: messagesFuture,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(child: CircularProgressIndicator());
                   }
-                  if (!snapshot.hasData ||
-                      snapshot.data == null ||
-                      snapshot.data![widget.travelId]['messages'] == null) {
+                  if (!snapshot.hasData || snapshot.data == null) {
                     return Center(child: Text('No Messages'));
                   }
                   if (snapshot.hasError) {
-                    return Center(child: Text('Error : ${snapshot.error}'));
+                    return Center(child: Text('Error 3 : ${snapshot.error}'));
                   }
 
-                  var messages = snapshot.data![widget.travelId]['messages']
-                      as List<Map<String, dynamic>>;
+                  var messages = snapshot.data!.messages as List<Message>;
                   return ListView.builder(
                     controller: _scrollController,
                     itemCount: messages.length,
                     itemBuilder: (context, index) {
                       //TODO : check if the message is from the current user (async problem)
                       final isCurrentUser =
-                          (messages[index]['sender'] == prefs.getString('uid'));
+                          (messages[index].sender == prefs.getString('uid'));
                       return Container(
                         padding: EdgeInsets.all(12.0),
                         decoration: isCurrentUser
@@ -160,8 +160,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             FutureBuilder<Map<String, dynamic>>(
-                              future:
-                                  dbService.GetUser(messages[index]['sender']),
+                              future: dbService.GetUser(messages[index].sender),
                               builder: (context, snapshot) {
                                 if (snapshot.connectionState ==
                                     ConnectionState.waiting) {
@@ -172,7 +171,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                                 }
                                 if (snapshot.hasError) {
                                   return Text(
-                                    'Error: ${snapshot.error}',
+                                    'Error 1: ${snapshot.error}',
                                     style: MessageBoxName,
                                   );
                                 }
@@ -190,7 +189,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                               },
                             ),
                             SizedBox(height: 4.0),
-                            Text(messages[index]['message'],
+                            Text(messages[index].message,
                                 style: MessageBoxMessage),
                           ],
                         ),
