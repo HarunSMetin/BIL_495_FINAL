@@ -89,6 +89,7 @@ class _PreTravelCreationState extends State<PreTravelCreation> {
           MaterialPageRoute(
               builder: (context) => TravelQuestionnaireForm(
                     travelId: value,
+                    travelName: _travelNameController.text,
                   )),
         );
       }).catchError((error) {
