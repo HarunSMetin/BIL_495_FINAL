@@ -6,22 +6,8 @@ import 'package:gezbot/components/Question.dart';
 class TravelQuestionService {
   final _database_service = DatabaseService();
 
-  Future<List<TravelQuestion>> fetchQuestions() async {
-    Map<String, dynamic> jsonData =
-        await _database_service.GetTravelQuestions();
-
-    return jsonData.entries.map<TravelQuestion>((entry) {
-      // Use the null-aware operator to provide a fallback for potential null values
-      return TravelQuestion(
-        questionId: entry.key,
-        question:
-            entry.value['question'] ?? 'Default Question', // Fallback if null
-        answers:
-            List<String>.from(entry.value['answers'] ?? []), // Fallback if null
-        questionType:
-            entry.value['questionType'] ?? 'Default Type', // Fallback if null
-      );
-    }).toList();
+  Future<List<TravelQuestion>> fetchQuestions() {
+    return _database_service.GetTravelQuestions();
   }
 }
 
@@ -47,7 +33,6 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
 
   void _loadQuestions() async {
     var questions = await _service.fetchQuestions();
-
     setState(() {
       _questions = questions;
     });

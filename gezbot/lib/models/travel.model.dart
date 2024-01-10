@@ -69,4 +69,29 @@ class Travel {
       localRecommendations: map['12_LocalRecommendations'],
     );
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'description': description,
+      'creatorId': creatorId,
+      'isPublic': isPublic,
+      'isCompleted': isCompleted,
+      'lastUpdate': lastUpdate,
+      'members': members,
+      'departureDate': departureDate,
+      'returnDate': returnDate,
+      'desiredDestination': desiredDestination,
+      'travelTransportation': travelTransportation,
+      'purposeOfVisit': purposeOfVisit,
+      'estimatedBudget': estimatedBudget,
+      'accommodationPreferences': accommodationPreferences,
+      'activitiesPreferences': activitiesPreferences,
+      'dietaryRestrictions': dietaryRestrictions,
+      'travelingWithOthers': travelingWithOthers,
+      'specialComment': specialComment,
+      'localRecommendations': localRecommendations,
+    };
+  }
 }

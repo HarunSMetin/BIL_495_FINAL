@@ -23,7 +23,6 @@ class _QuestionWidgetState extends State<QuestionWidget> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.question.questionId);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
