@@ -382,9 +382,12 @@ class DatabaseService {
 
   Future UpdateTravel(
       String TravelID, String QuestionId, dynamic answer) async {
+    if (answer == null) {
+      return;
+    }
     Map<String, dynamic> updateData = {};
 
-    updateData['QuestionId'] = answer;
+    updateData[QuestionId] = answer;
     updateData['lastUpdatedQuestionId'] = QuestionId;
     updateData['lastUpdate'] = DateTime.now();
 
@@ -397,6 +400,10 @@ class DatabaseService {
     return (await travelsCollection
         .doc(TravelID)
         .get())['lastUpdatedQuestionId'];
+  }
+
+  Future getAnswerOfQuestionOfTravel(String TravelID, String QuestionID) async {
+    return (await travelsCollection.doc(TravelID).get())[QuestionID];
   }
 
   Future AddFriendToTravel(
