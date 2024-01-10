@@ -1,12 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gezbot/models/travel.model.dart';
 import 'package:gezbot/pages/travel/travel_info.dart';
 import 'package:gezbot/services/database_service.dart';
 import 'package:gezbot/models/question.model.dart';
 import 'package:gezbot/components/Question.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class TravelQuestionService {
   final _database_service = DatabaseService();
@@ -54,7 +51,6 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
     if (_currentAnswer is DateTime) {
       firestoreAnswer = Timestamp.fromDate(_currentAnswer);
     }
-    final _auth = FirebaseAuth.instance;
     await _service._database_service.UpdateTravel(
         widget.travelId, currentQuestion.questionId, firestoreAnswer);
 
@@ -92,7 +88,7 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
         formattedAnswer = int.tryParse(answer);
         break;
       case QuestionType.yesNo:
-        formattedAnswer = answer == 'Yes';
+        formattedAnswer = (answer == 'Yes');
         break;
       default:
         formattedAnswer = answer;

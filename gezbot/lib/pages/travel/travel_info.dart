@@ -16,7 +16,15 @@ class TravelInformation extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text("Description: ${travel.description}"),
+            Text("Name: ${travel.name}"),
+            SizedBox(height: 8),
+            Text("Members: ${travel.members.join(', ')}"),
+            SizedBox(height: 8),
+            Text("Departure Date: ${travel.departureDate}"),
+            SizedBox(height: 8),
+            Text("Return Date: ${travel.returnDate}"),
+            SizedBox(height: 8),
+            Text("Desired Destination: ${travel.desiredDestination}"),
             SizedBox(height: 8),
             ElevatedButton(
               onPressed: () => _openChatScreen(context, travel.id),
