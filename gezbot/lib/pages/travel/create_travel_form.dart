@@ -63,6 +63,14 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
     }
   }
 
+  void _previousQuestion() {
+    if (_currentQuestionIndex > 0) {
+      setState(() {
+        _currentQuestionIndex--;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     bool isLastQuestion = _currentQuestionIndex == _questions.length - 1;
@@ -84,10 +92,23 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
                   child: Text(
                       '${_currentQuestionIndex + 1} of ${_questions.length} questions'),
                 ),
-                ElevatedButton(
-                  onPressed: _nextQuestion,
-                  child: Text(isLastQuestion ? 'Create Travel' : 'Next'),
-                )
+                Row(
+                  mainAxisAlignment: MainAxisAlignment
+                      .spaceEvenly, // This will space out the buttons evenly
+                  children: [
+                    // Only show the Back button if not on the first question
+                    if (_currentQuestionIndex > 0)
+                      ElevatedButton(
+                        onPressed: _previousQuestion,
+                        child: Text('Back'),
+                      ),
+
+                    ElevatedButton(
+                      onPressed: _nextQuestion,
+                      child: Text(isLastQuestion ? 'Create Travel' : 'Next'),
+                    ),
+                  ],
+                ),
               ],
             )
           : CircularProgressIndicator(),
