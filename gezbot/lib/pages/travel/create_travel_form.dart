@@ -11,17 +11,24 @@ class TravelQuestionService {
         await _database_service.GetTravelQuestions();
 
     return jsonData.entries.map<TravelQuestion>((entry) {
+      // Use the null-aware operator to provide a fallback for potential null values
       return TravelQuestion(
         questionId: entry.key,
-        question: entry.value['question'],
-        answers: List<String>.from(entry.value['answers']),
-        questionType: entry.value['questionType'],
+        question:
+            entry.value['question'] ?? 'Default Question', // Fallback if null
+        answers:
+            List<String>.from(entry.value['answers'] ?? []), // Fallback if null
+        questionType:
+            entry.value['questionType'] ?? 'Default Type', // Fallback if null
       );
     }).toList();
   }
 }
 
 class TravelQuestionnaireForm extends StatefulWidget {
+  final String travelId;
+
+  const TravelQuestionnaireForm({super.key, required this.travelId});
   @override
   _TravelQuestionnaireFormState createState() =>
       _TravelQuestionnaireFormState();

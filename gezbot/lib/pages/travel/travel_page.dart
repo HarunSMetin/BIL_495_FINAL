@@ -90,7 +90,7 @@ class _TravelsScreenState extends State<TravelsScreen> {
                   return Dialog(
                     child: PreTravelCreation(
                       travel: Travel.fromMap(
-                          {...value.values.first, 'id': value.keys.first}),
+                          {...value.values.last, 'id': value.keys.last}),
                     ),
                   );
                 }

@@ -371,9 +371,6 @@ class DatabaseService {
       '11_SpecialComment': '',
       '12_LocalRecommendations': '',
     });
-    travelOptionsCollection.doc(documentReference.id).set({
-      'id': documentReference.id,
-    });
     //create chat for travel
     await chatCollection.doc(documentReference.id).set({
       'id': documentReference.id,
