@@ -68,13 +68,12 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
       });
     } else {
       _service._database_service
-          .GetTravelOfUser(_auth.currentUser!.uid, widget.travelId)
+          .GetTravelOfUser(widget.travelId)
           .then((travel) {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                TravelInformation(travel: Travel.fromMap(travel)),
+            builder: (context) => TravelInformation(travel: travel),
           ),
         );
       });

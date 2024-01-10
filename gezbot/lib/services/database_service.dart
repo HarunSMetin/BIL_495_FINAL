@@ -167,7 +167,7 @@ class DatabaseService {
     return chats;
   }
 
-  Future<Chat?> GetChat(String TravelID) async {
+  Future<Chat> GetChat(String TravelID) async {
     QuerySnapshot querySnapshot = await travelsCollection
         .doc(TravelID)
         .collection('messages')
@@ -191,8 +191,8 @@ class DatabaseService {
 
   Future SendMessage(String TravelID, String Message, String SenderID) async {
     // travel Members check
-    travelsCollection.doc(TravelID).get().then((value) async {
-      List<String> members = value['members'] as List<String>;
+    return await travelsCollection.doc(TravelID).get().then((value) async {
+      List<String> members = List<String>.from(value['members']);
       if (members.contains(SenderID)) {
         await travelsCollection.doc(TravelID).set({
           'lastUpdate': DateTime.now(),
@@ -209,7 +209,7 @@ class DatabaseService {
               .doc(value2.id)
               .set({
             'id': value2.id,
-          });
+          }, SetOptions(merge: true));
         });
       }
     });
@@ -229,7 +229,7 @@ class DatabaseService {
     return travelData;
   }
 
-  Future<Travel?> GetTravelOfUser(String TravelID) async {
+  Future<Travel> GetTravelOfUser(String TravelID) async {
     DocumentSnapshot doc = await travelsCollection.doc(TravelID).get();
     Map<String, dynamic> travelData = doc.data() as Map<String, dynamic>;
     travelData['id'] = doc.id;
