@@ -17,11 +17,16 @@ void main() async {
   runApp(MyApp(isLoggedIn: isLoggedIn));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   final bool isLoggedIn;
 
   MyApp({required this.isLoggedIn});
 
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -29,7 +34,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: isLoggedIn ? HomePage() : LoginScreen(),
+      home: widget.isLoggedIn ? HomePage() : LoginScreen(),
       routes: {
         '/login': (context) => LoginScreen(),
         '/home': (context) => HomePage(),

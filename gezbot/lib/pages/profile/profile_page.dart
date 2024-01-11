@@ -310,6 +310,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:gezbot/pages/profile/edit_profile_page.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -350,29 +351,6 @@ class _ProfilePageState extends State<ProfilePage> {
     return age;
   }
 
-  Future<void> _pickImage() async {
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
-      setState(() => _imageFile = pickedFile);
-
-      try {
-        await _userService.updateUserProfilePhoto(
-          userId: FirebaseAuth.instance.currentUser?.uid ?? '',
-          imagePath: _imageFile!.path,
-          showErrorDialog: _showErrorDialog,
-        );
-        // Refresh the profile
-        await _refreshUserDetails();
-        ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Image Updated Successfully')));
-      } catch (e) {
-        _showErrorDialog('Failed to update image: ${e.toString()}');
-      }
-    }
-  }
-
   Future<Map<String, String>> _getUserDetails() async {
     final prefs = await SharedPreferences.getInstance();
     String userEmail = prefs.getString('userEmail') ?? 'Not available';
@@ -390,30 +368,6 @@ class _ProfilePageState extends State<ProfilePage> {
     };
   }
 
-  Future<void> _refreshUserDetails() async {
-    setState(() {
-      _getUserDetails();
-    });
-  }
-
-  void _showErrorDialog(String? message) {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('An error occurred'),
-        content: Text(message ?? 'Unknown error'),
-        actions: <Widget>[
-          TextButton(
-            child: const Text('Okay'),
-            onPressed: () {
-              Navigator.of(ctx).pop();
-            },
-          )
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -425,7 +379,7 @@ class _ProfilePageState extends State<ProfilePage> {
               isEditing = !isEditing;
             });
           },
-          child: const Text('User Name'),
+          child: const Text('Traveler Profile'),
         ),
         leading: IconButton(
           onPressed: () {
@@ -455,10 +409,24 @@ class _ProfilePageState extends State<ProfilePage> {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        CircleAvatar(
-                          radius: MediaQuery.of(context).size.width / 8,
-                          backgroundImage:
-                              NetworkImage(snapshot.data!['photoUrl']!),
+                        Column(
+                          children: [
+                            CircleAvatar(
+                              radius: MediaQuery.of(context).size.width / 8,
+                              backgroundImage:
+                                  NetworkImage(snapshot.data!['photoUrl']!),
+                            ),
+                            const SizedBox(
+                                height:
+                                    8), // Add some space between CircleAvatar and Text
+                            Text(
+                              snapshot.data?['name'] ?? 'Not available',
+                              style: const TextStyle(
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
                         const SizedBox(
                           width: 20,
@@ -483,51 +451,70 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ],
                                 ),
                               ),
+
                               const SizedBox(
-                                height: 20,
+                                height: 15,
                               ), // Adding space between the statistics and the text boxes
                               Padding(
                                 padding: const EdgeInsets.symmetric(
                                     vertical:
-                                        8.0), // Adjust the vertical space between rows
+                                        2.0), // Adjust the vertical space between rows
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceEvenly,
+                                  crossAxisAlignment: CrossAxisAlignment
+                                      .start, // or CrossAxisAlignment.center
                                   children: [
-                                    _buildTextBox(
-                                        "Age",
-                                        _calculateAge(snapshot
-                                                        .data?['birthDate'] ??
-                                                    'Not available') !=
-                                                -1
-                                            ? _calculateAge(snapshot
-                                                        .data?['birthDate'] ??
-                                                    'Not available')
-                                                .toString()
-                                            : 'Not available'),
-                                    _buildTextBox(
-                                        "Gender",
-                                        snapshot.data?['gender'] ??
-                                            'Not available'),
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8.0),
+                                        child: _buildTextBox(
+                                          "Age",
+                                          _calculateAge(snapshot
+                                                          .data?['birthDate'] ??
+                                                      'Not available') !=
+                                                  -1
+                                              ? _calculateAge(snapshot
+                                                          .data?['birthDate'] ??
+                                                      'Not available')
+                                                  .toString()
+                                              : 'Not available',
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8.0),
+                                        child: _buildTextBox(
+                                          "Gender",
+                                          snapshot.data?['gender'] ??
+                                              'Not available',
+                                        ),
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),
                             ],
                           ),
-                        )
+                        ),
                       ],
                     ),
                   ),
-
+                  const Divider(
+                    thickness: 1,
+                  ),
                   const SizedBox(
-                      height: 20), // Add space between stats and buttons
+                      height: 10), // Add space between stats and buttons
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       SizedBox(
                         width: MediaQuery.of(context).size.width *
                             0.4, // Set the button width
-                        height: 50, // Set the button height
+                        height: 35, // Set the button height
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
@@ -536,7 +523,11 @@ class _ProfilePageState extends State<ProfilePage> {
                             ),
                           ),
                           onPressed: () {
-                            // Implement edit profile functionality
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => EditProfilePage()),
+                            );
                           },
                           child: const Text('Edit Profile'),
                         ),
@@ -544,7 +535,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       SizedBox(
                         width: MediaQuery.of(context).size.width *
                             0.4, // Set the button width
-                        height: 50, // Set the button height
+                        height: 35, // Set the button height
                         child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             shape: RoundedRectangleBorder(
@@ -609,7 +600,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget _buildTextBox(String label, String value) {
     return Container(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(4.0),
       decoration: BoxDecoration(
         border: Border.all(
           color: Colors.grey,
