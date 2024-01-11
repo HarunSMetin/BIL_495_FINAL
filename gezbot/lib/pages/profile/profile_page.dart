@@ -203,7 +203,7 @@ class _ProfilePageState extends State<ProfilePage> {
           // Refresh the profile
           await _refreshUserDetails();
           ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Image Updated Successfully')));
+              const SnackBar(content: Text('Image Updated Successfully')));
         } catch (e) {
           _showErrorDialog('Failed to update image: ${e.toString()}');
         }

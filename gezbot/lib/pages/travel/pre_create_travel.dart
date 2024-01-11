@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:gezbot/pages/travel/create_travel_form.dart';
 import 'package:gezbot/services/database_service.dart';
 import 'package:gezbot/models/travel.model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class PreTravelCreation extends StatefulWidget {
   // Making `hasExistingTravel` non-nullable with a default value
@@ -19,14 +21,22 @@ class _PreTravelCreationState extends State<PreTravelCreation> {
   final TextEditingController _travelNameController = TextEditingController();
   final DatabaseService _databaseService = DatabaseService();
   String? _errorText;
-  bool _isCompleted = false;
+  bool _completedExists = false;
+  late final prefs;
 
   @override
   void initState() {
     super.initState();
     if (widget.travel != null) {
-      _isCompleted = widget.travel!.isCompleted;
+      _completedExists = !widget.travel!.isCompleted;
+
+      print("Completed exists: $_completedExists");
     }
+    fetchPrefs();
+  }
+
+  void fetchPrefs() async {
+    prefs = await SharedPreferences.getInstance();
   }
 
   @override
@@ -50,10 +60,10 @@ class _PreTravelCreationState extends State<PreTravelCreation> {
             child: Text("New Travel"),
           ),
           // The Continue button is conditionally displayed
-          if (_isCompleted)
+          if (_completedExists)
             ElevatedButton(
               onPressed: () => _continueTravel(),
-              child: Text("Continue"),
+              child: Text("Continue ${widget.travel!.name}"),
             ),
         ],
       ),
@@ -66,18 +76,30 @@ class _PreTravelCreationState extends State<PreTravelCreation> {
         _errorText = "Travel name cannot be empty";
       });
     } else {
-      // Logic for creating a new travel goes here
       setState(() {
         _errorText = null;
       });
-      Navigator.of(context)
-          .pop(); // Close the dialog after creating a new travel
+      _databaseService.CreateTravel(
+              prefs.getString('uid')!, _travelNameController.text)
+          .then((value) {
+        // Only navigate to the new screen after the future is complete
+        Navigator.of(context).pop(); // Close the current screen first
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => TravelQuestionnaireForm(
+                    travelId: value,
+                    travelName: _travelNameController.text,
+                  )),
+        );
+      }).catchError((error) {
+        // Handle any errors here
+        print("Error creating travel: $error");
+      });
     }
   }
 
   void _continueTravel() {
-    // Logic for continuing an existing travel goes here
-    Navigator.of(context)
-        .pop(); // Close the dialog after continuing existing travel
+    Navigator.of(context).pop();
   }
 }

@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
+import 'package:gezbot/models/chat.model.dart';
+import 'package:gezbot/models/message.model.dart';
+import 'package:gezbot/models/question.model.dart';
+import 'package:gezbot/models/travel.model.dart';
 
 class DatabaseService {
   final CollectionReference userCollection =
       FirebaseFirestore.instance.collection('users');
-  final CollectionReference chatCollection =
-      FirebaseFirestore.instance.collection('chats');
   final CollectionReference userOptionsCollection =
       FirebaseFirestore.instance.collection('userOptions');
   final CollectionReference travelsCollection =
@@ -28,28 +29,6 @@ class DatabaseService {
     '10_TravelPlanningApproach',
   ];
 
-  final List<String> travelFields = [
-    'lastUpdatedQuestionId',
-    'creatorId',
-    'name',
-    'description',
-    'isPublic',
-    'isCompleted',
-    'lastUpdate',
-    'members',
-    '01_DepartureDate',
-    '02_ReturnDate',
-    '03_DesiredDestination',
-    '04_TravelTransportation',
-    '06_PurposeOfVisit',
-    '05_EstimatedBudget',
-    '07_AccommodationPreferences',
-    '08_ActivitiesPreferences',
-    '09_DietaryRestrictions',
-    '10_TravelingWithOthers',
-    '11_SpecialComment',
-    '12_LocalRecommendations'
-  ];
   void printInlinedJson(Map<String, dynamic> jsonData, {String indent = ''}) {
     jsonData.forEach((key, value) {
       if (value is Map<String, dynamic>) {
@@ -153,155 +132,119 @@ class DatabaseService {
   }
 
 //CHAT
-  Future<Map<String, dynamic>> GetAllChats() async {
+
+  Future<Map<String, Chat>> GetUserAllChats(String UserID) async {
     //nested collection structure
-    Map<String, dynamic> jsonData = {};
+    Map<String, Chat> chats = {};
 
-    QuerySnapshot querySnapshot = await chatCollection.get();
+    QuerySnapshot querySnapshot = await travelsCollection.get();
     await Future.forEach(querySnapshot.docs, (result) async {
-      QuerySnapshot nestedQuerySnapshot = await chatCollection
-          .doc(result.id)
-          .collection('messages') // Replace with your nested collection name
-          .get();
-
-      List<Map<String, dynamic>> messages = [];
-      nestedQuerySnapshot.docs.forEach((nestedResult) {
-        messages.add(nestedResult.data() as Map<String, dynamic>);
-      });
-
-      jsonData[result.id] = {
-        'id': result.id,
-        'lastUpdate': (result.data() as Map<String, dynamic>)['lastUpdate'],
-        'members': (result.data() as Map<String, dynamic>)['members'],
-        'messages': messages,
-      };
-    });
-
-    return jsonData;
-  }
-
-  Future<Map<String, dynamic>> GetUserAllChats(String UserID) async {
-    //nested collection structure
-    Map<String, dynamic> jsonData = {};
-
-    QuerySnapshot querySnapshot = await chatCollection.get();
-    await Future.forEach(querySnapshot.docs, (result) async {
-      List members = (result.data() as Map<String, dynamic>)['members'];
+      Map<String, dynamic> travelData = result.data() as Map<String, dynamic>;
+      List<String> members = travelData['members'] as List<String>;
       if (members.contains(UserID)) {
-        QuerySnapshot nestedQuerySnapshot = await chatCollection
+        QuerySnapshot nestedQuerySnapshot = await travelsCollection
             .doc(result.id)
             .collection('messages')
             .orderBy('time', descending: false)
             .get();
 
-        List<Map<String, dynamic>> messages = [];
-        nestedQuerySnapshot.docs.forEach((nestedResult) {
-          messages.add(nestedResult.data() as Map<String, dynamic>);
-        });
+        List<Message> messages = [];
+        for (var nestedResult in nestedQuerySnapshot.docs) {
+          Map<String, dynamic> temp =
+              nestedResult.data() as Map<String, dynamic>;
+          temp['id'] = nestedResult.id;
+          Message messageData = Message.fromMap(temp);
+          messages.add(messageData);
+        }
 
-        Map<String, dynamic> chatData = result.data() as Map<String, dynamic>;
-
-        jsonData[result.id] = {
-          'id': chatData['id'],
-          'lastUpdate': chatData['lastUpdate'],
-          'members': chatData['members'],
-          'messages': messages,
-        };
+        chats[result.id] = Chat(
+          id: result.id,
+          messages: messages,
+          members: members,
+        );
       }
     });
-    return jsonData;
+    return chats;
   }
 
-  Future<Map<String, dynamic>> GetMessagesOfChat(String TravelID) async {
-    Map<String, dynamic> jsonData = {};
-    QuerySnapshot nestedQuerySnapshot = await chatCollection
+  Future<Chat> GetChat(String TravelID) async {
+    QuerySnapshot querySnapshot = await travelsCollection
         .doc(TravelID)
         .collection('messages')
         .orderBy('time', descending: false)
         .get();
 
-    List<Map<String, dynamic>> messages = [];
-    nestedQuerySnapshot.docs.forEach((nestedResult) {
-      messages.add(nestedResult.data() as Map<String, dynamic>);
-    });
-    Map<String, dynamic> chatData = (await chatCollection.doc(TravelID).get())
-        .data() as Map<String, dynamic>;
-    jsonData[TravelID] = {
-      'id': chatData['id'],
-      'members': chatData['members'],
-      'lastUpdate': chatData['lastUpdate'],
-      'messages': messages,
-    };
-    return jsonData;
+    List<Message> messages = [];
+    for (var result in querySnapshot.docs) {
+      Map<String, dynamic> temp = result.data() as Map<String, dynamic>;
+      temp['id'] = result.id;
+      Message messageData = Message.fromMap(temp);
+      messages.add(messageData);
+    }
+    Chat chat = Chat(
+        id: TravelID,
+        messages: messages,
+        members: List<String>.from(
+            (await travelsCollection.doc(TravelID).get())['members']));
+    return chat;
   }
 
   Future SendMessage(String TravelID, String Message, String SenderID) async {
-    await chatCollection.doc(TravelID).set({
-      'lastUpdate': DateTime.now(),
-      'members': [],
-    }, SetOptions(merge: true));
-
-    // Chat Members Update
-    var documentReference = chatCollection.doc(TravelID);
-    FirebaseFirestore.instance.runTransaction((transaction) async {
-      DocumentSnapshot snapshot = await transaction.get(documentReference);
-
-      if (!snapshot.exists) {
-        throw Exception("Document does not exist!");
-      }
-
-      List<dynamic> currentArray = snapshot.get('members') ?? [];
-
-      if (!currentArray.contains(SenderID)) {
-        transaction.set(
-            documentReference,
-            {
-              'members': FieldValue.arrayUnion([SenderID])
-            },
-            SetOptions(merge: true));
+    // travel Members check
+    return await travelsCollection.doc(TravelID).get().then((value) async {
+      List<String> members = List<String>.from(value['members']);
+      if (members.contains(SenderID)) {
+        await travelsCollection.doc(TravelID).set({
+          'lastUpdate': DateTime.now(),
+        }, SetOptions(merge: true));
+        // Chat Message Add
+        travelsCollection.doc(TravelID).collection('messages').add({
+          'message': Message,
+          'sender': SenderID,
+          'time': DateTime.now(),
+        }).then((value2) {
+          travelsCollection
+              .doc(TravelID)
+              .collection('messages')
+              .doc(value2.id)
+              .set({
+            'id': value2.id,
+          }, SetOptions(merge: true));
+        });
       }
     });
-    // Chat Message Add
-    DocumentReference doc =
-        await chatCollection.doc(TravelID).collection('messages').add({
-      'message': Message,
-      'sender': SenderID,
-      'time': DateTime.now(),
-    });
-    chatCollection.doc(TravelID).collection('messages').doc(doc.id).set({
-      'id': doc.id,
-    }, SetOptions(merge: true));
   }
 
 //TRAVELS
 
-  Future<Map<String, Map<String, dynamic>>> GetAllTravelsOfUser(
-      String UserID) async {
+  Future<Map<String, Travel>> GetAllTravelsOfUser(String UserID) async {
     QuerySnapshot querySnapshot =
-        await travelsCollection.where('creatorId', isEqualTo: UserID).get();
-    Map<String, Map<String, dynamic>> jsonData = {};
-
-    for (var doc in querySnapshot.docs) {
-      jsonData[doc.id] = doc.data() as Map<String, dynamic>;
-    }
-
-    return jsonData;
-  }
-
-  Future<Map<String, dynamic>> GetTravelOfUser(
-      String UserID, String TravelID) async {
-    DocumentSnapshot doc = await travelsCollection.doc(TravelID).get();
-    Map<String, dynamic> travelData = doc.data() as Map<String, dynamic>;
+        await travelsCollection.where('members', arrayContains: UserID).get();
+    Map<String, Travel> travelData = {};
+    await Future.forEach(querySnapshot.docs, (result) async {
+      Map<String, dynamic> temp = result.data() as Map<String, dynamic>;
+      temp['id'] = result.id;
+      travelData[result.id] = Travel.fromMap(temp);
+    });
     return travelData;
   }
 
-  Future<Map<String, dynamic>> GetTravelQuestions() async {
+  Future<Travel> GetTravelOfUser(String TravelID) async {
+    DocumentSnapshot doc = await travelsCollection.doc(TravelID).get();
+    Map<String, dynamic> travelData = doc.data() as Map<String, dynamic>;
+    travelData['id'] = doc.id;
+    return Travel.fromMap(travelData);
+  }
+
+  Future<List<TravelQuestion>> GetTravelQuestions() async {
     QuerySnapshot querySnapshot = await travelOptionsCollection.get();
-    Map<String, dynamic> jsonData = {};
+    List<TravelQuestion> questions = [];
     await Future.forEach(querySnapshot.docs, (result) async {
-      jsonData[result.id] = result.data() as Map<String, dynamic>;
+      Map<String, dynamic> temp = result.data() as Map<String, dynamic>;
+      temp['questionId'] = result.id;
+      questions.add(TravelQuestion.fromMap(temp));
     });
-    return jsonData;
+    return questions;
   }
 
   Future<Map<String, dynamic>> GetTravelAnswersOfUser(String UserID) async {
@@ -371,23 +314,27 @@ class DatabaseService {
       '11_SpecialComment': '',
       '12_LocalRecommendations': '',
     });
-    travelOptionsCollection.doc(documentReference.id).set({
-      'id': documentReference.id,
+    //create messages collection
+    await travelsCollection
+        .doc(documentReference.id)
+        .collection('messages')
+        .add({
+      'message': 'Travel created',
+      'sender': UserID,
+      'time': DateTime.now()
     });
-    //create chat for travel
-    await chatCollection.doc(documentReference.id).set({
-      'id': documentReference.id,
-      'lastUpdate': DateTime.now(),
-      'members': [UserID],
-    });
+
     return documentReference.id;
   }
 
   Future UpdateTravel(
       String TravelID, String QuestionId, dynamic answer) async {
+    if (answer == null) {
+      return;
+    }
     Map<String, dynamic> updateData = {};
 
-    updateData['QuestionId'] = answer;
+    updateData[QuestionId] = answer;
     updateData['lastUpdatedQuestionId'] = QuestionId;
     updateData['lastUpdate'] = DateTime.now();
 
@@ -402,16 +349,16 @@ class DatabaseService {
         .get())['lastUpdatedQuestionId'];
   }
 
+  Future getAnswerOfQuestionOfTravel(String TravelID, String QuestionID) async {
+    return (await travelsCollection.doc(TravelID).get())[QuestionID];
+  }
+
   Future AddFriendToTravel(
       String TravelID, String UserID, String FriendID) async {
     if (UserID == (await travelsCollection.doc(TravelID).get())['creatorId'] &&
         await IsFriend(UserID, FriendID)) {
       //add to travel
       await travelsCollection.doc(TravelID).set({
-        'members': FieldValue.arrayUnion([FriendID])
-      }, SetOptions(merge: true));
-      //add to chat
-      await chatCollection.doc(TravelID).set({
         'members': FieldValue.arrayUnion([FriendID])
       }, SetOptions(merge: true));
     }
@@ -424,16 +371,11 @@ class DatabaseService {
       await travelsCollection.doc(TravelID).set({
         'members': FieldValue.arrayRemove([FriendID])
       });
-      //remove from chat
-      await chatCollection.doc(TravelID).set({
-        'members': FieldValue.arrayRemove([FriendID])
-      });
     }
   }
 
   Future DeleteTravel(String TravelID) async {
     await travelsCollection.doc(TravelID).delete();
-    await chatCollection.doc(TravelID).delete();
   }
 
 //FRIENDS
