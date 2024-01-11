@@ -309,16 +309,110 @@
 // }
 
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:gezbot/services/user_service.dart'; // Import UserService
 
-class ProfilePage2 extends StatefulWidget {
-  const ProfilePage2({super.key});
+class ProfilePage extends StatefulWidget {
+  const ProfilePage({super.key});
 
   @override
-  State<ProfilePage2> createState() => _ProfilePage2State();
+  State<ProfilePage> createState() => _ProfilePageState();
 }
 
-class _ProfilePage2State extends State<ProfilePage2> {
+class _ProfilePageState extends State<ProfilePage> {
   bool isEditing = false;
+  final UserService _userService = UserService(); // Instance of UserService
+  late Future<Map<String, String>> userDetailsFuture;
+  XFile? _imageFile;
+  @override
+  void initState() {
+    super.initState();
+    userDetailsFuture = _getUserDetails();
+  }
+
+  int _calculateAge(String birthDateString) {
+    if (birthDateString == 'Not available') {
+      return -1; // Indicates age is not available
+    }
+
+    DateTime birthDate = DateTime.parse(birthDateString);
+    DateTime currentDate = DateTime.now();
+    int age = currentDate.year - birthDate.year;
+    if (birthDate.month > currentDate.month ||
+        (birthDate.month == currentDate.month &&
+            birthDate.day > currentDate.day)) {
+      age--;
+    }
+
+    return age;
+  }
+
+  Future<void> _pickImage() async {
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() => _imageFile = pickedFile);
+
+      try {
+        await _userService.updateUserProfilePhoto(
+          userId: FirebaseAuth.instance.currentUser?.uid ?? '',
+          imagePath: _imageFile!.path,
+          showErrorDialog: _showErrorDialog,
+        );
+        // Refresh the profile
+        await _refreshUserDetails();
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Image Updated Successfully')));
+      } catch (e) {
+        _showErrorDialog('Failed to update image: ${e.toString()}');
+      }
+    }
+  }
+
+  Future<Map<String, String>> _getUserDetails() async {
+    final prefs = await SharedPreferences.getInstance();
+    String userEmail = prefs.getString('userEmail') ?? 'Not available';
+    String userName = prefs.getString('userName') ?? 'Not available';
+    String userPhotoUrl = prefs.getString('photoUrl') ?? '';
+    String userBirthDate = prefs.getString('birthDate') ?? 'Not available';
+    String userGender = prefs.getString('gender') ?? 'Not available';
+
+    return {
+      'email': userEmail,
+      'name': userName,
+      'photoUrl': userPhotoUrl,
+      'birthDate': userBirthDate,
+      'gender': userGender,
+    };
+  }
+
+  Future<void> _refreshUserDetails() async {
+    setState(() {
+      _getUserDetails();
+    });
+  }
+
+  void _showErrorDialog(String? message) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('An error occurred'),
+        content: Text(message ?? 'Unknown error'),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('Okay'),
+            onPressed: () {
+              Navigator.of(ctx).pop();
+            },
+          )
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -343,108 +437,134 @@ class _ProfilePage2State extends State<ProfilePage2> {
           IconButton(onPressed: () {}, icon: const Icon(Icons.notifications)),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Row(
+      body: FutureBuilder(
+        future:
+            _getUserDetails(), // Replace _getUserDetails with your actual method
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const CircularProgressIndicator(); // Show loading indicator while fetching data
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else {
+            return SingleChildScrollView(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const CircleAvatar(
-                    radius: 75,
-                    backgroundImage: NetworkImage(
-                      'https://t3.ftcdn.net/jpg/06/04/79/52/360_F_604795233_5zIpEvhWizTN7bUxSADUdrQQFGj315G3.jpg',
-                    ),
-                  ),
-                  const SizedBox(
-                      width: 20), // Add some space between image and stats
-                  Expanded(
-                    child: Column(
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical:
-                                  8.0), // Adjust the vertical space between rows
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              _buildStat("Trips",
-                                  "10"), // Replace with actual trip count
-                              _buildStat("Followers",
-                                  "1000"), // Replace with actual follower count
-                              _buildStat("Following",
-                                  "500"), // Replace with actual following count
-                            ],
-                          ),
+                        CircleAvatar(
+                          radius: MediaQuery.of(context).size.width / 8,
+                          backgroundImage:
+                              NetworkImage(snapshot.data!['photoUrl']!),
                         ),
                         const SizedBox(
-                            height:
-                                20), // Adding space between the statistics and the text boxes
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical:
-                                  8.0), // Adjust the vertical space between rows
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          width: 20,
+                        ), // Add some space between image and stats
+                        Expanded(
+                          child: Column(
                             children: [
-                              _buildTextBox(
-                                  "Age", "18"), // Replace with actual age
-                              _buildTextBox("Gender",
-                                  "Male"), // Replace with actual gender
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical:
+                                        8.0), // Adjust the vertical space between rows
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    _buildStat("Trips",
+                                        "10"), // Replace with actual trip count
+                                    _buildStat("Followers",
+                                        "1000"), // Replace with actual follower count
+                                    _buildStat("Following",
+                                        "500"), // Replace with actual following count
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 20,
+                              ), // Adding space between the statistics and the text boxes
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical:
+                                        8.0), // Adjust the vertical space between rows
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    _buildTextBox(
+                                        "Age",
+                                        _calculateAge(snapshot
+                                                        .data?['birthDate'] ??
+                                                    'Not available') !=
+                                                -1
+                                            ? _calculateAge(snapshot
+                                                        .data?['birthDate'] ??
+                                                    'Not available')
+                                                .toString()
+                                            : 'Not available'),
+                                    _buildTextBox(
+                                        "Gender",
+                                        snapshot.data?['gender'] ??
+                                            'Not available'),
+                                  ],
+                                ),
+                              ),
                             ],
                           ),
-                        ),
+                        )
                       ],
                     ),
-                  )
+                  ),
+
+                  const SizedBox(
+                      height: 20), // Add space between stats and buttons
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width *
+                            0.4, // Set the button width
+                        height: 50, // Set the button height
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                  8.0), // Set button shape
+                            ),
+                          ),
+                          onPressed: () {
+                            // Implement edit profile functionality
+                          },
+                          child: const Text('Edit Profile'),
+                        ),
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width *
+                            0.4, // Set the button width
+                        height: 50, // Set the button height
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                  8.0), // Set button shape
+                            ),
+                          ),
+                          onPressed: () {
+                            // Implement share profile functionality
+                          },
+                          child: const Text('Share Profile'),
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
-            ),
-
-            const SizedBox(height: 20), // Add space between stats and buttons
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width *
-                      0.4, // Set the button width
-                  height: 50, // Set the button height
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(8.0), // Set button shape
-                      ),
-                    ),
-                    onPressed: () {
-                      // Implement edit profile functionality
-                    },
-                    child: const Text('Edit Profile'),
-                  ),
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width *
-                      0.4, // Set the button width
-                  height: 50, // Set the button height
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(8.0), // Set button shape
-                      ),
-                    ),
-                    onPressed: () {
-                      // Implement share profile functionality
-                    },
-                    child: const Text('Share Profile'),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
+            );
+          }
+        },
       ),
     );
   }
