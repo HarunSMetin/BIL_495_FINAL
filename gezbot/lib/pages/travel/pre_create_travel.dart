@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class PreTravelCreation extends StatefulWidget {
   // Making `hasExistingTravel` non-nullable with a default value
-  final Travel? travel;
+  final Travel travel;
 
   const PreTravelCreation({
     Key? key,
@@ -27,8 +27,8 @@ class _PreTravelCreationState extends State<PreTravelCreation> {
   @override
   void initState() {
     super.initState();
-    if (widget.travel != null) {
-      _completedExists = !widget.travel!.isCompleted;
+    if (widget.travel.id != 'empty') {
+      _completedExists = !widget.travel.isCompleted;
 
       print("Completed exists: $_completedExists");
     }
@@ -101,5 +101,14 @@ class _PreTravelCreationState extends State<PreTravelCreation> {
 
   void _continueTravel() {
     Navigator.of(context).pop();
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => TravelQuestionnaireForm(
+          travelId: widget.travel!.id,
+          travelName: widget.travel!.name,
+        ),
+      ),
+    );
   }
 }
