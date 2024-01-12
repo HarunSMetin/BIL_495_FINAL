@@ -3,10 +3,16 @@ import 'package:gezbot/models/user.model.dart';
 import 'package:gezbot/services/database_service.dart';
 import 'package:gezbot/shared/constants.dart';
 
-class UserInfoCard extends StatelessWidget {
-  DatabaseService _databaseService = DatabaseService();
-  UserInfoCard({super.key, required this.user});
+class UserInfoCard extends StatefulWidget {
+  const UserInfoCard({super.key, required this.user});
   final UserModel user;
+
+  @override
+  State<UserInfoCard> createState() => _UserInfoCardState();
+}
+
+class _UserInfoCardState extends State<UserInfoCard> {
+  final DatabaseService _databaseService = DatabaseService();
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +22,7 @@ class UserInfoCard extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Container(
-            constraints: BoxConstraints(maxWidth: double.infinity),
+            constraints: const BoxConstraints(maxWidth: double.infinity),
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(20),
@@ -33,7 +39,7 @@ class UserInfoCard extends StatelessWidget {
                         clipper: AvatarClipper(),
                         child: Container(
                           height: 80,
-                          decoration: BoxDecoration(
+                          decoration: const BoxDecoration(
                             color: darkColor,
                             borderRadius: BorderRadius.only(
                               topRight: Radius.circular(20),
@@ -49,23 +55,24 @@ class UserInfoCard extends StatelessWidget {
                           children: [
                             CircleAvatar(
                               radius: 50,
-                              backgroundImage: NetworkImage(user.photoUrl),
+                              backgroundImage:
+                                  NetworkImage(widget.user.photoUrl),
                             ),
                             const SizedBox(width: 20),
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  user.userName,
-                                  style: TextStyle(
+                                  widget.user.userName,
+                                  style: const TextStyle(
                                     fontSize: 32,
                                     color: Colors.white,
                                   ),
                                 ),
                                 const SizedBox(height: 8),
                                 Text(
-                                  user.email,
-                                  style: TextStyle(
+                                  widget.user.email,
+                                  style: const TextStyle(
                                     fontSize: 20,
                                     color: darkColor,
                                   ),
@@ -91,7 +98,7 @@ class UserInfoCard extends StatelessWidget {
                         child: Column(
                           children: [
                             Text(
-                              "Age:  ${DateTime.now().year - user.birthDate.year}",
+                              "Age:  ${DateTime.now().year - widget.user.birthDate.year}",
                               style: montserrat,
                             ),
                           ],
@@ -102,7 +109,7 @@ class UserInfoCard extends StatelessWidget {
                         child: Column(
                           children: [
                             Text(
-                              "Gender: ${user.gender} ",
+                              "Gender: ${widget.user.gender} ",
                               style: montserrat,
                             ),
                           ],
@@ -114,7 +121,7 @@ class UserInfoCard extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 8.0, right: 8.0),
                   child: FutureBuilder<Map<String, dynamic>>(
-                    future: _databaseService.GetUserSummary(user.id),
+                    future: _databaseService.GetUserSummary(widget.user.id),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         return Row(
@@ -136,9 +143,9 @@ class UserInfoCard extends StatelessWidget {
                                 )
                               ],
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 50,
-                              child: const VerticalDivider(
+                              child: VerticalDivider(
                                 color: Color(0xFF9A9A9A),
                               ),
                             ),
@@ -157,9 +164,9 @@ class UserInfoCard extends StatelessWidget {
                                 )
                               ],
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 50,
-                              child: const VerticalDivider(
+                              child: VerticalDivider(
                                 color: Color(0xFF9A9A9A),
                               ),
                             ),
@@ -185,7 +192,7 @@ class UserInfoCard extends StatelessWidget {
                           height: 100,
                           width: double.infinity,
                           alignment: Alignment.center,
-                          child: CircularProgressIndicator(),
+                          child: const CircularProgressIndicator(),
                         );
                       }
                     },
@@ -207,7 +214,7 @@ class AvatarClipper extends CustomClipper<Path> {
     return Path()
       ..lineTo(0, size.height)
       ..lineTo(8, size.height)
-      ..arcToPoint(Offset(114, size.height), radius: Radius.circular(1))
+      ..arcToPoint(Offset(114, size.height), radius: const Radius.circular(1))
       ..lineTo(size.width, size.height)
       ..lineTo(size.width, 0)
       ..close();
