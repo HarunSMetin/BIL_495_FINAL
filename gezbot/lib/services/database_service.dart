@@ -291,19 +291,28 @@ class DatabaseService {
     return jsonData;
   }
 
-  Future<Map<String, dynamic>> GetLastNotCompletedTravelOfUser(
-      String userId) async {
+  Future<Travel?> GetLastNotCompletedTravelOfUser(String userId) async {
     QuerySnapshot querySnapshot = await travelsCollection
         .where('creatorId', isEqualTo: userId)
         .where('isCompleted', isEqualTo: false)
         .get();
-    Map<String, dynamic> jsonData = {};
+    Map<String, dynamic> travelData = {};
     await Future.forEach(querySnapshot.docs, (result) async {
-      jsonData[result.id] = result.data() as Map<String, dynamic>;
+      travelData = result.data() as Map<String, dynamic>;
+      travelData['id'] = result.id;
     });
-    return jsonData;
+    if (travelData.isEmpty) {
+      return null;
+    }
+    return Travel.fromMap(travelData);
   }
 
+  Future<Travel> CompleteTravel(String TravelID) async {
+    await travelsCollection.doc(TravelID).set({
+      'isCompleted': true,
+    }, SetOptions(merge: true));
+    return await GetTravelOfUser(TravelID);
+  }
   //Get lastCompletedQuestionOfTravel database contaions: lastUpdatedQuestionId on travels
 
   Future CreateTravel(String UserID, String travelName) async {

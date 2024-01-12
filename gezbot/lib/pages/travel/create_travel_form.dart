@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:gezbot/models/travel.model.dart';
 import 'package:gezbot/pages/travel/travel_info.dart';
 import 'package:gezbot/services/database_service.dart';
 import 'package:gezbot/models/question.model.dart';
@@ -16,6 +17,7 @@ class TravelQuestionService {
 class TravelQuestionnaireForm extends StatefulWidget {
   final String travelId;
   final String travelName;
+
   const TravelQuestionnaireForm(
       {super.key, required this.travelId, required this.travelName});
   @override
@@ -25,7 +27,7 @@ class TravelQuestionnaireForm extends StatefulWidget {
 
 class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
   final TravelQuestionService _service = TravelQuestionService();
-
+  late final Travel travel;
   List<TravelQuestion> _questions = [];
   int _currentQuestionIndex = 0;
   dynamic _currentAnswer;
@@ -37,35 +39,60 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
     _loadQuestions();
   }
 
+  void _loadTravel() async {
+    var travel =
+        await _service._database_service.GetTravelOfUser(widget.travelId);
+    setState(() {
+      travel = travel;
+      int? parsedValue =
+          int.tryParse(travel.lastUpdatedQuestionId.substring(0, 2));
+      _currentQuestionIndex = parsedValue != null ? parsedValue - 1 : 0;
+
+      _currentQuestionType = QuestionType.values.firstWhere((type) =>
+          type.toString() ==
+          'QuestionType.${_questions[_currentQuestionIndex].questionType}');
+    });
+    print(_currentQuestionIndex);
+  }
+
   void _loadQuestions() async {
     var questions = await _service.fetchQuestions();
     setState(() {
       _questions = questions;
     });
+    _loadTravel();
   }
 
   void _nextQuestion() async {
     // Get the current question
     TravelQuestion currentQuestion = _questions[_currentQuestionIndex];
     dynamic firestoreAnswer = _currentAnswer;
-    if (_currentAnswer is DateTime) {
-      firestoreAnswer = Timestamp.fromDate(_currentAnswer);
+    if (_currentAnswer == null || _currentAnswer == '') {
+    } else {
+      if (_currentQuestionType == QuestionType.date) {
+        firestoreAnswer = Timestamp.fromDate(_currentAnswer);
+      } else if (_currentQuestionType == QuestionType.yesNo) {
+        firestoreAnswer = _currentAnswer ? 'Yes' : 'No';
+      } else if (_currentQuestionType == QuestionType.numberInput) {
+        firestoreAnswer = _currentAnswer.toString();
+      } else if (_currentQuestionType == QuestionType.multipleChoice) {
+        firestoreAnswer = _currentAnswer.toString();
+      }
+      await _service._database_service.UpdateTravel(
+          widget.travelId, currentQuestion.questionId, firestoreAnswer);
     }
-    await _service._database_service.UpdateTravel(
-        widget.travelId, currentQuestion.questionId, firestoreAnswer);
 
     if (_currentQuestionIndex < _questions.length - 1) {
       setState(() {
         _currentAnswer = '';
+        _currentQuestionIndex++;
+
         _currentQuestionType = QuestionType.values.firstWhere((type) =>
             type.toString() ==
             'QuestionType.${_questions[_currentQuestionIndex].questionType}');
-        _currentQuestionIndex++;
       });
     } else {
-      _service._database_service
-          .GetTravelOfUser(widget.travelId)
-          .then((travel) {
+      _service._database_service.CompleteTravel(widget.travelId).then((travel) {
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -82,7 +109,6 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
     switch (_currentQuestionType) {
       case QuestionType.date:
         formattedAnswer = DateTime.tryParse(answer);
-        print("formattedAnswer: $formattedAnswer");
         break;
       case QuestionType.numberInput:
         formattedAnswer = int.tryParse(answer);
@@ -103,6 +129,9 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
     if (_currentQuestionIndex > 0) {
       setState(() {
         _currentQuestionIndex--;
+        _currentQuestionType = QuestionType.values.firstWhere((type) =>
+            type.toString() ==
+            'QuestionType.${_questions[_currentQuestionIndex].questionType}');
       });
     }
   }
