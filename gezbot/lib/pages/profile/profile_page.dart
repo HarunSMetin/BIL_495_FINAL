@@ -626,20 +626,26 @@ class _ProfilePageState extends State<ProfilePage> {
       body: ListView.builder(
         itemCount: itemCount,
         itemBuilder: (BuildContext context, int index) {
-          return ListTile(
-            leading: const Icon(Icons.person),
-            title: Text('Person ${index + 1}'),
-            subtitle: const Text('Member'),
+          return Column(
+            children: [
+              ListTile(
+                leading: const Icon(Icons.person),
+                title: Text('Person ${index + 1}'),
+                subtitle: const Text('Member'),
 
-            trailing: title == 'Following'
-                ? IconButton(
-                    onPressed: () {
-                      debugPrint('User will be unfollowed here');
-                      // Add your logic here for unfollowing the user
-                    },
-                    icon: const Icon(Icons.remove_circle_outline),
-                  )
-                : null, // If title is not 'Following', set trailing to null
+                trailing: title == 'Following'
+                    ? IconButton(
+                        onPressed: () {
+                          debugPrint('User will be unfollowed here');
+                          // Add your logic here for unfollowing the user
+                        },
+                        icon: const Icon(Icons.remove_circle_outline),
+                      )
+                    : null, // If title is not 'Following', set trailing to null
+              ),
+              if (index < itemCount - 1)
+                const Divider(), // Add a Divider for all but the last item
+            ],
           );
         },
       ),
