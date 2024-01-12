@@ -27,7 +27,7 @@ class TravelQuestionnaireForm extends StatefulWidget {
 
 class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
   final TravelQuestionService _service = TravelQuestionService();
-  late final Travel travel;
+  late Travel travel;
   List<TravelQuestion> _questions = [];
   int _currentQuestionIndex = 0;
   dynamic _currentAnswer;
@@ -40,19 +40,23 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
   }
 
   void _loadTravel() async {
-    var travel =
-        await _service._database_service.GetTravelOfUser(widget.travelId);
+    travel = await _service._database_service.GetTravelOfUser(widget.travelId);
     setState(() {
-      travel = travel;
       int? parsedValue =
           int.tryParse(travel.lastUpdatedQuestionId.substring(0, 2));
-      _currentQuestionIndex = parsedValue != null ? parsedValue - 1 : 0;
+      _currentQuestionIndex = parsedValue ?? 0;
 
       _currentQuestionType = QuestionType.values.firstWhere((type) =>
           type.toString() ==
           'QuestionType.${_questions[_currentQuestionIndex].questionType}');
     });
-    print(_currentQuestionIndex);
+    for (TravelQuestion question in _questions) {
+      dynamic answer = travel.fieldFromQuestionId(question.questionId);
+      if (answer != '') {
+        question.userAnswer = answer;
+        break;
+      }
+    }
   }
 
   void _loadQuestions() async {
@@ -64,10 +68,9 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
   }
 
   void _nextQuestion() async {
-    // Get the current question
     TravelQuestion currentQuestion = _questions[_currentQuestionIndex];
     dynamic firestoreAnswer = _currentAnswer;
-    if (_currentAnswer == null || _currentAnswer == '') {
+    if (!currentQuestion.isUserChanged) {
     } else {
       if (_currentQuestionType == QuestionType.date) {
         firestoreAnswer = Timestamp.fromDate(_currentAnswer);
@@ -84,9 +87,10 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
 
     if (_currentQuestionIndex < _questions.length - 1) {
       setState(() {
-        _currentAnswer = '';
         _currentQuestionIndex++;
-
+        _currentAnswer = travel
+            .fieldFromQuestionId(_questions[_currentQuestionIndex].questionId);
+        _currentAnswer ??= '';
         _currentQuestionType = QuestionType.values.firstWhere((type) =>
             type.toString() ==
             'QuestionType.${_questions[_currentQuestionIndex].questionType}');
@@ -105,7 +109,7 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
 
   void _onAnswerChanged(String answer) {
     dynamic formattedAnswer;
-    print(_currentQuestionType);
+
     switch (_currentQuestionType) {
       case QuestionType.date:
         formattedAnswer = DateTime.tryParse(answer);
@@ -120,9 +124,8 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
         formattedAnswer = answer;
     }
 
-    setState(() {
-      _currentAnswer = formattedAnswer;
-    });
+    _questions[_currentQuestionIndex].isUserChanged = true;
+    _currentAnswer = formattedAnswer;
   }
 
   void _previousQuestion() {

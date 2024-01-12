@@ -3,7 +3,6 @@ import 'package:gezbot/models/question.model.dart';
 
 enum QuestionType { openEnded, date, multipleChoice, numberInput, yesNo }
 
-// This widget displays a dynamic question based on the type of the question.
 class QuestionWidget extends StatefulWidget {
   final TravelQuestion question;
   final Function(String) onAnswerChanged;
@@ -21,7 +20,7 @@ class _QuestionWidgetState extends State<QuestionWidget> {
   String? selectedOption;
   bool yesSelected = false;
   bool noSelected = false;
-  late TextEditingController _textController;
+  final TextEditingController _textController = TextEditingController();
 
   @override
   void dispose() {
@@ -32,7 +31,6 @@ class _QuestionWidgetState extends State<QuestionWidget> {
   @override
   void initState() {
     super.initState();
-    _textController = TextEditingController();
   }
 
   @override
@@ -71,12 +69,19 @@ class _QuestionWidgetState extends State<QuestionWidget> {
     }
   }
 
+  void printError(String error) {
+    //print red
+    print('\x1B[31m$error\x1B[0m');
+  }
+
   Widget _buildTextInputField(QuestionType type) {
     return TextField(
       controller: _textController,
       onChanged: (value) {
-        setState(() {}); // Update UI on each text change
-        widget.onAnswerChanged(value);
+        setState(() {
+          _textController.text = value;
+          widget.onAnswerChanged(value);
+        });
       },
       keyboardType: type == QuestionType.numberInput
           ? TextInputType.number
@@ -117,18 +122,18 @@ class _QuestionWidgetState extends State<QuestionWidget> {
   void _onOptionChanged(String? value) {
     if (value != null) {
       setState(() {
-        selectedOption = value; // Update the state to reflect selection
+        selectedOption = value;
+        widget.onAnswerChanged(value);
       });
-      widget.onAnswerChanged(value); // Continue to notify the server
     }
   }
 
   void _onYesNoChanged(int index) {
     setState(() {
       yesSelected = index == 0;
-      noSelected = index == 1; // Update the state to reflect selection
+      noSelected = index == 1;
+      widget.onAnswerChanged(index == 0 ? 'Yes' : 'No'); // Notify the server
     });
-    widget.onAnswerChanged(index == 0 ? 'Yes' : 'No'); // Notify the server
   }
 
   Future<void> _selectDate(BuildContext context) async {
@@ -141,8 +146,8 @@ class _QuestionWidgetState extends State<QuestionWidget> {
     if (picked != null) {
       setState(() {
         selectedDate = picked; // Update the state to reflect the date selection
+        widget.onAnswerChanged(picked.toIso8601String());
       });
-      widget.onAnswerChanged(picked.toIso8601String());
     }
   }
 }
