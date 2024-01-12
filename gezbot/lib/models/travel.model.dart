@@ -94,4 +94,29 @@ class Travel {
       'localRecommendations': localRecommendations,
     };
   }
+
+  factory Travel.empty() {
+    return Travel(
+      id: 'empty',
+      name: 'empty',
+      description: 'empty',
+      creatorId: 'empty',
+      isPublic: false,
+      isCompleted: false,
+      lastUpdate: DateTime.now(),
+      members: [],
+      departureDate: DateTime.now(),
+      returnDate: DateTime.now(),
+      desiredDestination: 'empty',
+      travelTransportation: 'empty',
+      purposeOfVisit: 'empty',
+      estimatedBudget: 'empty',
+      accommodationPreferences: 'empty',
+      activitiesPreferences: 'empty',
+      dietaryRestrictions: 'empty',
+      travelingWithOthers: 'empty',
+      specialComment: 'empty',
+      localRecommendations: 'empty',
+    );
+  }
 }

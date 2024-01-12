@@ -3,6 +3,7 @@ import 'package:gezbot/models/chat.model.dart';
 import 'package:gezbot/models/message.model.dart';
 import 'package:gezbot/models/question.model.dart';
 import 'package:gezbot/models/travel.model.dart';
+import 'package:gezbot/models/user.model.dart';
 
 class DatabaseService {
   final CollectionReference userCollection =
@@ -51,19 +52,25 @@ class DatabaseService {
     });
   }
 
-  Future<Map<String, dynamic>> GetAllUsers() async {
+  Future<List<UserModel>> GetAllUsers() async {
     QuerySnapshot querySnapshot = await userCollection.get();
-    Map<String, dynamic> jsonData = {};
+    List<UserModel> Users = List.empty(growable: true);
     await Future.forEach(querySnapshot.docs, (result) async {
-      jsonData[result.id] = result.data() as Map<String, dynamic>;
+      Map<String, dynamic> temp = result.data() as Map<String, dynamic>;
+      temp['id'] = result.id;
+      Users.add(UserModel.fromMap(temp));
     });
-    return jsonData;
+    return Users;
   }
 
-  Future<Map<String, dynamic>> GetUser(String UserID) async {
+  Future<UserModel> GetUser(String UserID) async {
     DocumentSnapshot doc = await userCollection.doc(UserID).get();
-    Map<String, dynamic> userData = doc.data() as Map<String, dynamic>;
-    return userData;
+    Map<String, dynamic> docData = doc.data() as Map<String, dynamic>;
+    docData['id'] = doc.id;
+
+    UserModel user = UserModel.fromMap(docData);
+
+    return user;
   }
 
   Future<Map<String, dynamic>> GetUserQuestions() async {
@@ -227,6 +234,14 @@ class DatabaseService {
       travelData[result.id] = Travel.fromMap(temp);
     });
     return travelData;
+  }
+
+  Future<int> GetNumberOfTravelsOfUser(String UserID) async {
+    AggregateQuerySnapshot count = await travelsCollection
+        .where('members', arrayContains: UserID)
+        .count()
+        .get();
+    return count.count;
   }
 
   Future<Travel> GetTravelOfUser(String TravelID) async {
@@ -403,7 +418,7 @@ class DatabaseService {
     return jsonData;
   }
 
-//FRIEND REQUESTS
+//(GET) FRIEND REQUESTS (SENT)
   Future<Map<String, dynamic>> GetAllFriendRequestsSentByUser(
       String UserID) async //Sent friend requests
   {
@@ -415,6 +430,17 @@ class DatabaseService {
       jsonData[result.id] = result.data() as Map<String, dynamic>;
     });
     return jsonData;
+  }
+
+  Future<int> GetNumberOfPendingFriendRequestsSentByUser(
+      String UserID) async //Sent friend requests
+  {
+    AggregateQuerySnapshot count = await friendRequestsCollection
+        .where('senderId', isEqualTo: UserID)
+        .where('status', isEqualTo: 'pending')
+        .count()
+        .get();
+    return count.count;
   }
 
   Future<Map<String, dynamic>> GetPendingFriendRequestSentByUser(
@@ -431,6 +457,17 @@ class DatabaseService {
     return jsonData;
   }
 
+  Future<int> GetNumberOfAcceptedFriendRequestsSentByUser(
+      String UserID) async // sent friend requests
+  {
+    AggregateQuerySnapshot count = await friendRequestsCollection
+        .where('senderId', isEqualTo: UserID)
+        .where('status', isEqualTo: 'accepted')
+        .count()
+        .get();
+    return count.count;
+  }
+
   Future<Map<String, dynamic>> GetAcceptedFriendRequestsSentByUser(
       String UserID) async // sent friend requests
   {
@@ -443,6 +480,17 @@ class DatabaseService {
       jsonData[result.id] = result.data() as Map<String, dynamic>;
     });
     return jsonData;
+  }
+
+  Future<int> GetNumberOfDeclinedFriendRequestsSentByUser(
+      String UserID) async // sent friend requests
+  {
+    AggregateQuerySnapshot count = await friendRequestsCollection
+        .where('senderId', isEqualTo: UserID)
+        .where('status', isEqualTo: 'declined')
+        .count()
+        .get();
+    return count.count;
   }
 
   Future<Map<String, dynamic>> GetDeclinedFriendRequestsSentByUser(
@@ -459,6 +507,7 @@ class DatabaseService {
     return jsonData;
   }
 
+//(GET) FRIEND REQUESTS (RECIVED)
   Future<Map<String, dynamic>> GetAllFriendRequestsRecivedByUser(
       String UserID) async // coming friend requests
   {
@@ -470,6 +519,17 @@ class DatabaseService {
       jsonData[result.id] = result.data() as Map<String, dynamic>;
     });
     return jsonData;
+  }
+
+  Future<int> GetNumberOfPendingFriendRequestsRecivedByUser(
+      String UserID) async // coming friend requests
+  {
+    AggregateQuerySnapshot count = await friendRequestsCollection
+        .where('receiverId', isEqualTo: UserID)
+        .where('status', isEqualTo: 'pending')
+        .count()
+        .get();
+    return count.count;
   }
 
   Future<Map<String, dynamic>> GetPendingFriendRequestsRecivedByUser(
@@ -486,6 +546,17 @@ class DatabaseService {
     return jsonData;
   }
 
+  Future<int> GetNumberOfAcceptedFriendRequestsRecivedByUser(
+      String UserID) async // coming friend requests
+  {
+    AggregateQuerySnapshot count = await friendRequestsCollection
+        .where('receiverId', isEqualTo: UserID)
+        .where('status', isEqualTo: 'accepted')
+        .count()
+        .get();
+    return count.count;
+  }
+
   Future<Map<String, dynamic>> GetAcceptedFriendRequestsRecivedByUser(
       String UserID) async // coming friend requests
   {
@@ -498,6 +569,17 @@ class DatabaseService {
       jsonData[result.id] = result.data() as Map<String, dynamic>;
     });
     return jsonData;
+  }
+
+  Future<int> GetNumberOfDeclinedFriendRequestsRecivedByUser(
+      String UserID) async // coming friend requests
+  {
+    AggregateQuerySnapshot count = await friendRequestsCollection
+        .where('receiverId', isEqualTo: UserID)
+        .where('status', isEqualTo: 'declined')
+        .count()
+        .get();
+    return count.count;
   }
 
   Future<Map<String, dynamic>> GetDeclinedFriendRequestsRecivedByUser(
@@ -513,7 +595,27 @@ class DatabaseService {
     });
     return jsonData;
   }
+//(GET) SUM FRIEND REQ COUNTS
 
+  Future<Map<String, dynamic>> GetUserSummary(String UserID) async {
+    Map<String, dynamic> jsonData = {};
+    jsonData['pendingSent'] =
+        await GetNumberOfPendingFriendRequestsSentByUser(UserID);
+    jsonData['acceptedSent'] =
+        await GetNumberOfAcceptedFriendRequestsSentByUser(UserID);
+    jsonData['declinedSent'] =
+        await GetNumberOfDeclinedFriendRequestsSentByUser(UserID);
+    jsonData['pendingRecived'] =
+        await GetNumberOfPendingFriendRequestsRecivedByUser(UserID);
+    jsonData['acceptedRecived'] =
+        await GetNumberOfAcceptedFriendRequestsRecivedByUser(UserID);
+    jsonData['declinedRecived'] =
+        await GetNumberOfDeclinedFriendRequestsRecivedByUser(UserID);
+    jsonData['travels'] = await GetNumberOfTravelsOfUser(UserID);
+    return jsonData;
+  }
+
+//(POST) FRIEND REQUESTS
   Future<String> SendFriendRequest(String SenderID, String ReceiverID) async {
     var documentReference = await friendRequestsCollection.add({
       'senderId': SenderID,

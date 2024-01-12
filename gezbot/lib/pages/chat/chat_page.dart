@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gezbot/models/chat.model.dart';
 import 'package:gezbot/models/message.model.dart';
 import 'package:gezbot/models/travel.model.dart';
+import 'package:gezbot/models/user.model.dart';
 import 'package:gezbot/services/database_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gezbot/shared/constants.dart';
@@ -106,8 +107,27 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
             if (!snapshot.hasData) {
               return Text('No Data');
             }
-            var travelInfo = snapshot.data!;
-            return Text('Chat Of ${travelInfo.name}');
+            Travel travelInfo = snapshot.data!;
+            // Text('Chat Of ${travelInfo.name}');
+            return Container(
+              width: double.infinity,
+              child: TextButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/chatInfo',
+                      arguments: travelInfo);
+                },
+                child: Text(
+                  'Chat Of ${travelInfo.name}',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 15.0,
+                  ),
+                ),
+                style: ElevatedButton.styleFrom(
+                  surfaceTintColor: Colors.grey,
+                ),
+              ),
+            );
           },
         ),
         actions: <Widget>[
@@ -159,7 +179,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            FutureBuilder<Map<String, dynamic>>(
+                            FutureBuilder<UserModel>(
                               future: dbService.GetUser(messages[index].sender),
                               builder: (context, snapshot) {
                                 if (snapshot.connectionState ==
@@ -183,7 +203,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                                 }
                                 var senderName = snapshot.data!;
                                 return Text(
-                                  senderName['userName'] + ' :',
+                                  '${senderName.userName} :',
                                   style: MessageBoxName,
                                 );
                               },
