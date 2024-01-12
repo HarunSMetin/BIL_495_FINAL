@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gezbot/pages/profile/edit_profile_page.dart';
+import 'package:gezbot/services/database_service.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -17,6 +18,8 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  late String userID;
+  final DatabaseService _databaseService = DatabaseService();
   bool isEditing = false;
   final UserService _userService = UserService(); // Instance of UserService
   late Future<Map<String, dynamic>> userDetailsFuture;
@@ -41,6 +44,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<Map<String, dynamic>> _getUserDetails() async {
     final prefs = await SharedPreferences.getInstance();
+    userID = prefs.getString('uid') ?? '';
     String userEmail = prefs.getString('userEmail') ?? 'Not available';
     String userName = prefs.getString('userName') ?? 'Not available';
     String userPhotoUrl = prefs.getString('photoUrl') ?? '';
@@ -60,28 +64,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xFFD2FFF4),
-        title: GestureDetector(
-          onTap: () {
-            setState(() {
-              isEditing = !isEditing;
-            });
-          },
-          child: const Text('Traveler Profile'),
-        ),
-        leading: IconButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          icon: const Icon(Icons.arrow_back_ios),
-        ),
-        actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.notifications)),
-        ],
-      ),
-      body: FutureBuilder(
+    return Container(
+      child: FutureBuilder(
         future:
             _getUserDetails(), // Replace _getUserDetails with your actual method
         builder: (context, snapshot) {
@@ -94,108 +78,130 @@ class _ProfilePageState extends State<ProfilePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Column(
-                          children: [
-                            CircleAvatar(
-                              radius: MediaQuery.of(context).size.width / 8,
-                              backgroundImage:
-                                  NetworkImage(snapshot.data!['photoUrl']!),
-                            ),
-                            const SizedBox(
-                                height:
-                                    8), // Add some space between CircleAvatar and Text
-                            Container(
-                              width: MediaQuery.of(context).size.width /
-                                  4, // Adjust the width as needed
-                              child: Text(
-                                snapshot.data?['name'] ?? 'Not available',
-                                style: const TextStyle(
-                                  fontSize: 16.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(
-                          width: 20,
-                        ), // Add some space between image and stats
-                        Expanded(
-                          child: Column(
+                  Container(
+                    color: const Color.fromRGBO(255, 255, 255,
+                        0.621), // Add white background color with 150 opacity
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Column(
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical:
-                                        8.0), // Adjust the vertical space between rows
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    _buildStat("Trips",
-                                        "10"), // Replace with actual trip count
-                                    _buildStat("Followers",
-                                        "1000"), // Replace with actual follower count
-                                    _buildStat("Following",
-                                        "500"), // Replace with actual following count
-                                  ],
-                                ),
+                              CircleAvatar(
+                                radius: MediaQuery.of(context).size.width / 8,
+                                backgroundImage:
+                                    NetworkImage(snapshot.data!['photoUrl']!),
                               ),
-
                               const SizedBox(
-                                height: 15,
-                              ), // Adding space between the statistics and the text boxes
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical:
-                                        2.0), // Adjust the vertical space between rows
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  crossAxisAlignment: CrossAxisAlignment
-                                      .start, // or CrossAxisAlignment.center
-                                  children: [
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 8.0),
-                                        child: _buildTextBox(
-                                          "Age",
-                                          _calculateAge(snapshot
-                                                          .data?['birthDate'] ??
-                                                      'Not available') !=
-                                                  -1
-                                              ? _calculateAge(snapshot
-                                                          .data?['birthDate'] ??
-                                                      'Not available')
-                                                  .toString()
-                                              : 'Not available',
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 8.0),
-                                        child: _buildTextBox(
-                                          "Gender",
-                                          snapshot.data?['gender'] ??
-                                              'Not available',
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                height: 8,
+                              ), // Add some space between CircleAvatar and Text
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width /
+                                    4, // Adjust the width as needed
+                                child: Text(
+                                  snapshot.data?['name'] ?? 'Not available',
+                                  style: const TextStyle(
+                                    fontSize: 16.0,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ),
                             ],
                           ),
-                        ),
-                      ],
+                          const SizedBox(
+                            width: 20,
+                          ), // Add some space between image and stats
+                          Expanded(
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical:
+                                          8.0), // Adjust the vertical space between rows
+                                  child: FutureBuilder<Map<String, dynamic>>(
+                                    future: _databaseService.GetUserSummary(
+                                        userID), // Replace with your actual method
+                                    builder: (context, snapshot) {
+                                      return Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          _buildStat(
+                                            "Travels",
+                                            snapshot.data?['travels']
+                                                    .toString() ??
+                                                "0", // Replace with actual trip count
+                                          ),
+                                          _buildStat(
+                                            "Followers",
+                                            snapshot.data?['acceptedReceived']
+                                                    .toString() ??
+                                                "0", // Replace with actual follower count
+                                          ),
+                                          _buildStat(
+                                            "Following",
+                                            snapshot.data?['acceptedSent']
+                                                    .toString() ??
+                                                "0", // Replace with actual following count
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  ),
+                                ),
+
+                                const SizedBox(
+                                  height: 15,
+                                ), // Adding space between the statistics and the text boxes
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical:
+                                          2.0), // Adjust the vertical space between rows
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    crossAxisAlignment: CrossAxisAlignment
+                                        .start, // or CrossAxisAlignment.center
+                                    children: [
+                                      Expanded(
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 8.0),
+                                          child: _buildTextBox(
+                                            "Age",
+                                            _calculateAge(snapshot.data?[
+                                                            'birthDate'] ??
+                                                        'Not available') !=
+                                                    -1
+                                                ? _calculateAge(snapshot.data?[
+                                                            'birthDate'] ??
+                                                        'Not available')
+                                                    .toString()
+                                                : 'Not available',
+                                          ),
+                                        ),
+                                      ),
+                                      Expanded(
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 8.0),
+                                          child: _buildTextBox(
+                                            "Gender",
+                                            snapshot.data?['gender'] ??
+                                                'Not available',
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   const Divider(
@@ -258,18 +264,28 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget _buildStat(String title, String value) {
     return GestureDetector(
       onTap: () {
-        if (title == "Followers" || title == "Following") {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => _buildStatDetailed(title, int.parse(value)),
-            ),
-          );
-        } else if (title == "Trips") {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => _buildTripDetailed(context),
-            ),
-          );
+        switch (title) {
+          case "Followers":
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => _buildStatDetailed(title, 1000),
+              ),
+            );
+            break;
+          case "Following":
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => _buildStatDetailed(title, 500),
+              ),
+            );
+            break;
+          case "Trips":
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => _buildTripDetailed(context),
+              ),
+            );
+            break;
         }
       },
       child: Column(

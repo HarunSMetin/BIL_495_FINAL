@@ -124,7 +124,7 @@ class UserInfoCard extends StatelessWidget {
                             Column(
                               children: [
                                 Text(
-                                  snapshot.data!['acceptedRecived'].toString(),
+                                  snapshot.data!['acceptedReceived'].toString(),
                                   style: buildMontserrat(
                                     const Color(0xFF000000),
                                     fontWeight: FontWeight.bold,
@@ -157,9 +157,9 @@ class UserInfoCard extends StatelessWidget {
                                 )
                               ],
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 50,
-                              child: const VerticalDivider(
+                              child: VerticalDivider(
                                 color: Color(0xFF9A9A9A),
                               ),
                             ),

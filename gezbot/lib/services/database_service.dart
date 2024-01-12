@@ -614,11 +614,11 @@ class DatabaseService {
         await GetNumberOfAcceptedFriendRequestsSentByUser(UserID);
     jsonData['declinedSent'] =
         await GetNumberOfDeclinedFriendRequestsSentByUser(UserID);
-    jsonData['pendingRecived'] =
+    jsonData['pendingReceived'] =
         await GetNumberOfPendingFriendRequestsRecivedByUser(UserID);
-    jsonData['acceptedRecived'] =
+    jsonData['acceptedReceived'] =
         await GetNumberOfAcceptedFriendRequestsRecivedByUser(UserID);
-    jsonData['declinedRecived'] =
+    jsonData['declinedReceived'] =
         await GetNumberOfDeclinedFriendRequestsRecivedByUser(UserID);
     jsonData['travels'] = await GetNumberOfTravelsOfUser(UserID);
     return jsonData;
