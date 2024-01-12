@@ -69,4 +69,54 @@ class Travel {
       localRecommendations: map['12_LocalRecommendations'],
     );
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'name': name,
+      'description': description,
+      'creatorId': creatorId,
+      'isPublic': isPublic,
+      'isCompleted': isCompleted,
+      'lastUpdate': lastUpdate,
+      'members': members,
+      'departureDate': departureDate,
+      'returnDate': returnDate,
+      'desiredDestination': desiredDestination,
+      'travelTransportation': travelTransportation,
+      'purposeOfVisit': purposeOfVisit,
+      'estimatedBudget': estimatedBudget,
+      'accommodationPreferences': accommodationPreferences,
+      'activitiesPreferences': activitiesPreferences,
+      'dietaryRestrictions': dietaryRestrictions,
+      'travelingWithOthers': travelingWithOthers,
+      'specialComment': specialComment,
+      'localRecommendations': localRecommendations,
+    };
+  }
+
+  factory Travel.empty() {
+    return Travel(
+      id: 'empty',
+      name: 'empty',
+      description: 'empty',
+      creatorId: 'empty',
+      isPublic: false,
+      isCompleted: false,
+      lastUpdate: DateTime.now(),
+      members: [],
+      departureDate: DateTime.now(),
+      returnDate: DateTime.now(),
+      desiredDestination: 'empty',
+      travelTransportation: 'empty',
+      purposeOfVisit: 'empty',
+      estimatedBudget: 'empty',
+      accommodationPreferences: 'empty',
+      activitiesPreferences: 'empty',
+      dietaryRestrictions: 'empty',
+      travelingWithOthers: 'empty',
+      specialComment: 'empty',
+      localRecommendations: 'empty',
+    );
+  }
 }

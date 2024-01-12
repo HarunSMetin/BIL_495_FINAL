@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gezbot/models/question.model.dart';
-import 'package:gezbot/shared/constants.dart';
 
 enum QuestionType { openEnded, date, multipleChoice, numberInput, yesNo }
 

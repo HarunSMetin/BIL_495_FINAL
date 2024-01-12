@@ -1,32 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:gezbot/models/travel.model.dart';
 import 'package:gezbot/pages/travel/travel_info.dart';
 import 'package:gezbot/services/database_service.dart';
 import 'package:gezbot/models/question.model.dart';
 import 'package:gezbot/components/Question.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class TravelQuestionService {
   final _database_service = DatabaseService();
 
-  Future<List<TravelQuestion>> fetchQuestions() async {
-    Map<String, dynamic> jsonData =
-        await _database_service.GetTravelQuestions();
-
-    return jsonData.entries.map<TravelQuestion>((entry) {
-      // Use the null-aware operator to provide a fallback for potential null values
-      return TravelQuestion(
-        questionId: entry.key,
-        question:
-            entry.value['question'] ?? 'Default Question', // Fallback if null
-        answers:
-            List<String>.from(entry.value['answers'] ?? []), // Fallback if null
-        questionType:
-            entry.value['questionType'] ?? 'Default Type', // Fallback if null
-      );
-    }).toList();
+  Future<List<TravelQuestion>> fetchQuestions() {
+    return _database_service.GetTravelQuestions();
   }
 }
 
@@ -56,7 +39,6 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
 
   void _loadQuestions() async {
     var questions = await _service.fetchQuestions();
-
     setState(() {
       _questions = questions;
     });
@@ -69,7 +51,6 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
     if (_currentAnswer is DateTime) {
       firestoreAnswer = Timestamp.fromDate(_currentAnswer);
     }
-    final _auth = FirebaseAuth.instance;
     await _service._database_service.UpdateTravel(
         widget.travelId, currentQuestion.questionId, firestoreAnswer);
 
@@ -83,13 +64,12 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
       });
     } else {
       _service._database_service
-          .GetTravelOfUser(_auth.currentUser!.uid, widget.travelId)
+          .GetTravelOfUser(widget.travelId)
           .then((travel) {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) =>
-                TravelInformation(travel: Travel.fromMap(travel)),
+            builder: (context) => TravelInformation(travel: travel),
           ),
         );
       });
@@ -108,7 +88,7 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
         formattedAnswer = int.tryParse(answer);
         break;
       case QuestionType.yesNo:
-        formattedAnswer = answer == 'Yes';
+        formattedAnswer = (answer == 'Yes');
         break;
       default:
         formattedAnswer = answer;

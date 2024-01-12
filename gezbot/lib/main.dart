@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:gezbot/models/travel.model.dart';
+import 'package:gezbot/pages/chatInfo/chatInfo.dart';
 import 'firebase_options.dart';
 import 'pages/login_screen/login_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -38,6 +40,11 @@ class _MyAppState extends State<MyApp> {
       routes: {
         '/login': (context) => LoginScreen(),
         '/home': (context) => HomePage(),
+        '/chatInfo': (context) => ChatInfo(
+              travelInfo:
+                  ModalRoute.of(context)!.settings.arguments as Travel? ??
+                      Travel.empty(),
+            ),
       },
     );
   }
