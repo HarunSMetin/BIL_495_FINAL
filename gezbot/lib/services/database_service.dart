@@ -236,7 +236,7 @@ class DatabaseService {
     return travelData;
   }
 
-  Future<int> GetNumberOfTravelsOfUser(String UserID) async {
+  Future<int?> GetNumberOfTravelsOfUser(String UserID) async {
     AggregateQuerySnapshot count = await travelsCollection
         .where('members', arrayContains: UserID)
         .count()
@@ -441,7 +441,7 @@ class DatabaseService {
     return jsonData;
   }
 
-  Future<int> GetNumberOfPendingFriendRequestsSentByUser(
+  Future<int?> GetNumberOfPendingFriendRequestsSentByUser(
       String UserID) async //Sent friend requests
   {
     AggregateQuerySnapshot count = await friendRequestsCollection
@@ -466,7 +466,7 @@ class DatabaseService {
     return jsonData;
   }
 
-  Future<int> GetNumberOfAcceptedFriendRequestsSentByUser(
+  Future<int?> GetNumberOfAcceptedFriendRequestsSentByUser(
       String UserID) async // sent friend requests
   {
     AggregateQuerySnapshot count = await friendRequestsCollection
@@ -491,7 +491,7 @@ class DatabaseService {
     return jsonData;
   }
 
-  Future<int> GetNumberOfDeclinedFriendRequestsSentByUser(
+  Future<int?> GetNumberOfDeclinedFriendRequestsSentByUser(
       String UserID) async // sent friend requests
   {
     AggregateQuerySnapshot count = await friendRequestsCollection
@@ -530,7 +530,7 @@ class DatabaseService {
     return jsonData;
   }
 
-  Future<int> GetNumberOfPendingFriendRequestsRecivedByUser(
+  Future<int?> GetNumberOfPendingFriendRequestsRecivedByUser(
       String UserID) async // coming friend requests
   {
     AggregateQuerySnapshot count = await friendRequestsCollection
@@ -555,7 +555,7 @@ class DatabaseService {
     return jsonData;
   }
 
-  Future<int> GetNumberOfAcceptedFriendRequestsRecivedByUser(
+  Future<int?> GetNumberOfAcceptedFriendRequestsRecivedByUser(
       String UserID) async // coming friend requests
   {
     AggregateQuerySnapshot count = await friendRequestsCollection
@@ -580,7 +580,7 @@ class DatabaseService {
     return jsonData;
   }
 
-  Future<int> GetNumberOfDeclinedFriendRequestsRecivedByUser(
+  Future<int?> GetNumberOfDeclinedFriendRequestsRecivedByUser(
       String UserID) async // coming friend requests
   {
     AggregateQuerySnapshot count = await friendRequestsCollection
@@ -614,11 +614,11 @@ class DatabaseService {
         await GetNumberOfAcceptedFriendRequestsSentByUser(UserID);
     jsonData['declinedSent'] =
         await GetNumberOfDeclinedFriendRequestsSentByUser(UserID);
-    jsonData['pendingRecived'] =
+    jsonData['pendingReceived'] =
         await GetNumberOfPendingFriendRequestsRecivedByUser(UserID);
-    jsonData['acceptedRecived'] =
+    jsonData['acceptedReceived'] =
         await GetNumberOfAcceptedFriendRequestsRecivedByUser(UserID);
-    jsonData['declinedRecived'] =
+    jsonData['declinedReceived'] =
         await GetNumberOfDeclinedFriendRequestsRecivedByUser(UserID);
     jsonData['travels'] = await GetNumberOfTravelsOfUser(UserID);
     return jsonData;

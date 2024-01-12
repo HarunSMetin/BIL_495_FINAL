@@ -131,7 +131,7 @@ class _UserInfoCardState extends State<UserInfoCard> {
                             Column(
                               children: [
                                 Text(
-                                  snapshot.data!['acceptedRecived'].toString(),
+                                  snapshot.data!['acceptedReceived'].toString(),
                                   style: buildMontserrat(
                                     const Color(0xFF000000),
                                     fontWeight: FontWeight.bold,
