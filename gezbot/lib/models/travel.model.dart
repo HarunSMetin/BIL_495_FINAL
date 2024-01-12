@@ -124,4 +124,34 @@ class Travel {
       lastUpdatedQuestionId: 'empty',
     );
   }
+  dynamic fieldFromQuestionId(String questionId) {
+    switch (questionId) {
+      case '01_DepartureDate':
+        return this.departureDate;
+      case '02_ReturnDate':
+        return this.returnDate;
+      case '03_DesiredDestination':
+        return this.desiredDestination;
+      case '04_TravelTransportation':
+        return this.travelTransportation;
+      case '05_EstimatedBudget':
+        return this.estimatedBudget;
+      case '06_PurposeOfVisit':
+        return this.purposeOfVisit;
+      case '07_AccommodationPreferences':
+        return this.accommodationPreferences;
+      case '08_ActivitiesPreferences':
+        return this.activitiesPreferences;
+      case '09_DietaryRestrictions':
+        return this.dietaryRestrictions;
+      case '10_TravelingWithOthers':
+        return this.travelingWithOthers;
+      case '11_SpecialComment':
+        return this.specialComment;
+      case '12_LocalRecommendations':
+        return this.localRecommendations;
+      default:
+        return null;
+    }
+  }
 }
