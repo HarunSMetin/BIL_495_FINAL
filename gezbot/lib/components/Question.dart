@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gezbot/models/question.model.dart';
-import 'package:gezbot/shared/constants.dart';
 
 enum QuestionType { openEnded, date, multipleChoice, numberInput, yesNo }
 
@@ -47,10 +46,9 @@ class _QuestionWidgetState extends State<QuestionWidget> {
               style: const TextStyle(fontWeight: FontWeight.bold)),
         ),
         _buildAnswerField(QuestionType.values.firstWhere(
-            (type) =>
-                type.toString() ==
-                'QuestionType.${widget.question.questionType}',
-            orElse: () => QuestionType.openEnded)), // Handle undefined types
+          (type) =>
+              type.toString() == 'QuestionType.${widget.question.questionType}',
+        )), // Handle undefined types
       ],
     );
   }
@@ -59,6 +57,7 @@ class _QuestionWidgetState extends State<QuestionWidget> {
   Widget _buildAnswerField(QuestionType type) {
     switch (type) {
       case QuestionType.openEnded:
+        return _buildTextInputField(type);
       case QuestionType.numberInput:
         return _buildTextInputField(type);
       case QuestionType.date:
@@ -68,7 +67,7 @@ class _QuestionWidgetState extends State<QuestionWidget> {
       case QuestionType.yesNo:
         return _buildYesNoToggle();
       default:
-        return const SizedBox.shrink();
+        return Container();
     }
   }
 

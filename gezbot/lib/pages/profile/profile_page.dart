@@ -329,7 +329,7 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   bool isEditing = false;
   final UserService _userService = UserService(); // Instance of UserService
-  late Future<Map<String, String>> userDetailsFuture;
+  late Future<Map<String, dynamic>> userDetailsFuture;
   XFile? _imageFile;
   @override
   void initState() {
@@ -337,12 +337,7 @@ class _ProfilePageState extends State<ProfilePage> {
     userDetailsFuture = _getUserDetails();
   }
 
-  int _calculateAge(String birthDateString) {
-    if (birthDateString == 'Not available') {
-      return -1; // Indicates age is not available
-    }
-
-    DateTime birthDate = DateTime.parse(birthDateString);
+  int _calculateAge(DateTime birthDate) {
     DateTime currentDate = DateTime.now();
     int age = currentDate.year - birthDate.year;
     if (birthDate.month > currentDate.month ||
@@ -354,12 +349,14 @@ class _ProfilePageState extends State<ProfilePage> {
     return age;
   }
 
-  Future<Map<String, String>> _getUserDetails() async {
+  Future<Map<String, dynamic>> _getUserDetails() async {
     final prefs = await SharedPreferences.getInstance();
     String userEmail = prefs.getString('userEmail') ?? 'Not available';
     String userName = prefs.getString('userName') ?? 'Not available';
     String userPhotoUrl = prefs.getString('photoUrl') ?? '';
-    String userBirthDate = prefs.getString('birthDate') ?? 'Not available';
+    DateTime userBirthDate = prefs.getString('birthDate') != null
+        ? DateTime.parse(prefs.getString('birthDate')!)
+        : DateTime.now();
     String userGender = prefs.getString('gender') ?? 'Not available';
 
     return {

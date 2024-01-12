@@ -21,6 +21,7 @@ class Travel {
   final String travelingWithOthers;
   final String specialComment;
   final String localRecommendations;
+  final String lastUpdatedQuestionId;
 
   Travel({
     required this.id,
@@ -43,6 +44,7 @@ class Travel {
     required this.travelingWithOthers,
     required this.specialComment,
     required this.localRecommendations,
+    required this.lastUpdatedQuestionId,
   });
 
   factory Travel.fromMap(Map<String, dynamic> map) {
@@ -67,6 +69,7 @@ class Travel {
       travelingWithOthers: map['10_TravelingWithOthers'],
       specialComment: map['11_SpecialComment'],
       localRecommendations: map['12_LocalRecommendations'],
+      lastUpdatedQuestionId: map['lastUpdatedQuestionId'],
     );
   }
 
@@ -92,6 +95,33 @@ class Travel {
       'travelingWithOthers': travelingWithOthers,
       'specialComment': specialComment,
       'localRecommendations': localRecommendations,
+      'lastUpdatedQuestionId': lastUpdatedQuestionId,
     };
+  }
+
+  factory Travel.empty() {
+    return Travel(
+      id: 'empty',
+      name: 'empty',
+      description: 'empty',
+      creatorId: 'empty',
+      isPublic: false,
+      isCompleted: false,
+      lastUpdate: DateTime.now(),
+      members: [],
+      departureDate: DateTime.now(),
+      returnDate: DateTime.now(),
+      desiredDestination: 'empty',
+      travelTransportation: 'empty',
+      purposeOfVisit: 'empty',
+      estimatedBudget: 'empty',
+      accommodationPreferences: 'empty',
+      activitiesPreferences: 'empty',
+      dietaryRestrictions: 'empty',
+      travelingWithOthers: 'empty',
+      specialComment: 'empty',
+      localRecommendations: 'empty',
+      lastUpdatedQuestionId: 'empty',
+    );
   }
 }

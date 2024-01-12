@@ -76,17 +76,16 @@ class _TravelsScreenState extends State<TravelsScreen> {
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  if (value.values.isEmpty) {
-                    return const Dialog(
+                  if (value == null) {
+                    return Dialog(
                       child: PreTravelCreation(
-                        travel: null,
+                        travel: Travel.empty(),
                       ),
                     );
                   } else {
                     return Dialog(
                       child: PreTravelCreation(
-                        travel: Travel.fromMap(
-                            {...value.values.last, 'id': value.keys.last}),
+                        travel: value,
                       ),
                     );
                   }
