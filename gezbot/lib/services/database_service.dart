@@ -403,31 +403,82 @@ class DatabaseService {
   }
 
 //FRIENDS
-  Future<Map<String, dynamic>> GetFollowingsOfUser(String UserID) async {
+  Future<List<UserModel>> GetFollowingsOfUser(String UserID) async {
     QuerySnapshot querySnapshot = await friendRequestsCollection
         .where('senderId', isEqualTo: UserID)
         .where('status', isEqualTo: 'accepted')
         .get();
-    Map<String, dynamic> jsonData = {};
-    await Future.forEach(querySnapshot.docs, (result) async {
-      jsonData[result.id] = result.data() as Map<String, dynamic>;
-    });
-    return jsonData;
+
+    List<UserModel> followings = [];
+    for (var doc in querySnapshot.docs) {
+      String followingId = (doc.data() as Map<String, dynamic>)['receiverId'];
+      DocumentSnapshot userDoc = await userCollection.doc(followingId).get();
+      if (userDoc.exists) {
+        Map<String, dynamic> userData = userDoc.data() as Map<String, dynamic>;
+        userData['id'] = followingId; // Add the followingId to the userData map
+        followings.add(UserModel.fromMap(userData));
+      }
+    }
+    return followings;
   }
 
-  Future<Map<String, dynamic>> GetFollowersOfUser(String UserID) async {
+  Future<List<UserModel>> GetFollowersOfUser(String UserID) async {
     QuerySnapshot querySnapshot = await friendRequestsCollection
         .where('receiverId', isEqualTo: UserID)
         .where('status', isEqualTo: 'accepted')
         .get();
-    Map<String, dynamic> jsonData = {};
-    await Future.forEach(querySnapshot.docs, (result) async {
-      jsonData[result.id] = result.data() as Map<String, dynamic>;
-    });
-    return jsonData;
+
+    List<UserModel> followers = [];
+    for (var doc in querySnapshot.docs) {
+      String followerId = (doc.data() as Map<String, dynamic>)['senderId'];
+      DocumentSnapshot userDoc = await userCollection.doc(followerId).get();
+      if (userDoc.exists) {
+        Map<String, dynamic> userData = userDoc.data() as Map<String, dynamic>;
+        userData['id'] = followerId;
+        followers.add(UserModel.fromMap(userData));
+      }
+    }
+    return followers;
   }
 
 //(GET) FRIEND REQUESTS (SENT)
+
+  Future<List<UserModel>> GetAcceptedFriendRequestsSentByUser(
+      String UserID) async {
+    QuerySnapshot querySnapshot = await friendRequestsCollection
+        .where('senderId', isEqualTo: UserID)
+        .where('status', isEqualTo: 'accepted')
+        .get();
+
+    List<UserModel> users = [];
+    for (var doc in querySnapshot.docs) {
+      String receiverId = (doc.data() as Map<String, dynamic>)['receiverId'];
+      DocumentSnapshot userDoc = await userCollection.doc(receiverId).get();
+      if (userDoc.exists) {
+        users.add(UserModel.fromMap(userDoc.data() as Map<String, dynamic>));
+      }
+    }
+    return users;
+  }
+
+  Future<List<UserModel>> GetAcceptedFriendRequestsRecivedByUser(
+      String UserID) async {
+    QuerySnapshot querySnapshot = await friendRequestsCollection
+        .where('receiverId', isEqualTo: UserID)
+        .where('status', isEqualTo: 'accepted')
+        .get();
+
+    List<UserModel> users = [];
+    for (var doc in querySnapshot.docs) {
+      String senderId = (doc.data() as Map<String, dynamic>)['senderId'];
+      DocumentSnapshot userDoc = await userCollection.doc(senderId).get();
+      if (userDoc.exists) {
+        users.add(UserModel.fromMap(userDoc.data() as Map<String, dynamic>));
+      }
+    }
+    return users;
+  }
+
   Future<Map<String, dynamic>> GetAllFriendRequestsSentByUser(
       String UserID) async //Sent friend requests
   {
@@ -475,20 +526,6 @@ class DatabaseService {
         .count()
         .get();
     return count.count;
-  }
-
-  Future<Map<String, dynamic>> GetAcceptedFriendRequestsSentByUser(
-      String UserID) async // sent friend requests
-  {
-    QuerySnapshot querySnapshot = await friendRequestsCollection
-        .where('senderId', isEqualTo: UserID)
-        .where('status', isEqualTo: 'accepted')
-        .get();
-    Map<String, dynamic> jsonData = {};
-    await Future.forEach(querySnapshot.docs, (result) async {
-      jsonData[result.id] = result.data() as Map<String, dynamic>;
-    });
-    return jsonData;
   }
 
   Future<int?> GetNumberOfDeclinedFriendRequestsSentByUser(
@@ -556,28 +593,13 @@ class DatabaseService {
   }
 
   Future<int?> GetNumberOfAcceptedFriendRequestsRecivedByUser(
-      String UserID) async // coming friend requests
-  {
+      String UserID) async {
     AggregateQuerySnapshot count = await friendRequestsCollection
         .where('receiverId', isEqualTo: UserID)
         .where('status', isEqualTo: 'accepted')
         .count()
         .get();
     return count.count;
-  }
-
-  Future<Map<String, dynamic>> GetAcceptedFriendRequestsRecivedByUser(
-      String UserID) async // coming friend requests
-  {
-    QuerySnapshot querySnapshot = await friendRequestsCollection
-        .where('receiverId', isEqualTo: UserID)
-        .where('status', isEqualTo: 'accepted')
-        .get();
-    Map<String, dynamic> jsonData = {};
-    await Future.forEach(querySnapshot.docs, (result) async {
-      jsonData[result.id] = result.data() as Map<String, dynamic>;
-    });
-    return jsonData;
   }
 
   Future<int?> GetNumberOfDeclinedFriendRequestsRecivedByUser(
@@ -647,6 +669,30 @@ class DatabaseService {
     return await friendRequestsCollection.doc(RequestID).set({
       'status': 'declined',
       'statusChangedAt': DateTime.now(),
+    });
+  }
+
+  Future removeFollower(String UserID, String FollowerID) async {
+    return await friendRequestsCollection
+        .where('senderId', isEqualTo: FollowerID)
+        .where('receiverId', isEqualTo: UserID)
+        .get()
+        .then((value) async {
+      if (value.docs.length > 0) {
+        await friendRequestsCollection.doc(value.docs[0].id).delete();
+      }
+    });
+  }
+
+  Future removeFollowing(String UserID, String FollowingID) async {
+    return await friendRequestsCollection
+        .where('senderId', isEqualTo: UserID)
+        .where('receiverId', isEqualTo: FollowingID)
+        .get()
+        .then((value) async {
+      if (value.docs.length > 0) {
+        await friendRequestsCollection.doc(value.docs[0].id).delete();
+      }
     });
   }
 
