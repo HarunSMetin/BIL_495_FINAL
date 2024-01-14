@@ -7,7 +7,9 @@ import 'package:gezbot/services/user_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+  final String userId;
+
+  const ProfilePage({super.key, required this.userId});
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -20,7 +22,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    userDetailsFuture = _fetchUserDetails();
+    userDetailsFuture = _userService.fetchUserDetails(widget.userId);
   }
 
   Future<UserModel> _fetchUserDetails() async {
