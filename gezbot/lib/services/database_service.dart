@@ -17,19 +17,6 @@ class DatabaseService {
   final CollectionReference friendRequestsCollection =
       FirebaseFirestore.instance.collection('friendRequests');
 
-  final List<String> userQuestions = [
-    '01_SpeedOfTravel',
-    '02_PreferredDestinations',
-    '03_MainTravelGoal',
-    '04_TravelingPreferences',
-    '05_EveningPreferences',
-    '06_ExcitingActivities',
-    '07_BudgetConsideration',
-    '08_AccommodationPreferences',
-    '09_ExoticFoodsAttitude',
-    '10_TravelPlanningApproach',
-  ];
-
   void printInlinedJson(Map<String, dynamic> jsonData, {String indent = ''}) {
     jsonData.forEach((key, value) {
       if (value is Map<String, dynamic>) {
@@ -224,16 +211,16 @@ class DatabaseService {
 
 //TRAVELS
 
-  Future<Map<String, Travel>> GetAllTravelsOfUser(String UserID) async {
+  Future<List<Travel>> GetAllTravelsOfUser(String UserID) async {
     QuerySnapshot querySnapshot =
         await travelsCollection.where('members', arrayContains: UserID).get();
-    Map<String, Travel> travelData = {};
+    List<Travel> travels = [];
     await Future.forEach(querySnapshot.docs, (result) async {
-      Map<String, dynamic> temp = result.data() as Map<String, dynamic>;
-      temp['id'] = result.id;
-      travelData[result.id] = Travel.fromMap(temp);
+      Map<String, dynamic> travelData = result.data() as Map<String, dynamic>;
+      travelData['id'] = result.id;
+      travels.add(Travel.fromMap(travelData));
     });
-    return travelData;
+    return travels;
   }
 
   Future<int?> GetNumberOfTravelsOfUser(String UserID) async {
@@ -714,5 +701,135 @@ class DatabaseService {
       return true;
     }
     return false;
+  }
+
+  //SEARCH FUNCTIONS
+
+  Future<List<UserModel>> SearchUsersByUserName(String query) async {
+    QuerySnapshot querySnapshot = await userCollection
+        .where('userName', isGreaterThanOrEqualTo: query.trim())
+        .where('userName', isLessThanOrEqualTo: query.trim() + '\uf8ff')
+        .get();
+    List<UserModel> users = [];
+    for (var doc in querySnapshot.docs) {
+      Map<String, dynamic> userData = doc.data() as Map<String, dynamic>;
+      userData['id'] = doc.id;
+      users.add(UserModel.fromMap(userData));
+    }
+    return users;
+  }
+
+  Future<List<UserModel>> SearchUsersByEmail(String query) async {
+    QuerySnapshot querySnapshot = await userCollection
+        .where('email', isGreaterThanOrEqualTo: query.trim())
+        .where('email', isLessThanOrEqualTo: query.trim() + '\uf8ff')
+        .get();
+    List<UserModel> users = [];
+    for (var doc in querySnapshot.docs) {
+      Map<String, dynamic> userData = doc.data() as Map<String, dynamic>;
+      userData['id'] = doc.id;
+      users.add(UserModel.fromMap(userData));
+    }
+    return users;
+  }
+
+  Future<List<UserModel>> ByUserNameAndEmail(String query) async {
+    List<UserModel> users = [];
+    List<UserModel> email = await SearchUsersByEmail(query);
+    users.addAll(await SearchUsersByUserName(query));
+
+    for (var emailsearchuser in email) {
+      bool isExist = false;
+      for (var user in users) {
+        if (user.id == emailsearchuser.id) {
+          isExist = true;
+        }
+      }
+      if (!isExist) {
+        users.add(emailsearchuser);
+      }
+    }
+    return users;
+  }
+
+  Future<List<Travel>> SearchTravelsByTravelName(String query) async {
+    QuerySnapshot querySnapshot = await travelsCollection
+        .where('name', isGreaterThanOrEqualTo: query.trim())
+        .where('name', isLessThanOrEqualTo: query.trim() + '\uf8ff')
+        .where('isPublic', isEqualTo: true)
+        .get();
+    List<Travel> travels = [];
+    for (var doc in querySnapshot.docs) {
+      Map<String, dynamic> travelData = doc.data() as Map<String, dynamic>;
+      travelData['id'] = doc.id;
+      travels.add(Travel.fromMap(travelData));
+    }
+    return travels;
+  }
+
+  Future<List<Travel>> SearchTravelsByUserEmail(String query) async {
+    //find Travel creator id then match search id with creator id then get all travels of that user
+    QuerySnapshot querySnapshot = await userCollection
+        .where('email', isGreaterThanOrEqualTo: query.trim())
+        .where('email', isLessThanOrEqualTo: query.trim() + '\uf8ff')
+        .limit(5)
+        .get();
+    List<Travel> travels = [];
+    for (var doc in querySnapshot.docs) {
+      Map<String, dynamic> userData = doc.data() as Map<String, dynamic>;
+      userData['id'] = doc.id;
+      travels.addAll(await GetAllTravelsOfUser(userData['id']));
+    }
+    return travels;
+  }
+
+  Future<List<Travel>> SearchTravelsByUserName(String query) async {
+    //find Travel creator id then match search id with creator id then get all travels of that user
+    QuerySnapshot querySnapshot = await userCollection
+        .where('userName', isGreaterThanOrEqualTo: query.trim())
+        .where('userName', isLessThanOrEqualTo: query.trim() + '\uf8ff')
+        .limit(5)
+        .get();
+    List<Travel> travels = [];
+    for (var doc in querySnapshot.docs) {
+      Map<String, dynamic> userData = doc.data() as Map<String, dynamic>;
+      userData['id'] = doc.id;
+      travels.addAll(await GetAllTravelsOfUser(userData['id']));
+    }
+    return travels;
+  }
+
+  Future<List<Travel>> SearchTravelsByUserNameAndEmail(String query) async {
+    List<Travel> travels = [];
+    List<Travel> name = await SearchTravelsByUserName(query);
+    travels.addAll(await SearchTravelsByUserEmail(query));
+    for (var namesearchtravel in name) {
+      bool isExist = false;
+      for (var travel in travels) {
+        if (travel.id == namesearchtravel.id) {
+          isExist = true;
+        }
+      }
+      if (!isExist) {
+        travels.add(namesearchtravel);
+      }
+    }
+    return travels;
+  }
+
+  Future<List<Travel>> SearchTravelsByDestination(String query) async {
+    QuerySnapshot querySnapshot = await travelsCollection
+        .where('03_DesiredDestination', isGreaterThanOrEqualTo: query.trim())
+        .where('03_DesiredDestination',
+            isLessThanOrEqualTo: query.trim() + '\uf8ff')
+        .where('isPublic', isEqualTo: true)
+        .get();
+    List<Travel> travels = [];
+    for (var doc in querySnapshot.docs) {
+      Map<String, dynamic> travelData = doc.data() as Map<String, dynamic>;
+      travelData['id'] = doc.id;
+      travels.add(Travel.fromMap(travelData));
+    }
+    return travels;
   }
 }

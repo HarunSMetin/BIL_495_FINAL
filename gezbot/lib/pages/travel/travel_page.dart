@@ -35,9 +35,8 @@ class _TravelsScreenState extends State<TravelsScreen> {
     prefs = await SharedPreferences.getInstance();
     String? userId = prefs.getString('uid');
     if (userId != null) {
-      Map<String, Travel> travelsData =
-          await dbService.GetAllTravelsOfUser(userId);
-      return travelsData.values.toList();
+      List<Travel> travelsData = await dbService.GetAllTravelsOfUser(userId);
+      return travelsData;
     } else {
       return [];
     }

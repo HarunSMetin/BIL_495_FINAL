@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:gezbot/components/tempTravelQuestion.dart';
 import 'dart:math' as math;
 import 'package:gezbot/pages/profile/profile_page.dart';
+import 'package:gezbot/pages/search/search.dart';
 import 'package:gezbot/pages/travel/travel_page.dart';
 import 'package:gezbot/pages/login_screen/components/center_widget/center_widget.dart';
 
@@ -108,9 +110,6 @@ class _HomePageState extends State<HomePage>
     Size screenSize = getScreenSize(context);
 
     final List<Widget> _widgetOptions = [
-      Text('Home Tab'),
-      Text('Search Tab'),
-      TravelsScreen(),
       Stack(
         children: [
           AnimatedBuilder(
@@ -134,9 +133,12 @@ class _HomePageState extends State<HomePage>
             },
           ),
           CenterWidget(size: screenSize), // Use screenSize here
-          ProfilePage(),
+          Text('Home Tab'),
         ],
       ),
+      SearchPage(),
+      TravelsScreen(),
+      ProfilePage(),
     ];
 
     return Scaffold(

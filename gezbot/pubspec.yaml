@@ -42,6 +42,7 @@ dependencies:
   permission_handler: ^11.1.0
   uuid: ^4.2.2
   ionicons: ^0.2.2
+  flutter_bloc: ^8.1.3
 dev_dependencies:
   flutter_test:
     sdk: flutter
