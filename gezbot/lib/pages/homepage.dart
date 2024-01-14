@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:gezbot/pages/profile/profile_page.dart';
 import 'package:gezbot/pages/travel/travel_page.dart';
 import 'package:gezbot/pages/login_screen/components/center_widget/center_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -14,12 +15,17 @@ class _HomePageState extends State<HomePage>
   late AnimationController _animationController;
   late Animation<Offset> _topAnimation;
   late Animation<Offset> _bottomAnimation;
-  final math.Random random = math.Random();
-  int _selectedIndex = 0;
+  Future<String> _uidFuture = _fetchUID(); // Initialize immediately
+
+  static Future<String> _fetchUID() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('uid') ?? '';
+  }
 
   @override
   void initState() {
     super.initState();
+
     _animationController = AnimationController(
       duration: const Duration(seconds: 2),
       vsync: this,
@@ -27,12 +33,12 @@ class _HomePageState extends State<HomePage>
 
     _topAnimation = Tween<Offset>(
       begin: Offset.zero,
-      end: Offset(random.nextDouble(), random.nextDouble()),
+      end: Offset(math.Random().nextDouble(), math.Random().nextDouble()),
     ).animate(_animationController);
 
     _bottomAnimation = Tween<Offset>(
       begin: Offset.zero,
-      end: Offset(random.nextDouble(), random.nextDouble()),
+      end: Offset(math.Random().nextDouble(), math.Random().nextDouble()),
     ).animate(_animationController);
   }
 
@@ -45,17 +51,6 @@ class _HomePageState extends State<HomePage>
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
-      // Restart the animation with new random end values
-      _topAnimation = Tween<Offset>(
-        begin: Offset.zero,
-        end: Offset(random.nextDouble() * 2 - 1, random.nextDouble() * 2 - 1),
-      ).animate(_animationController);
-
-      _bottomAnimation = Tween<Offset>(
-        begin: Offset.zero,
-        end: Offset(random.nextDouble() * 2 - 1, random.nextDouble() * 2 - 1),
-      ).animate(_animationController);
-
       _animationController.forward(from: 0.0);
     });
   }
@@ -103,6 +98,8 @@ class _HomePageState extends State<HomePage>
     return MediaQuery.of(context).size;
   }
 
+  int _selectedIndex = 0; // Define the selected index
+
   @override
   Widget build(BuildContext context) {
     Size screenSize = getScreenSize(context);
@@ -111,34 +108,24 @@ class _HomePageState extends State<HomePage>
       Text('Home Tab'),
       Text('Search Tab'),
       TravelsScreen(),
-      Stack(
-        children: [
-          AnimatedBuilder(
-            animation: _animationController,
-            builder: (context, child) {
-              return Positioned(
-                top: _topAnimation.value.dy * screenSize.height,
-                left: _topAnimation.value.dx * screenSize.width,
-                child: topWidget(screenSize.width),
-              );
-            },
-          ),
-          AnimatedBuilder(
-            animation: _animationController,
-            builder: (context, child) {
-              return Positioned(
-                bottom: _bottomAnimation.value.dy * screenSize.height,
-                left: _bottomAnimation.value.dx * screenSize.width,
-                child: bottomWidget(screenSize.width),
-              );
-            },
-          ),
-          CenterWidget(size: screenSize), // Use screenSize here
-          ProfilePage(),
-        ],
+      FutureBuilder<String>(
+        future: _uidFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          }
+          if (snapshot.hasError ||
+              !snapshot.hasData ||
+              snapshot.data!.isEmpty) {
+            return Text('Error fetching user data');
+          }
+          return ProfilePage(
+              userId: snapshot
+                  .data!); // Assuming ProfilePage accepts a userId parameter
+        },
       ),
+// Additional widget options if needed
     ];
-
     return Scaffold(
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
@@ -163,7 +150,7 @@ class _HomePageState extends State<HomePage>
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: const Color.fromARGB(255, 124, 136, 146),
+        selectedItemColor: Colors.blue,
         unselectedItemColor: Colors.grey,
         onTap: _onItemTapped,
       ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:gezbot/pages/profile/profile_page.dart';
 import 'package:gezbot/services/database_service.dart';
 import 'package:gezbot/models/user.model.dart';
+import 'package:gezbot/components/UserTile.dart';
 
 class FollowingsScreen extends StatefulWidget {
   final String userId;
@@ -36,21 +38,17 @@ class _FollowingsScreenState extends State<FollowingsScreen> {
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
                 UserModel following = snapshot.data![index];
-                return ListTile(
-                  title: Text(
-                    following.userName,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  leading: CircleAvatar(
-                    backgroundImage: NetworkImage(following.photoUrl),
-                  ),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.remove_circle_outline),
-                    onPressed: () async {
-                      await _databaseService.removeFollowing(
-                          widget.userId, following.id);
-                    },
-                  ),
+                return UserTile(
+                  user: following,
+                  currentUserId: widget.userId,
+                  databaseService: _databaseService,
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => ProfilePage(userId: following.id),
+                      ),
+                    );
+                  },
                 );
               },
             );
