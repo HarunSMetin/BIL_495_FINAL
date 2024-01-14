@@ -123,7 +123,7 @@ class _TravelsScreenState extends State<TravelsScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => TravelInformation(travel: travel),
+                        builder: (context) => TravelInfo(travel: travel),
                       ),
                     );
                   },

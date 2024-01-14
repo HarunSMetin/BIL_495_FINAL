@@ -100,7 +100,7 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => TravelInformation(travel: travel),
+            builder: (context) => TravelInfo(travel: travel),
           ),
         );
       });
