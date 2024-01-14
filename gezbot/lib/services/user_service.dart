@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:gezbot/models/user.model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:uuid/uuid.dart';
@@ -302,6 +303,20 @@ class UserService {
       await prefs.setString(
           'userEmail', userDetails['email'] ?? 'Not available');
       await prefs.setString('uid', userId);
+    }
+  }
+
+  Future<UserModel> fetchUserDetails(String userId) async {
+    DocumentSnapshot userDoc =
+        await _firestore.collection('users').doc(userId).get();
+    if (userDoc.exists) {
+      Map<String, dynamic> userDetails = userDoc.data() as Map<String, dynamic>;
+      userDetails['id'] =
+          userDoc.id; // Include the user ID in the userDetails map
+      print(userDetails);
+      return UserModel.fromMap(userDetails);
+    } else {
+      return UserModel.empty();
     }
   }
 }

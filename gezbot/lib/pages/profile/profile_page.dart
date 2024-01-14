@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:gezbot/pages/profile/edit_profile_page.dart';
-import 'package:gezbot/services/database_service.dart';
-import 'package:image_picker/image_picker.dart';
+import 'package:gezbot/pages/profile/widgets/ProfileHeader.dart';
+import 'package:gezbot/pages/profile/widgets/StatWidget.dart';
+import 'package:gezbot/pages/profile/widgets/profile_action_buttons.dart';
+import 'package:gezbot/models/user.model.dart';
+import 'package:gezbot/services/user_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:gezbot/services/user_service.dart'; // Import UserService
-
-//from profile branch
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -17,384 +14,49 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  late String userID;
-  final DatabaseService _databaseService = DatabaseService();
-  bool isEditing = false;
-  final UserService _userService = UserService(); // Instance of UserService
-  late Future<Map<String, dynamic>> userDetailsFuture;
-  XFile? _imageFile;
+  late Future<UserModel> userDetailsFuture;
+  final UserService _userService = UserService();
+
   @override
   void initState() {
     super.initState();
-    userDetailsFuture = _getUserDetails();
+    userDetailsFuture = _fetchUserDetails();
   }
 
-  int _calculateAge(DateTime birthDate) {
-    DateTime currentDate = DateTime.now();
-    int age = currentDate.year - birthDate.year;
-    if (birthDate.month > currentDate.month ||
-        (birthDate.month == currentDate.month &&
-            birthDate.day > currentDate.day)) {
-      age--;
-    }
-
-    return age;
-  }
-
-  Future<Map<String, dynamic>> _getUserDetails() async {
+  Future<UserModel> _fetchUserDetails() async {
     final prefs = await SharedPreferences.getInstance();
-    userID = prefs.getString('uid') ?? '';
-    String userEmail = prefs.getString('userEmail') ?? 'Not available';
-    String userName = prefs.getString('userName') ?? 'Not available';
-    String userPhotoUrl = prefs.getString('photoUrl') ?? '';
-    DateTime userBirthDate = prefs.getString('birthDate') != null
-        ? DateTime.parse(prefs.getString('birthDate')!)
-        : DateTime.now();
-    String userGender = prefs.getString('gender') ?? 'Not available';
-
-    return {
-      'email': userEmail,
-      'name': userName,
-      'photoUrl': userPhotoUrl,
-      'birthDate': userBirthDate,
-      'gender': userGender,
-    };
+    String currentUserId = prefs.getString('uid') ?? '';
+    return _userService.fetchUserDetails(currentUserId);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: FutureBuilder(
-        future:
-            _getUserDetails(), // Replace _getUserDetails with your actual method
+    return Scaffold(
+      body: FutureBuilder<UserModel>(
+        future: userDetailsFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator(); // Show loading indicator while fetching data
+            return const CircularProgressIndicator();
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
+          } else if (snapshot.hasData) {
+            return _buildProfilePage(snapshot.data!);
           } else {
-            return SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    color: const Color.fromRGBO(255, 255, 255,
-                        0.621), // Add white background color with 150 opacity
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Column(
-                            children: [
-                              CircleAvatar(
-                                radius: MediaQuery.of(context).size.width / 8,
-                                backgroundImage:
-                                    NetworkImage(snapshot.data!['photoUrl']!),
-                              ),
-                              const SizedBox(
-                                height: 8,
-                              ), // Add some space between CircleAvatar and Text
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width /
-                                    4, // Adjust the width as needed
-                                child: Text(
-                                  snapshot.data?['name'] ?? 'Not available',
-                                  style: const TextStyle(
-                                    fontSize: 16.0,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(
-                            width: 20,
-                          ), // Add some space between image and stats
-                          Expanded(
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical:
-                                          8.0), // Adjust the vertical space between rows
-                                  child: FutureBuilder<Map<String, dynamic>>(
-                                    future: _databaseService.GetUserSummary(
-                                        userID), // Replace with your actual method
-                                    builder: (context, snapshot) {
-                                      return Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          _buildStat(
-                                            "Travels",
-                                            snapshot.data?['travels']
-                                                    .toString() ??
-                                                "0", // Replace with actual trip count
-                                          ),
-                                          _buildStat(
-                                            "Followers",
-                                            snapshot.data?['acceptedReceived']
-                                                    .toString() ??
-                                                "0", // Replace with actual follower count
-                                          ),
-                                          _buildStat(
-                                            "Following",
-                                            snapshot.data?['acceptedSent']
-                                                    .toString() ??
-                                                "0", // Replace with actual following count
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  ),
-                                ),
-
-                                const SizedBox(
-                                  height: 15,
-                                ), // Adding space between the statistics and the text boxes
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical:
-                                          2.0), // Adjust the vertical space between rows
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    crossAxisAlignment: CrossAxisAlignment
-                                        .start, // or CrossAxisAlignment.center
-                                    children: [
-                                      Expanded(
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 8.0),
-                                          child: _buildTextBox(
-                                            "Age",
-                                            _calculateAge(snapshot.data?[
-                                                            'birthDate'] ??
-                                                        'Not available') !=
-                                                    -1
-                                                ? _calculateAge(snapshot.data?[
-                                                            'birthDate'] ??
-                                                        'Not available')
-                                                    .toString()
-                                                : 'Not available',
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 8.0),
-                                          child: _buildTextBox(
-                                            "Gender",
-                                            snapshot.data?['gender'] ??
-                                                'Not available',
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const Divider(
-                    thickness: 1,
-                  ),
-                  const SizedBox(
-                      height: 10), // Add space between stats and buttons
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width *
-                            0.4, // Set the button width
-                        height: 35, // Set the button height
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                  8.0), // Set button shape
-                            ),
-                          ),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => EditProfilePage()),
-                            );
-                          },
-                          child: const Text('Edit Profile'),
-                        ),
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width *
-                            0.4, // Set the button width
-                        height: 35, // Set the button height
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                                  8.0), // Set button shape
-                            ),
-                          ),
-                          onPressed: () {
-                            // Implement share profile functionality
-                          },
-                          child: const Text('Share Profile'),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            );
+            return const Text('No data available');
           }
         },
       ),
     );
   }
 
-  Widget _buildStat(String title, String value) {
-    return GestureDetector(
-      onTap: () {
-        switch (title) {
-          case "Followers":
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => _buildStatDetailed(title, 1000),
-              ),
-            );
-            break;
-          case "Following":
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => _buildStatDetailed(title, 500),
-              ),
-            );
-            break;
-          case "Trips":
-            Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (context) => _buildTripDetailed(context),
-              ),
-            );
-            break;
-        }
-      },
+  Widget _buildProfilePage(UserModel user) {
+    return SingleChildScrollView(
       child: Column(
         children: [
-          Text(
-            value,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            title,
-            style: const TextStyle(
-              color: Colors.grey,
-            ),
-          ),
+          UserProfileHeader(user: user),
+          UserStats(user: user),
+          ProfileActionButtons(),
         ],
-      ),
-    );
-  }
-
-  Widget _buildTextBox(String label, String value) {
-    return Container(
-      padding: const EdgeInsets.all(4.0),
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: Colors.grey,
-          width: 1.0,
-        ),
-        borderRadius: BorderRadius.circular(8.0),
-      ),
-      child: Text(
-        '$label: $value',
-        style: const TextStyle(
-          fontSize: 16.0,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
-  }
-
-  Widget _buildStatDetailed(String title, int itemCount) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(title), // Modify the title as needed
-      ),
-      body: ListView.builder(
-        itemCount: itemCount,
-        itemBuilder: (BuildContext context, int index) {
-          return Column(
-            children: [
-              ListTile(
-                leading: const Icon(Icons.person),
-                title: Text('Person ${index + 1}'),
-                subtitle: const Text('Member'),
-
-                trailing: title == 'Following'
-                    ? IconButton(
-                        onPressed: () {
-                          debugPrint('User will be unfollowed here');
-                          // Add your logic here for unfollowing the user
-                        },
-                        icon: const Icon(Icons.remove_circle_outline),
-                      )
-                    : null, // If title is not 'Following', set trailing to null
-              ),
-              if (index < itemCount - 1)
-                const Divider(), // Add a Divider for all but the last item
-            ],
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildTripDetailed(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Trip Details'),
-      ),
-      body: const Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Location: Eskisehir',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 10),
-            Text(
-              'Group Members: members',
-              style: TextStyle(
-                fontSize: 16,
-              ),
-            ),
-            SizedBox(height: 10),
-            Text(
-              'Date: date',
-              style: TextStyle(
-                fontSize: 16,
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
