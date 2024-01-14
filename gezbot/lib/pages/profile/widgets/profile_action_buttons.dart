@@ -13,7 +13,6 @@ class ProfileActionButtons extends StatelessWidget {
             context,
             text: 'Edit Profile',
             onPressed: () {
-              // Implement navigation to the Edit Profile page
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => EditProfilePage()),
@@ -23,9 +22,7 @@ class ProfileActionButtons extends StatelessWidget {
           _buildActionButton(
             context,
             text: 'Share Profile',
-            onPressed: () {
-              // Implement Share Profile functionality
-            },
+            onPressed: () {},
           ),
         ],
       ),
@@ -36,14 +33,14 @@ class ProfileActionButtons extends StatelessWidget {
       {required String text, required VoidCallback onPressed}) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        primary: Theme.of(context).primaryColor,
+        backgroundColor: Theme.of(context).primaryColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.0),
         ),
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
       ),
       onPressed: onPressed,
-      child: Text(text),
+      child: Text(text, style: const TextStyle(color: Colors.white)),
     );
   }
 }
