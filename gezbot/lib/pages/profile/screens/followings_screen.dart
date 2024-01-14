@@ -18,12 +18,6 @@ class _FollowingsScreenState extends State<FollowingsScreen> {
     return _databaseService.GetFollowingsOfUser(widget.userId);
   }
 
-  void _unfollowUser(String followingId) {
-    // TODO: Implement the functionality to unfollow a user
-    print('Unfollow user: $followingId');
-    // After unfollowing, you might want to refresh the list of followings
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
