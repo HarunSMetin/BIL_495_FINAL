@@ -144,3 +144,7 @@ app.*.map.json
 /gezbot/android/app/release
 
 #/gezbot/lib/firebase_options.dart
+gezbot/linux/flutter/generated_plugin_registrant.cc
+gezbot/macos/Flutter/GeneratedPluginRegistrant.swift
+gezbot/windows/flutter/generated_plugin_registrant.cc
+gezbot/windows/flutter/generated_plugins.cmake

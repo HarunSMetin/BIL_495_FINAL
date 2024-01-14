@@ -29,6 +29,13 @@
             {
               "client_id": "1027985224810-jeioofe75dtanigd4r1vtgv4v4glemis.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "1027985224810-2lq9uqjp351fu4evn7k2r0n4m28tuqjm.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.gezbot"
+              }
             }
           ]
         }

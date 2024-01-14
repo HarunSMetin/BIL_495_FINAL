@@ -2,7 +2,7 @@ name: gezbot
 description: "A new Flutter project."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.2.3 <4.0.0'
+  sdk: ">=3.2.3 <4.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -31,17 +31,22 @@ dependencies:
   flutter:
     sdk: flutter
 
+<<<<<<< HEAD
   ionicons: ^0.1.2
   cupertino_icons: ^1.0.2
+=======
+  cupertino_icons: ^1.0.6
+>>>>>>> 7de1de7662b6b44ed7fa4f0335512cdf4860bbe6
   firebase_core: ^2.24.2
   firebase_auth: ^4.15.3
   shared_preferences: ^2.2.2
-  google_sign_in: ^6.2.1 
+  google_sign_in: ^6.2.1
   cloud_firestore: ^4.13.6
   image_picker: ^1.0.5
   firebase_storage: ^11.5.6
   permission_handler: ^11.1.0
   uuid: ^4.2.2
+  ionicons: ^0.2.2
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -58,7 +63,6 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -73,6 +77,17 @@ flutter:
           weight: 600
         - asset: assets/fonts/Montserrat-Bold.otf
           weight: 700
+<<<<<<< HEAD
+=======
+
+  assets:
+    - assets/images/google.png
+    - assets/images/chat_background.jpg
+  # To add assets to your application, add an assets section, like this:
+  # assets:
+  #   - images/a_dot_burr.jpeg
+  #   - images/a_dot_ham.jpeg
+>>>>>>> 7de1de7662b6b44ed7fa4f0335512cdf4860bbe6
 
   assets:
     - assets/images/facebook.png
