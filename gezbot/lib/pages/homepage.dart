@@ -134,7 +134,20 @@ class _HomePageState extends State<HomePage>
         ],
       ),
       SearchPage(),
-      TravelsScreen(),
+      FutureBuilder<String>(
+        future: _uidFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return CircularProgressIndicator();
+          }
+          if (snapshot.hasError ||
+              !snapshot.hasData ||
+              snapshot.data!.isEmpty) {
+            return Text('Error fetching user data');
+          }
+          return TravelsScreen(userId: snapshot.data!);
+        },
+      ),
       FutureBuilder<String>(
         future: _uidFuture,
         builder: (context, snapshot) {

@@ -18,10 +18,11 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   late Future<UserModel> userDetailsFuture;
   final UserService _userService = UserService();
-
+  String _viewerID = 'empty';
   @override
   void initState() {
     super.initState();
+    _initializeViewerID();
     userDetailsFuture = _userService.fetchUserDetails(widget.userId);
   }
 
@@ -29,6 +30,13 @@ class _ProfilePageState extends State<ProfilePage> {
     final prefs = await SharedPreferences.getInstance();
     String currentUserId = prefs.getString('uid') ?? '';
     return _userService.fetchUserDetails(currentUserId);
+  }
+
+  void _initializeViewerID() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _viewerID = prefs.getString('uid') ?? '';
+    });
   }
 
   @override
@@ -56,7 +64,9 @@ class _ProfilePageState extends State<ProfilePage> {
       child: Column(
         children: [
           UserProfileHeader(user: user),
-          UserStats(user: user),
+          UserStats(
+              userId: _viewerID,
+              user: user), // Pass the UserModel instance here
           ProfileActionButtons(),
         ],
       ),

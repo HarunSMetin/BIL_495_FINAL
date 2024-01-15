@@ -237,10 +237,11 @@ class DatabaseService {
     return travels;
   }
 
-  Future<List<Travel>> GetAllTravelsOfUserByShowStatus(
-      String TargetUserID, String RequesterUserID) async {
+  Future<List<Travel>> GetAllTravelsOfUserByShowStatus(String TargetUserID,
+      [String RequesterUserID = 'empty']) async {
     if (TargetUserID == RequesterUserID ||
-        await IsFriend(TargetUserID, RequesterUserID)) {
+        await IsFriend(TargetUserID, RequesterUserID) ||
+        RequesterUserID == 'empty') {
       return _getAllTravelsOfUser(TargetUserID);
     } else {
       return GetAllPublicTravelsOfUser(TargetUserID);
