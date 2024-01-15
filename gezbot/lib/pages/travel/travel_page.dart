@@ -6,6 +6,9 @@ import 'package:gezbot/pages/travel/pre_create_travel.dart';
 import 'package:gezbot/models/travel.model.dart';
 
 class TravelsScreen extends StatefulWidget {
+  String userId;
+  String viwerId;
+  TravelsScreen({required this.userId, this.viwerId = 'empty'});
   @override
   _TravelsScreenState createState() => _TravelsScreenState();
 }
@@ -33,15 +36,10 @@ class _TravelsScreenState extends State<TravelsScreen> {
 
   Future<List<Travel>> _fetchTravels() async {
     prefs = await SharedPreferences.getInstance();
-    String? userId = prefs.getString('uid');
-    if (userId != null) {
-      List<Travel> travelsData =
-          await dbService.GetAllTravelsOfUserByShowStatus(
-              userId, userId); //TODO : change to SENDER user id
-      return travelsData;
-    } else {
-      return [];
-    }
+
+    List<Travel> travelsData = await dbService.GetAllTravelsOfUserByShowStatus(
+        widget.userId, widget.viwerId);
+    return travelsData;
   }
 
   void _onScroll() {

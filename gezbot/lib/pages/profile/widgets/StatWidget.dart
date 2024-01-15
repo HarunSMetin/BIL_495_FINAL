@@ -7,8 +7,10 @@ import 'package:gezbot/services/database_service.dart';
 
 class UserStats extends StatefulWidget {
   final UserModel user;
+  final String userId;
 
-  UserStats({Key? key, required this.user}) : super(key: key);
+  UserStats({Key? key, required this.user, required this.userId})
+      : super(key: key);
 
   @override
   State<UserStats> createState() => _UserStatsState();
@@ -52,9 +54,15 @@ class _UserStatsState extends State<UserStats> {
     return GestureDetector(
       onTap: () {
         if (label == "Travels") {
+          print(widget.user.id);
+          print(widget.userId);
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => TravelsScreen()),
+            MaterialPageRoute(
+                builder: (context) => TravelsScreen(
+                      userId: widget.user.id,
+                      viwerId: widget.userId,
+                    )),
           );
         }
         if (label == "Followers") {
