@@ -1,29 +1,51 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:gezbot/pages/travel/widgets/side_bar.dart';
 import 'activity_details_screen.dart';
 
 import '../models/activity_model.dart';
 import '../widgets/custom_header.dart';
 
-class ActivitiesScreen extends StatelessWidget {
+class ActivitiesScreen extends StatefulWidget {
   const ActivitiesScreen({Key? key}) : super(key: key);
 
   static const routeName = '/activities';
 
   @override
+  State<ActivitiesScreen> createState() => _ActivitiesScreenState();
+}
+
+class _ActivitiesScreenState extends State<ActivitiesScreen> {
+  @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     List<Activity> activities = Activity.activities;
 
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return Scaffold(
+      body: Row(
         children: [
-          const SizedBox(height: 50),
-          const CustomHeader(title: 'Activities'),
-          _ActivitiesMasonryGrid(
-            width: width,
-            activities: activities,
+          // Sidebar
+          SideBar(
+            width: width * 0.6,
+            height: height,
+            navigator: GlobalKey<NavigatorState>(),
+          ),
+          // Main Content
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(height: 50),
+                  const CustomHeader(title: 'Travels'),
+                  _ActivitiesMasonryGrid(
+                    width: width,
+                    activities: activities,
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),
