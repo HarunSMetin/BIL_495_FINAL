@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gezbot/models/travel.model.dart';
 import 'package:gezbot/models/user.model.dart';
 import 'package:gezbot/pages/search/helperSearchFunc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TravelView extends StatefulWidget {
   @override
@@ -41,35 +43,51 @@ class _TravelViewState extends State<TravelView> {
     );
   }
 
+  static Future<String> _fetchUID() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('uid') ?? 'empty';
+  }
+
   Widget buildSearchForm(BuildContext context) {
     final searchController = TextEditingController();
 
     return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        children: [
-          TextField(
-            controller: searchController,
-            onChanged: (value) {
-              // Trigger the search using the entered query
-              final query = searchController.text;
-              context.read<SearchBloc>().searchUsers(query);
-            },
-            decoration: InputDecoration(
-              hintText: 'Search for travels (User Name, Travel Name) ',
-              suffixIcon: IconButton(
-                icon: Icon(Icons.search),
-                onPressed: () {
-                  // Trigger the search using the entered query
-                  final query = searchController.text;
-                  context.read<SearchBloc>().searchUsers(query);
-                },
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
+        padding: const EdgeInsets.all(16.0),
+        child: FutureBuilder<String>(
+          future: _fetchUID(),
+          builder: (context, UID) =>
+              //if snapshot has data, then build the form
+              UID.hasData
+                  ? Column(
+                      children: [
+                        TextField(
+                          controller: searchController,
+                          onChanged: (value) {
+                            // Trigger the search using the entered query
+                            final query = searchController.text;
+                            context
+                                .read<SearchBloc>()
+                                .searchTravel(query, UID.data!);
+                          },
+                          decoration: InputDecoration(
+                            hintText:
+                                'Search for travels (User Name, Travel Name) ',
+                            suffixIcon: IconButton(
+                              icon: Icon(Icons.search),
+                              onPressed: () {
+                                // Trigger the search using the entered query
+                                final query = searchController.text;
+                                context
+                                    .read<SearchBloc>()
+                                    .searchTravel(query, UID.data!);
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  : Center(child: CircularProgressIndicator()),
+        ));
   }
 
   Widget buildSearchResults() {
@@ -77,12 +95,16 @@ class _TravelViewState extends State<TravelView> {
     // Example: return ListView.builder(itemBuilder: (context, index) => ...)
     return Expanded(
       child: ListView.builder(
-        itemCount: context.read<SearchBloc>().users.length,
+        itemCount: context.read<SearchBloc>().travelsByTravelNameSearch.length,
         itemBuilder: (context, index) {
-          UserModel user = context.read<SearchBloc>().users[index];
+          Travel travel =
+              context.read<SearchBloc>().travelsByTravelNameSearch[index];
           return ListTile(
-            title: Text(user.userName),
-            subtitle: Text(user.email),
+            title: Text(travel.name),
+            subtitle: Text(travel.activitiesPreferences.toString()),
+            onTap: () {
+              Navigator.pushNamed(context, '/travelDetail', arguments: travel);
+            },
           );
         },
       ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gezbot/models/travel.model.dart';
 import 'package:gezbot/models/user.model.dart';
 import 'package:gezbot/pages/search/helperSearchFunc.dart';
 
@@ -33,7 +34,7 @@ class _DestinationViewState extends State<DestinationView> {
           return buildSearchResults();
         } else if (state == SearchState.error) {
           return Center(
-            child: Text('Error fetching users. Please try again.'),
+            child: Text('Error fetching Travels. Please try again.'),
           );
         } else
           return Text('Please enter a query to begin');
@@ -53,16 +54,16 @@ class _DestinationViewState extends State<DestinationView> {
             onChanged: (value) {
               // Trigger the search using the entered query
               final query = searchController.text;
-              context.read<SearchBloc>().searchUsers(query);
+              context.read<SearchBloc>().searchTravelByDestination(query);
             },
             decoration: InputDecoration(
-              hintText: 'Search for users',
+              hintText: 'Search for destinations',
               suffixIcon: IconButton(
                 icon: Icon(Icons.search),
                 onPressed: () {
                   // Trigger the search using the entered query
                   final query = searchController.text;
-                  context.read<SearchBloc>().searchUsers(query);
+                  context.read<SearchBloc>().searchTravelByDestination(query);
                 },
               ),
             ),
@@ -77,12 +78,16 @@ class _DestinationViewState extends State<DestinationView> {
     // Example: return ListView.builder(itemBuilder: (context, index) => ...)
     return Expanded(
       child: ListView.builder(
-        itemCount: context.read<SearchBloc>().users.length,
+        itemCount: context.read<SearchBloc>().travelsByDestinationSearch.length,
         itemBuilder: (context, index) {
-          UserModel user = context.read<SearchBloc>().users[index];
+          Travel travel =
+              context.read<SearchBloc>().travelsByDestinationSearch[index];
           return ListTile(
-            title: Text(user.userName),
-            subtitle: Text(user.email),
+            title: Text(travel.name),
+            subtitle: Text(travel.desiredDestination),
+            onTap: () {
+              Navigator.pushNamed(context, '/travel', arguments: travel);
+            },
           );
         },
       ),

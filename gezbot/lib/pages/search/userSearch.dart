@@ -83,6 +83,10 @@ class _SearchViewState extends State<SearchView> {
           return ListTile(
             title: Text(user.userName),
             subtitle: Text(user.email),
+            onTap: () {
+              // Navigate to the details page for the selected user
+              Navigator.pushNamed(context, '/userDetails', arguments: user);
+            },
           );
         },
       ),

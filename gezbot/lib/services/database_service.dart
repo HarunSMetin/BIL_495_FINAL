@@ -211,7 +211,7 @@ class DatabaseService {
 
 //TRAVELS
 
-  Future<List<Travel>> GetAllTravelsOfUser(String UserID) async {
+  Future<List<Travel>> _getAllTravelsOfUser(String UserID) async {
     QuerySnapshot querySnapshot =
         await travelsCollection.where('members', arrayContains: UserID).get();
     List<Travel> travels = [];
@@ -221,6 +221,30 @@ class DatabaseService {
       travels.add(Travel.fromMap(travelData));
     });
     return travels;
+  }
+
+  Future<List<Travel>> GetAllPublicTravelsOfUser(String UserID) async {
+    QuerySnapshot querySnapshot = await travelsCollection
+        .where('members', arrayContains: UserID)
+        .where('isPublic', isEqualTo: true)
+        .get();
+    List<Travel> travels = [];
+    await Future.forEach(querySnapshot.docs, (result) async {
+      Map<String, dynamic> travelData = result.data() as Map<String, dynamic>;
+      travelData['id'] = result.id;
+      travels.add(Travel.fromMap(travelData));
+    });
+    return travels;
+  }
+
+  Future<List<Travel>> GetAllTravelsOfUserByShowStatus(
+      String TargetUserID, String RequesterUserID) async {
+    if (TargetUserID == RequesterUserID ||
+        await IsFriend(TargetUserID, RequesterUserID)) {
+      return _getAllTravelsOfUser(TargetUserID);
+    } else {
+      return GetAllPublicTravelsOfUser(TargetUserID);
+    }
   }
 
   Future<int?> GetNumberOfTravelsOfUser(String UserID) async {
@@ -705,10 +729,10 @@ class DatabaseService {
 
   //SEARCH FUNCTIONS
 
-  Future<List<UserModel>> SearchUsersByUserName(String query) async {
+  Future<List<UserModel>> _searchUsersByUserName(String query) async {
     QuerySnapshot querySnapshot = await userCollection
         .where('userName', isGreaterThanOrEqualTo: query.trim())
-        .where('userName', isLessThanOrEqualTo: query.trim() + '\uf8ff')
+        .where('userName', isLessThanOrEqualTo: '${query.trim()}\uf8ff')
         .get();
     List<UserModel> users = [];
     for (var doc in querySnapshot.docs) {
@@ -719,11 +743,12 @@ class DatabaseService {
     return users;
   }
 
-  Future<List<UserModel>> SearchUsersByEmail(String query) async {
+  Future<List<UserModel>> _searchUsersByEmail(String query) async {
     QuerySnapshot querySnapshot = await userCollection
         .where('email', isGreaterThanOrEqualTo: query.trim())
-        .where('email', isLessThanOrEqualTo: query.trim() + '\uf8ff')
+        .where('email', isLessThanOrEqualTo: '${query.trim()}\uf8ff')
         .get();
+
     List<UserModel> users = [];
     for (var doc in querySnapshot.docs) {
       Map<String, dynamic> userData = doc.data() as Map<String, dynamic>;
@@ -733,11 +758,11 @@ class DatabaseService {
     return users;
   }
 
-  Future<List<UserModel>> ByUserNameAndEmail(String query) async {
+  Future<List<UserModel>> SearchByUserNameAndEmail(String query) async {
     List<UserModel> users = [];
-    List<UserModel> email = await SearchUsersByEmail(query);
-    users.addAll(await SearchUsersByUserName(query));
+    List<UserModel> email = await _searchUsersByEmail(query);
 
+    users.addAll(await _searchUsersByUserName(query));
     for (var emailsearchuser in email) {
       bool isExist = false;
       for (var user in users) {
@@ -752,10 +777,11 @@ class DatabaseService {
     return users;
   }
 
-  Future<List<Travel>> SearchTravelsByTravelName(String query) async {
+  Future<List<Travel>> SearchTravelsByTravelName(String query,
+      [String SenderID = "empty"]) async {
     QuerySnapshot querySnapshot = await travelsCollection
-        .where('name', isGreaterThanOrEqualTo: query.trim())
-        .where('name', isLessThanOrEqualTo: query.trim() + '\uf8ff')
+        .where('name', isGreaterThanOrEqualTo: query)
+        .where('name', isLessThanOrEqualTo: '${query.trim()}\uf8ff')
         .where('isPublic', isEqualTo: true)
         .get();
     List<Travel> travels = [];
@@ -767,42 +793,53 @@ class DatabaseService {
     return travels;
   }
 
-  Future<List<Travel>> SearchTravelsByUserEmail(String query) async {
+  Future<List<Travel>> _searchTravelsByUserEmail(String query,
+      [String SenderID = "empty"]) async {
     //find Travel creator id then match search id with creator id then get all travels of that user
     QuerySnapshot querySnapshot = await userCollection
         .where('email', isGreaterThanOrEqualTo: query.trim())
-        .where('email', isLessThanOrEqualTo: query.trim() + '\uf8ff')
+        .where('email', isLessThanOrEqualTo: '${query.trim()}\uf8ff')
         .limit(5)
         .get();
     List<Travel> travels = [];
-    for (var doc in querySnapshot.docs) {
-      Map<String, dynamic> userData = doc.data() as Map<String, dynamic>;
-      userData['id'] = doc.id;
-      travels.addAll(await GetAllTravelsOfUser(userData['id']));
+    if (SenderID == "empty") {
+      for (var doc in querySnapshot.docs) {
+        travels.addAll(await GetAllPublicTravelsOfUser(doc.id));
+      }
+    } else {
+      for (var doc in querySnapshot.docs) {
+        travels.addAll(await GetAllTravelsOfUserByShowStatus(doc.id, SenderID));
+      }
     }
     return travels;
   }
 
-  Future<List<Travel>> SearchTravelsByUserName(String query) async {
+  Future<List<Travel>> _searchTravelsByUserName(String query,
+      [String SenderID = "empty"]) async {
     //find Travel creator id then match search id with creator id then get all travels of that user
     QuerySnapshot querySnapshot = await userCollection
         .where('userName', isGreaterThanOrEqualTo: query.trim())
-        .where('userName', isLessThanOrEqualTo: query.trim() + '\uf8ff')
+        .where('userName', isLessThanOrEqualTo: '${query.trim()}\uf8ff')
         .limit(5)
         .get();
     List<Travel> travels = [];
-    for (var doc in querySnapshot.docs) {
-      Map<String, dynamic> userData = doc.data() as Map<String, dynamic>;
-      userData['id'] = doc.id;
-      travels.addAll(await GetAllTravelsOfUser(userData['id']));
+    if (SenderID == "empty") {
+      for (var doc in querySnapshot.docs) {
+        travels.addAll(await GetAllPublicTravelsOfUser(doc.id));
+      }
+    } else {
+      for (var doc in querySnapshot.docs) {
+        travels.addAll(await GetAllTravelsOfUserByShowStatus(doc.id, SenderID));
+      }
     }
     return travels;
   }
 
-  Future<List<Travel>> SearchTravelsByUserNameAndEmail(String query) async {
+  Future<List<Travel>> SearchTravelsByUserNameAndEmail(String query,
+      [String SenderID = 'empty']) async {
     List<Travel> travels = [];
-    List<Travel> name = await SearchTravelsByUserName(query);
-    travels.addAll(await SearchTravelsByUserEmail(query));
+    List<Travel> name = await _searchTravelsByUserName(query, SenderID);
+    travels.addAll(await _searchTravelsByUserEmail(query, SenderID));
     for (var namesearchtravel in name) {
       bool isExist = false;
       for (var travel in travels) {
@@ -818,18 +855,21 @@ class DatabaseService {
   }
 
   Future<List<Travel>> SearchTravelsByDestination(String query) async {
+    print(query);
     QuerySnapshot querySnapshot = await travelsCollection
         .where('03_DesiredDestination', isGreaterThanOrEqualTo: query.trim())
         .where('03_DesiredDestination',
-            isLessThanOrEqualTo: query.trim() + '\uf8ff')
+            isLessThanOrEqualTo: '${query.trim()}\uf8ff')
         .where('isPublic', isEqualTo: true)
         .get();
+    print(querySnapshot.docs.length);
     List<Travel> travels = [];
     for (var doc in querySnapshot.docs) {
       Map<String, dynamic> travelData = doc.data() as Map<String, dynamic>;
       travelData['id'] = doc.id;
       travels.add(Travel.fromMap(travelData));
     }
+
     return travels;
   }
 }

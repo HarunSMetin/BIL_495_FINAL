@@ -35,7 +35,9 @@ class _TravelsScreenState extends State<TravelsScreen> {
     prefs = await SharedPreferences.getInstance();
     String? userId = prefs.getString('uid');
     if (userId != null) {
-      List<Travel> travelsData = await dbService.GetAllTravelsOfUser(userId);
+      List<Travel> travelsData =
+          await dbService.GetAllTravelsOfUserByShowStatus(
+              userId, userId); //TODO : change to SENDER user id
       return travelsData;
     } else {
       return [];
@@ -45,102 +47,85 @@ class _TravelsScreenState extends State<TravelsScreen> {
   void _onScroll() {
     if (_scrollController.position.pixels ==
             _scrollController.position.maxScrollExtent &&
-        !isFetchingMore) {
-      _refreshTravels();
-    }
-  }
-
-  Future<void> _refreshTravels() async {
-    setState(() {
-      isFetchingMore = true;
-    });
-
-    setState(() {
-      travelsFuture = _fetchTravels();
-      isFetchingMore = false;
-    });
-    ScaffoldMessenger.of(context)
-        .showSnackBar(SnackBar(content: Text('Image Updated Successfully')));
+        !isFetchingMore) {}
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(title: Text('Travels')),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            await dbService.GetLastNotCompletedTravelOfUser(
-                    prefs.getString('uid'))
-                .then((value) {
-              showDialog(
-                context: context,
-                builder: (BuildContext context) {
-                  if (value == null) {
-                    return Dialog(
-                      child: PreTravelCreation(
-                        travel: Travel.empty(),
-                      ),
-                    );
-                  } else {
-                    return Dialog(
-                      child: PreTravelCreation(
-                        travel: value,
-                      ),
-                    );
-                  }
-                },
-              );
-            });
-          },
-          child: Icon(Icons.add),
-          tooltip: 'Add Travel',
-        ),
-        body: RefreshIndicator(
-          onRefresh: _refreshTravels,
-          child: FutureBuilder<List<Travel>>(
-            future: travelsFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
-              }
-              if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return Center(child: Text('No Travels Found'));
-              }
-              if (snapshot.hasError) {
-                return Center(child: Text('Error: ${snapshot.error}'));
-              }
+      appBar: AppBar(title: Text('Travels')),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          await dbService.GetLastNotCompletedTravelOfUser(
+                  prefs.getString('uid'))
+              .then((value) {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                if (value == null) {
+                  return Dialog(
+                    child: PreTravelCreation(
+                      travel: Travel.empty(),
+                    ),
+                  );
+                } else {
+                  return Dialog(
+                    child: PreTravelCreation(
+                      travel: value,
+                    ),
+                  );
+                }
+              },
+            );
+          });
+        },
+        child: Icon(Icons.add),
+        tooltip: 'Add Travel',
+      ),
+      body: FutureBuilder<List<Travel>>(
+        future: travelsFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return Center(child: Text('No Travels Found'));
+          }
+          if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          }
 
-              List<Travel> travels = snapshot.data!;
-              return Flex(
-                direction: Axis.vertical,
-                children: [
-                  Expanded(
-                    child: ListView.builder(
-                      controller: _scrollController,
-                      itemCount: travels.length,
-                      itemBuilder: (context, index) {
-                        Travel travel = travels[index];
-                        return ListTile(
-                          key: ValueKey(travel.id),
-                          title: Text(travel.name),
-                          subtitle: Text(travel.description),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    TravelInformation(travel: travel),
-                              ),
-                            );
-                          },
+          List<Travel> travels = snapshot.data!;
+          return Flex(
+            direction: Axis.vertical,
+            children: [
+              Expanded(
+                child: ListView.builder(
+                  controller: _scrollController,
+                  itemCount: travels.length,
+                  itemBuilder: (context, index) {
+                    Travel travel = travels[index];
+                    return ListTile(
+                      key: ValueKey(travel.id),
+                      title: Text(travel.name),
+                      subtitle: Text(travel.description),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                TravelInformation(travel: travel),
+                          ),
                         );
                       },
-                    ),
-                  ),
-                ],
-              );
-            },
-          ),
-        ));
+                    );
+                  },
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+    );
   }
 }

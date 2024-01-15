@@ -21,22 +21,34 @@ class SearchBloc extends Cubit<SearchState> {
     emit(SearchState.loading);
 
     try {
-      users = await databaseService.ByUserNameAndEmail(query);
+      users = await databaseService.SearchByUserNameAndEmail(query);
       emit(SearchState.loaded);
     } catch (e) {
       emit(SearchState.error);
     }
   }
 
-  void searchTravel(String query) async {
+  void searchTravel(String query, String SenderID) async {
     // Add logic to fetch and process user data
     emit(SearchState.loading);
 
     try {
       travelsByTravelNameSearch =
-          await databaseService.SearchTravelsByTravelName(query);
+          await databaseService.SearchTravelsByTravelName(query, SenderID);
       travelsByUserNameSearch =
-          await databaseService.SearchTravelsByUserNameAndEmail(query);
+          await databaseService.SearchTravelsByUserNameAndEmail(
+              query, SenderID);
+      emit(SearchState.loaded);
+    } catch (e) {
+      emit(SearchState.error);
+    }
+  }
+
+  void searchTravelByDestination(String query) async {
+    // Add logic to fetch and process user data
+    emit(SearchState.loading);
+
+    try {
       travelsByDestinationSearch =
           await databaseService.SearchTravelsByDestination(query);
       emit(SearchState.loaded);
