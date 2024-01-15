@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gezbot/models/travel.model.dart';
 import 'package:gezbot/models/user.model.dart';
 import 'package:gezbot/pages/search/helperSearchFunc.dart';
+import 'package:gezbot/pages/travel/travel_info.dart';
 
 class DestinationView extends StatefulWidget {
   @override
@@ -86,7 +87,14 @@ class _DestinationViewState extends State<DestinationView> {
             title: Text(travel.name),
             subtitle: Text(travel.desiredDestination),
             onTap: () {
-              Navigator.pushNamed(context, '/travel', arguments: travel);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => TravelInformation(
+                    travel: travel,
+                  ),
+                ),
+              );
             },
           );
         },

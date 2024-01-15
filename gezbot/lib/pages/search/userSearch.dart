@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gezbot/models/user.model.dart';
+import 'package:gezbot/pages/profile/profile_page.dart';
 import 'package:gezbot/pages/search/helperSearchFunc.dart';
 
 class SearchView extends StatefulWidget {
@@ -84,8 +85,14 @@ class _SearchViewState extends State<SearchView> {
             title: Text(user.userName),
             subtitle: Text(user.email),
             onTap: () {
-              // Navigate to the details page for the selected user
-              Navigator.pushNamed(context, '/userDetails', arguments: user);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProfilePage(
+                    userId: user.id,
+                  ),
+                ),
+              );
             },
           );
         },
