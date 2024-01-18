@@ -225,6 +225,7 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                 children: <Widget>[
                   Expanded(
                     child: TextField(
+                      onSubmitted: (_) => _sendMessage(),
                       controller: _messageController,
                       decoration: InputDecoration(
                         labelText: 'Type a message...',
