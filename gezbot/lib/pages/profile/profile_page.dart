@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gezbot/pages/profile/widgets/NotificationsPage.dart';
 import 'package:gezbot/pages/profile/widgets/ProfileHeader.dart';
 import 'package:gezbot/pages/profile/widgets/StatWidget.dart';
 import 'package:gezbot/pages/profile/widgets/profile_action_buttons.dart';
@@ -19,6 +21,7 @@ class _ProfilePageState extends State<ProfilePage> {
   late Future<UserModel> userDetailsFuture;
   final UserService _userService = UserService();
   String _viewerID = 'empty';
+
   @override
   void initState() {
     super.initState();
@@ -28,8 +31,8 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<UserModel> _fetchUserDetails() async {
     final prefs = await SharedPreferences.getInstance();
-    String currentUserId = prefs.getString('uid') ?? '';
-    return _userService.fetchUserDetails(currentUserId);
+    String sessionUserId = prefs.getString('uid') ?? '';
+    return _userService.fetchUserDetails(sessionUserId);
   }
 
   void _initializeViewerID() async {
@@ -39,9 +42,26 @@ class _ProfilePageState extends State<ProfilePage> {
     });
   }
 
+  void _logout() async {
+    final prefs = await SharedPreferences.getInstance();
+    final _auth = FirebaseAuth.instance;
+    await prefs.clear();
+    await _auth.signOut();
+    Navigator.of(context).pushReplacementNamed('/login');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        // If you have an AppBar, you can add the logout button as an action
+        actions: [
+          IconButton(
+            icon: Icon(Icons.logout),
+            onPressed: _logout,
+          ),
+        ],
+      ),
       body: FutureBuilder<UserModel>(
         future: userDetailsFuture,
         builder: (context, snapshot) {
@@ -64,10 +84,9 @@ class _ProfilePageState extends State<ProfilePage> {
       child: Column(
         children: [
           UserProfileHeader(user: user),
-          UserStats(
-              userId: _viewerID,
-              user: user), // Pass the UserModel instance here
-          ProfileActionButtons(),
+          UserStats(userId: _viewerID, user: user),
+          ProfileActionButtons(userId: widget.userId, viewerId: _viewerID),
+          NotificationsWidget(userId: widget.userId),
         ],
       ),
     );

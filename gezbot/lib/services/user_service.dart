@@ -319,6 +319,46 @@ class UserService {
       return UserModel.empty();
     }
   }
+
+  Future<String> checkRelationshipStatus(String viewerId, String userId) async {
+    // Check if there's a friend request from viewer to the user
+    var sentRequest = await _firestore
+        .collection('friendRequests')
+        .where('senderId', isEqualTo: viewerId)
+        .where('receiverId', isEqualTo: userId)
+        .limit(1)
+        .get();
+
+    if (sentRequest.docs.isNotEmpty) {
+      // Assuming 'status' field exists and can be 'pending', 'accepted', etc.
+      return sentRequest.docs.first.data()['status'].toString();
+    }
+
+    // Check if there's a friend request from the user to the viewer
+    var receivedRequest = await _firestore
+        .collection('friendRequests')
+        .where('senderId', isEqualTo: userId)
+        .where('receiverId', isEqualTo: viewerId)
+        .limit(1)
+        .get();
+
+    if (receivedRequest.docs.isNotEmpty) {
+      return receivedRequest.docs.first.data()['status'].toString();
+    }
+
+    // Check if they are already friends, assuming a 'friends' collection exists
+    var friends = await _firestore
+        .collection('friends')
+        .where('userIds', arrayContainsAny: [viewerId, userId])
+        .limit(1)
+        .get();
+
+    if (friends.docs.isNotEmpty) {
+      return 'friends';
+    }
+
+    return 'none'; // No relationship found
+  }
 }
 
 enum Gender { Male, Female, Other }
