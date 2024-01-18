@@ -7,6 +7,7 @@ class UserTile extends StatefulWidget {
   final String currentUserId;
   final DatabaseService databaseService;
   final VoidCallback onTap;
+  final bool canDeleteUser; // Add this line
 
   UserTile({
     Key? key,
@@ -14,6 +15,7 @@ class UserTile extends StatefulWidget {
     required this.currentUserId,
     required this.databaseService,
     required this.onTap,
+    this.canDeleteUser = false, // Add this line, default to false
   }) : super(key: key);
 
   @override
@@ -33,13 +35,16 @@ class _UserTileState extends State<UserTile> {
         leading: CircleAvatar(
           backgroundImage: NetworkImage(widget.user.photoUrl),
         ),
-        trailing: IconButton(
-          icon: const Icon(Icons.remove_circle_outline),
-          onPressed: () async {
-            await widget.databaseService
-                .removeFollowing(widget.currentUserId, widget.user.id);
-          },
-        ),
+        trailing: widget.canDeleteUser
+            ? IconButton(
+                // Conditionally display this
+                icon: const Icon(Icons.remove_circle_outline),
+                onPressed: () async {
+                  await widget.databaseService
+                      .removeFollowing(widget.currentUserId, widget.user.id);
+                },
+              )
+            : null,
       ),
     );
   }

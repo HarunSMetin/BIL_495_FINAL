@@ -98,9 +98,13 @@ class _TravelInformationState extends State<TravelInformation> {
                                 } else if (uidSnapshot.hasError) {
                                   return Text('Error: ${uidSnapshot.error}');
                                 } else if (uidSnapshot.hasData) {
+                                  bool canDelete = uidSnapshot.data ==
+                                      widget.travel.creatorId;
                                   return UserTile(
                                     user: member,
                                     currentUserId: uidSnapshot.data!,
+                                    canDeleteUser:
+                                        canDelete, // Pass the flag here
                                     databaseService: DatabaseService(),
                                     onTap: () {
                                       Navigator.push(
