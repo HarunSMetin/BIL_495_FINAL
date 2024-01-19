@@ -714,6 +714,30 @@ class DatabaseService {
     }
   }
 
+  Future<bool> DeclineFriendRequest(String senderId, String receiverId) async {
+    try {
+      var querySnapshot = await friendRequestsCollection
+          .where('senderId', isEqualTo: senderId)
+          .where('receiverId', isEqualTo: receiverId)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        var documentId = querySnapshot.docs.first.id;
+
+        await friendRequestsCollection
+            .doc(documentId)
+            .update({'status': 'declined'});
+
+        return true; // Successfully deleted or updated the request
+      } else {
+        return false; // No such request found
+      }
+    } catch (e) {
+      print("Error declining friend request: $e");
+      return false; // An error occurred
+    }
+  }
+
   Future AcceptFriendRequest(String RequestID) async {
     return await friendRequestsCollection.doc(RequestID).set({
       'status': 'accepted',
@@ -721,12 +745,12 @@ class DatabaseService {
     }, SetOptions(merge: true));
   }
 
-  Future DeclineFriendRequest(String RequestID) async {
+  /*Future DeclineFriendRequest(String RequestID) async {
     return await friendRequestsCollection.doc(RequestID).set({
       'status': 'declined',
       'statusChangedAt': DateTime.now(),
     }, SetOptions(merge: true));
-  }
+  }*/
 
   Future removeFollower(String UserID, String FollowerID) async {
     return await friendRequestsCollection

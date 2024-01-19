@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:gezbot/components/UserTile.dart'; // Ensure this import is correct
 import 'package:gezbot/services/database_service.dart';
 import 'package:gezbot/models/user.model.dart';
+import 'package:gezbot/pages/profile/profile_page.dart'; // Import for navigation
 
 class FollowersScreen extends StatefulWidget {
   final String userId;
@@ -36,21 +38,22 @@ class _FollowersScreenState extends State<FollowersScreen> {
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
                 UserModel follower = snapshot.data![index];
-                return ListTile(
-                  title: Text(
-                    follower.userName,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  leading: CircleAvatar(
-                    backgroundImage: NetworkImage(follower.photoUrl),
-                  ),
-                  trailing: IconButton(
-                    icon: const Icon(Icons.delete),
-                    onPressed: () async {
-                      await _databaseService.removeFollower(
-                          widget.userId, follower.id);
-                    },
-                  ),
+                return UserTile(
+                  user: follower,
+                  currentUserId: widget.userId,
+                  databaseService: _databaseService,
+                  isFollowersPage: true,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ProfilePage(userId: follower.id),
+                      ),
+                    );
+                  },
+                  canDeleteUser: true,
+                  onAccept: () {},
+                  showAcceptButton: false,
                 );
               },
             );

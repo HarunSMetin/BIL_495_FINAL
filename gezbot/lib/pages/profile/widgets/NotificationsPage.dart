@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:gezbot/components/UserTile.dart';
+import 'package:gezbot/models/user.model.dart';
+import 'package:gezbot/pages/profile/profile_page.dart';
 import 'package:gezbot/services/database_service.dart';
+import 'package:gezbot/services/user_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class NotificationsWidget extends StatefulWidget {
-  final String userId;
-
-  NotificationsWidget({Key? key, required this.userId}) : super(key: key);
-
   @override
   _NotificationsWidgetState createState() => _NotificationsWidgetState();
 }
@@ -13,19 +14,37 @@ class NotificationsWidget extends StatefulWidget {
 class _NotificationsWidgetState extends State<NotificationsWidget> {
   Map<String, dynamic> pendingRequests = {};
   bool isLoading = true;
+  String userId = '';
 
   @override
   void initState() {
     super.initState();
+    _initializeUserId();
+  }
+
+  void _initializeUserId() async {
+    final prefs = await SharedPreferences.getInstance();
+    userId = prefs.getString('uid') ?? '';
     _fetchPendingRequests();
   }
 
   void _fetchPendingRequests() async {
-    pendingRequests = await DatabaseService()
-        .GetPendingFriendRequestsRecivedByUser(widget.userId);
-    setState(() {
-      isLoading = false;
-    });
+    if (userId.isNotEmpty) {
+      pendingRequests =
+          await DatabaseService().GetPendingFriendRequestsRecivedByUser(userId);
+      setState(() {
+        isLoading = false;
+      });
+    } else {
+      // Handle the scenario where the user ID is not found
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
+  Future<UserModel> _fetchUserDetails(String userId) async {
+    return await UserService().fetchUserDetails(userId);
   }
 
   @override
@@ -42,21 +61,41 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text('Pending Requests', style: TextStyle(fontSize: 18.0)),
-            ...pendingRequests.entries
-                .map((entry) => ListTile(
-                      title: Text('Request from ${entry.value['senderId']}'),
-                      subtitle: Text('Sent at: ${entry.value['sentAt']}'),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.check),
-                        onPressed: () {
-                          DatabaseService().AcceptFriendRequest(entry.key);
-                          setState(() {
-                            pendingRequests.remove(entry.key);
-                          });
-                        },
-                      ),
-                    ))
-                .toList(),
+            ...pendingRequests.entries.map((entry) {
+              return FutureBuilder<UserModel>(
+                future: _fetchUserDetails(entry.value['senderId']),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else if (snapshot.hasData) {
+                    return UserTile(
+                      user: snapshot.data!,
+                      currentUserId: userId,
+                      databaseService: DatabaseService(),
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                ProfilePage(userId: snapshot.data!.id),
+                          ),
+                        );
+                      },
+                      showAcceptButton: true,
+                      onAccept: () async {
+                        await DatabaseService().AcceptFriendRequest(entry.key);
+                        setState(() {
+                          pendingRequests.remove(entry.key);
+                        });
+                      },
+                    );
+                  } else {
+                    return const Text('No user data available');
+                  }
+                },
+              );
+            }).toList(),
           ],
         ),
       ),
