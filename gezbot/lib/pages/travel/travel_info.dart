@@ -103,6 +103,8 @@ class _TravelInformationState extends State<TravelInformation> {
                                   return UserTile(
                                     user: member,
                                     currentUserId: uidSnapshot.data!,
+                                    showAcceptButton: false,
+                                    onAccept: () {},
                                     canDeleteUser:
                                         canDelete, // Pass the flag here
                                     databaseService: DatabaseService(),

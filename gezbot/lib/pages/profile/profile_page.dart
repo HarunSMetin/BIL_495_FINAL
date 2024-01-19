@@ -6,6 +6,7 @@ import 'package:gezbot/pages/profile/widgets/StatWidget.dart';
 import 'package:gezbot/pages/profile/widgets/profile_action_buttons.dart';
 import 'package:gezbot/models/user.model.dart';
 import 'package:gezbot/services/user_service.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -44,18 +45,31 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void _logout() async {
     final prefs = await SharedPreferences.getInstance();
-    final _auth = FirebaseAuth.instance;
+    final GoogleSignIn _googleSignIn = GoogleSignIn(
+        clientId:
+            "1027985224810-jeioofe75dtanigd4r1vtgv4v4glemis.apps.googleusercontent.com");
+    await FirebaseAuth.instance.signOut();
     await prefs.clear();
-    await _auth.signOut();
+    await _googleSignIn.signOut();
     Navigator.of(context).pushReplacementNamed('/login');
+  }
+
+  void _navigateToNotifications() {
+    // Navigate to the Notifications Page
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => NotificationsWidget()),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // If you have an AppBar, you can add the logout button as an action
         actions: [
+          IconButton(
+            icon: Icon(Icons.notifications),
+            onPressed: _navigateToNotifications,
+          ),
           IconButton(
             icon: Icon(Icons.logout),
             onPressed: _logout,
@@ -86,7 +100,6 @@ class _ProfilePageState extends State<ProfilePage> {
           UserProfileHeader(user: user),
           UserStats(userId: _viewerID, user: user),
           ProfileActionButtons(userId: widget.userId, viewerId: _viewerID),
-          NotificationsWidget(userId: widget.userId),
         ],
       ),
     );

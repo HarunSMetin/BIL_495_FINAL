@@ -34,7 +34,6 @@ class UserService {
       return Future.error('Username is empty');
     }
 
-    // Check if username already exists in Firestore
     var users = await _firestore
         .collection('users')
         .where('userName', isEqualTo: username)
@@ -61,7 +60,7 @@ class UserService {
           'email': email,
           'userName': username,
           'createdAt': DateTime.now().toIso8601String(),
-          'photoUrl': defaultProfilePicUrl, // Adding the photo URL to Firestore
+          'photoUrl': defaultProfilePicUrl,
         });
       }
 
@@ -311,8 +310,7 @@ class UserService {
         await _firestore.collection('users').doc(userId).get();
     if (userDoc.exists) {
       Map<String, dynamic> userDetails = userDoc.data() as Map<String, dynamic>;
-      userDetails['id'] =
-          userDoc.id; // Include the user ID in the userDetails map
+      userDetails['id'] = userDoc.id;
       print(userDetails);
       return UserModel.fromMap(userDetails);
     } else {
@@ -321,7 +319,6 @@ class UserService {
   }
 
   Future<String> checkRelationshipStatus(String viewerId, String userId) async {
-    // Check if there's a friend request from viewer to the user
     var sentRequest = await _firestore
         .collection('friendRequests')
         .where('senderId', isEqualTo: viewerId)
@@ -330,11 +327,9 @@ class UserService {
         .get();
 
     if (sentRequest.docs.isNotEmpty) {
-      // Assuming 'status' field exists and can be 'pending', 'accepted', etc.
       return sentRequest.docs.first.data()['status'].toString();
     }
 
-    // Check if there's a friend request from the user to the viewer
     var receivedRequest = await _firestore
         .collection('friendRequests')
         .where('senderId', isEqualTo: userId)
@@ -346,7 +341,6 @@ class UserService {
       return receivedRequest.docs.first.data()['status'].toString();
     }
 
-    // Check if they are already friends, assuming a 'friends' collection exists
     var friends = await _firestore
         .collection('friends')
         .where('userIds', arrayContainsAny: [viewerId, userId])
@@ -357,7 +351,7 @@ class UserService {
       return 'friends';
     }
 
-    return 'none'; // No relationship found
+    return 'none';
   }
 }
 

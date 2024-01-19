@@ -105,8 +105,8 @@ class _ProfileActionButtonsState extends State<ProfileActionButtons> {
     switch (relationshipStatus) {
       case 'pending':
         return 'Request Pending';
-      case 'friends':
-        return 'Unfriend';
+      case 'accepted':
+        return 'UnFollow';
       default:
         return 'Follow';
     }
