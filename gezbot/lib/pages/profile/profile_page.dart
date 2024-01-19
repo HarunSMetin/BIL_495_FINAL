@@ -55,7 +55,6 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _navigateToNotifications() {
-    // Navigate to the Notifications Page
     Navigator.of(context).push(
       MaterialPageRoute(builder: (context) => NotificationsWidget()),
     );
@@ -66,14 +65,16 @@ class _ProfilePageState extends State<ProfilePage> {
     return Scaffold(
       appBar: AppBar(
         actions: [
-          IconButton(
-            icon: Icon(Icons.notifications),
-            onPressed: _navigateToNotifications,
-          ),
-          IconButton(
-            icon: Icon(Icons.logout),
-            onPressed: _logout,
-          ),
+          if (widget.userId == _viewerID)
+            IconButton(
+              icon: Icon(Icons.notifications),
+              onPressed: _navigateToNotifications,
+            ),
+          if (widget.userId == _viewerID)
+            IconButton(
+              icon: Icon(Icons.logout),
+              onPressed: _logout,
+            ),
         ],
       ),
       body: FutureBuilder<UserModel>(
