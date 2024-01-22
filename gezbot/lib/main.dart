@@ -34,6 +34,7 @@ class _MyAppState extends State<MyApp> {
     return SafeArea(
       child: MaterialApp(
         title: 'Flutter Demo',
+        debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),

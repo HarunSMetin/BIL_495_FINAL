@@ -15,11 +15,22 @@ class _TravelViewState extends State<TravelView> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Column(
-        children: [
-          buildSearchForm(context),
-          SearchView(),
-        ],
+      child: Expanded(
+        child: Column(
+          children: [
+            buildSearchForm(context),
+            SearchView(),
+            Divider(height: 10.0, color: const Color.fromARGB(120, 97, 94, 94)),
+            Text(
+              'Travels by User Name',
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SearchViewForUsernameSearchedTravel(),
+          ],
+        ),
       ),
     );
   }
@@ -39,7 +50,37 @@ class _TravelViewState extends State<TravelView> {
             child: Text('Error fetching Travels. Please try again.'),
           );
         } else
-          return Text('Please enter a query to begin');
+          return Expanded(
+            child: Center(
+              child: Text('Please enter a query to begin'),
+            ),
+          );
+      },
+    );
+  }
+
+  Widget SearchViewForUsernameSearchedTravel() {
+    return BlocBuilder<SearchBloc, SearchState>(
+      builder: (context, state) {
+        if (state == SearchState.loading) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (state == SearchState.loaded) {
+          // Render the list of users
+          return buildSearchByUserName();
+        } else if (state == SearchState.error) {
+          return Center(
+            child: Text(
+                'Error fetching Travels Based UserName. Please try again.'),
+          );
+        } else {
+          return Expanded(
+            child: Center(
+              child: Text('User Name based travel search results.'),
+            ),
+          );
+        }
       },
     );
   }
@@ -100,6 +141,32 @@ class _TravelViewState extends State<TravelView> {
         itemBuilder: (context, index) {
           Travel travel =
               context.read<SearchBloc>().travelsByTravelNameSearch[index];
+          return ListTile(
+            title: Text(travel.name),
+            subtitle: Text(travel.activitiesPreferences.toString()),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => TravelInformation(
+                    travel: travel,
+                  ),
+                ),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+
+  Widget buildSearchByUserName() {
+    return Expanded(
+      child: ListView.builder(
+        itemCount: context.read<SearchBloc>().travelsByUserNameSearch.length,
+        itemBuilder: (context, index) {
+          Travel travel =
+              context.read<SearchBloc>().travelsByUserNameSearch[index];
           return ListTile(
             title: Text(travel.name),
             subtitle: Text(travel.activitiesPreferences.toString()),

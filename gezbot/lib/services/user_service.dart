@@ -34,7 +34,6 @@ class UserService {
       return Future.error('Username is empty');
     }
 
-    // Check if username already exists in Firestore
     var users = await _firestore
         .collection('users')
         .where('userName', isEqualTo: username)
@@ -61,7 +60,7 @@ class UserService {
           'email': email,
           'userName': username,
           'createdAt': DateTime.now().toIso8601String(),
-          'photoUrl': defaultProfilePicUrl, // Adding the photo URL to Firestore
+          'photoUrl': defaultProfilePicUrl,
         });
       }
 
@@ -311,13 +310,48 @@ class UserService {
         await _firestore.collection('users').doc(userId).get();
     if (userDoc.exists) {
       Map<String, dynamic> userDetails = userDoc.data() as Map<String, dynamic>;
-      userDetails['id'] =
-          userDoc.id; // Include the user ID in the userDetails map
+      userDetails['id'] = userDoc.id;
       print(userDetails);
       return UserModel.fromMap(userDetails);
     } else {
       return UserModel.empty();
     }
+  }
+
+  Future<String> checkRelationshipStatus(String viewerId, String userId) async {
+    var sentRequest = await _firestore
+        .collection('friendRequests')
+        .where('senderId', isEqualTo: viewerId)
+        .where('receiverId', isEqualTo: userId)
+        .limit(1)
+        .get();
+
+    if (sentRequest.docs.isNotEmpty) {
+      return sentRequest.docs.first.data()['status'].toString();
+    }
+
+    var receivedRequest = await _firestore
+        .collection('friendRequests')
+        .where('senderId', isEqualTo: userId)
+        .where('receiverId', isEqualTo: viewerId)
+        .limit(1)
+        .get();
+
+    if (receivedRequest.docs.isNotEmpty) {
+      return receivedRequest.docs.first.data()['status'].toString();
+    }
+
+    var friends = await _firestore
+        .collection('friends')
+        .where('userIds', arrayContainsAny: [viewerId, userId])
+        .limit(1)
+        .get();
+
+    if (friends.docs.isNotEmpty) {
+      return 'friends';
+    }
+
+    return 'none';
   }
 }
 

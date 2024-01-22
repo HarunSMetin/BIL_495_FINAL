@@ -591,8 +591,7 @@ class DatabaseService {
   }
 
   Future<Map<String, dynamic>> GetPendingFriendRequestsRecivedByUser(
-      String UserID) async // coming friend requests
-  {
+      String UserID) async {
     QuerySnapshot querySnapshot = await friendRequestsCollection
         .where('receiverId', isEqualTo: UserID)
         .where('status', isEqualTo: 'pending')
@@ -660,29 +659,98 @@ class DatabaseService {
 
 //(POST) FRIEND REQUESTS
   Future<String> SendFriendRequest(String SenderID, String ReceiverID) async {
-    var documentReference = await friendRequestsCollection.add({
-      'senderId': SenderID,
-      'receiverId': ReceiverID,
-      'status': 'pending',
-      'sentAt': DateTime.now(),
-      'statusChangedAt': DateTime.now(),
-    });
-    return documentReference.id;
+    try {
+      var querySnapshot = await friendRequestsCollection
+          .where('senderId', isEqualTo: SenderID)
+          .where('receiverId', isEqualTo: ReceiverID)
+          .limit(1)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        var document = querySnapshot.docs.first;
+        var documentId = document.id;
+        await friendRequestsCollection.doc(documentId).update({
+          'status': 'pending',
+          'statusChangedAt': DateTime.now(),
+        });
+        return documentId;
+      } else {
+        var documentReference = await friendRequestsCollection.add({
+          'senderId': SenderID,
+          'receiverId': ReceiverID,
+          'status': 'pending',
+          'sentAt': DateTime.now(),
+          'statusChangedAt': DateTime.now(),
+        });
+        return documentReference.id;
+      }
+    } catch (e) {
+      print("Error in sending friend request: $e");
+      return '';
+    }
+  }
+
+  Future<bool> CancelFriendRequest(String senderId, String receiverId) async {
+    try {
+      var querySnapshot = await friendRequestsCollection
+          .where('senderId', isEqualTo: senderId)
+          .where('receiverId', isEqualTo: receiverId)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        var documentId = querySnapshot.docs.first.id;
+
+        await friendRequestsCollection
+            .doc(documentId)
+            .update({'status': 'cancelled'});
+
+        return true; // Successfully deleted or updated the request
+      } else {
+        return false; // No such request found
+      }
+    } catch (e) {
+      print("Error cancelling friend request: $e");
+      return false; // An error occurred
+    }
+  }
+
+  Future<bool> DeclineFriendRequest(String senderId, String receiverId) async {
+    try {
+      var querySnapshot = await friendRequestsCollection
+          .where('senderId', isEqualTo: senderId)
+          .where('receiverId', isEqualTo: receiverId)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        var documentId = querySnapshot.docs.first.id;
+
+        await friendRequestsCollection
+            .doc(documentId)
+            .update({'status': 'declined'});
+
+        return true; // Successfully deleted or updated the request
+      } else {
+        return false; // No such request found
+      }
+    } catch (e) {
+      print("Error declining friend request: $e");
+      return false; // An error occurred
+    }
   }
 
   Future AcceptFriendRequest(String RequestID) async {
     return await friendRequestsCollection.doc(RequestID).set({
       'status': 'accepted',
       'statusChangedAt': DateTime.now(),
-    });
+    }, SetOptions(merge: true));
   }
 
-  Future DeclineFriendRequest(String RequestID) async {
+  /*Future DeclineFriendRequest(String RequestID) async {
     return await friendRequestsCollection.doc(RequestID).set({
       'status': 'declined',
       'statusChangedAt': DateTime.now(),
-    });
-  }
+    }, SetOptions(merge: true));
+  }*/
 
   Future removeFollower(String UserID, String FollowerID) async {
     return await friendRequestsCollection
