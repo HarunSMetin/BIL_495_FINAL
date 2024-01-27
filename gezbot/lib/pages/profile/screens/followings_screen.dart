@@ -49,10 +49,9 @@ class _FollowingsScreenState extends State<FollowingsScreen> {
                       ),
                     );
                   },
-                  showAcceptButton:
-                      false, // Set this to false for followings screen
-                  onAccept: () {}, // Dummy callback, as we don't need this here
-                  canDeleteUser: true, // Set this based on your requirements
+                  showAcceptButton: false,
+                  onAccept: () {},
+                  canDeleteUser: true,
                 );
               },
             );

@@ -75,8 +75,6 @@ class _DestinationViewState extends State<DestinationView> {
   }
 
   Widget buildSearchResults() {
-    // Implement the UI to display search results
-    // Example: return ListView.builder(itemBuilder: (context, index) => ...)
     return Expanded(
       child: ListView.builder(
         itemCount: context.read<SearchBloc>().travelsByDestinationSearch.length,
