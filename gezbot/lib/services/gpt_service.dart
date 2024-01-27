@@ -1,8 +1,18 @@
 import 'dart:convert';
-import 'package:gezbot/models/ai.travel.model.dart';
 import 'package:gezbot/models/travel.model.dart';
 import 'package:gezbot/services/database_service.dart';
 import 'package:http/http.dart' as http;
+
+class AICreatedTravel {
+  final String travelId;
+
+  final String additionalNotes;
+  //fill inside
+  AICreatedTravel({
+    required this.travelId,
+    required this.additionalNotes,
+  });
+}
 
 class GPTService {
   final String apiKey;
@@ -51,10 +61,7 @@ class GPTService {
     print(response);
     return AICreatedTravel(
       travelId: travelId,
-      suggestedFlights: [/* ... */],
-      suggestedBuses: [/* ... */],
-      suggestedAccommodations: [/* ... */],
-      suggestedActivities: [/* ... */],
+
       additionalNotes:
           response, // veya daha detaylı bir parse işlemi yapılabilir
     );
