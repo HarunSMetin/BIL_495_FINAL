@@ -61,7 +61,7 @@ def find_similar_places(user_preference: UserPreference, restaurant_vectors, top
 
     for restaurant, vector in restaurant_vectors.items():
         similarity = cosine_similarity([custom_review_vector], [vector])[0][0]
-        similarity_scores[restaurant] = similarity
+        similarity_scores[restaurant] = float(similarity)
 
     sorted_similarities = sorted(
         similarity_scores.items(), key=lambda item: item[1], reverse=True
