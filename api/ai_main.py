@@ -16,4 +16,4 @@ db = firestore.client()
 
 @app.get("/")
 def read_root():
-    return {"gezBot": "Backend"}
+    return {"gezBot": "AI"}
