@@ -31,7 +31,7 @@ def compute_embedding(text):
 @app.post("/process_reviews/")
 def process_reviews(review_list: ReviewList):
     local_restaurant_vectors = {}
-
+    local_restaurant_weights = {}
     for review in review_list.reviews:
         review_text = review.review
         restaurant_name = review.place
@@ -39,9 +39,17 @@ def process_reviews(review_list: ReviewList):
 
         if pd.isna(review_text):
             continue
-
+        local_restaurant_weights[restaurant_name] = 0
         review_vector = compute_embedding(review_text)
-        weighted_review_vector = review_vector * rating
+        if rating == 1 or rating == 5:
+            weighted_review_vector = review_vector * 2
+            local_restaurant_weights[restaurant_name] += 2
+        if rating == 2 or rating == 4:
+            weighted_review_vector = review_vector * 1.5
+            local_restaurant_weights[restaurant_name] += 1.5
+        if rating == 3:
+            weighted_review_vector = review_vector * 1
+            local_restaurant_weights[restaurant_name] += 1
 
         if restaurant_name in local_restaurant_vectors:
             local_restaurant_vectors[restaurant_name] += weighted_review_vector
@@ -50,9 +58,22 @@ def process_reviews(review_list: ReviewList):
 
     for restaurant in local_restaurant_vectors:
         count = len([r for r in review_list.reviews if r.place == restaurant])
-        local_restaurant_vectors[restaurant] /= count * 5
+        local_restaurant_vectors[restaurant] /= local_restaurant_weights[
+            restaurant_name
+        ]
 
     return local_restaurant_vectors
+
+
+@app.post("/find_similar_places_from_local/")
+def find_similar_places_from_local(file_name: str, top_n=10):
+    file_name = file_name + ".csv"
+    df = pd.read_csv(file_name)
+    restaurant_vectors = process_reviews(df)
+    similar_places = find_similar_places(restaurant_vectors, top_n)
+    return [
+        {"name": place, "similarity_score": score} for place, score in similar_places
+    ]
 
 
 def find_similar_places(user_preference: UserPreference, restaurant_vectors, top_n=10):

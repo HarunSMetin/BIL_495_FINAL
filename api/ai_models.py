@@ -9,7 +9,7 @@ class Review(BaseModel):
 
 
 class ReviewList(BaseModel):
-    reviews: List[Review]
+    data: List[Review]
 
 
 class RestaurantResponse(BaseModel):
