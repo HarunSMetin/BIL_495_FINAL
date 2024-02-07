@@ -1,240 +1,248 @@
 #General Instruction#
-You will be focusing on either Definion 1 or Definition 2. In both cases, you will need the json file structure and definition below. Your returned text will be based on which definition you are given. What you should return is explained in both "#Definition 1#" and "#Definition 2#", so you're going to return according to the definition type.
+You will be focusing on either Definion 1 or Definition 2. In both deifinitions, you will need the json file structure and definition which is stated as "#json file#" below. Your returned text will be based on which definition you are given. What you should return is explained in both "#Definition 1#" and "#Definition 2#" which are also below, so you're going to return according to the definition type.
 
 #json file#
-All the information of the user's travel plan will be provided to you either in a complete or incomplete state based on the following 2 definitions. There is an example json file below:
+All the information of the user's travel plan will be provided to you either in a complete or incomplete state based on the 2 definitions which are named as "#Definition 1#" and "#Definition 2#". There is an example json file below:
 
 {
 	"TravelPlan": {
-	  "Transportation": {
-		"PublicTransport": {
-		  "Bus": {
-			"departure": {
-			  "DateTime": "10.10.2010 08:00 AM",
-			  "Price": 300,
-			  "BookingLink": "bus_booking_link"
+	  	"Transportation": {
+			"PublicTransport": {
+				"Bus": {
+					"departure": {
+						"DateTime": "10.10.2010 08:00 AM",
+						"Price": 300,
+						"BookingLink": "bus_booking_link"
+					},
+					"arrival": {
+						"DateTime": "15.10.2010 05:00 PM",
+						"Price": 300,
+						"BookingLink": "bus_return_booking_link"
+					}
+				},
+				"Train": {
+					"departure": {
+						"DateTime": "11.10.2010 09:30 AM",
+						"Price": 500,
+						"BookingLink": "train_booking_link"
+					},
+					"arrival": {
+						"DateTime": "14.10.2010 04:30 PM",
+						"Price": 500,
+						"BookingLink": "train_return_booking_link"
+					}
+				}
 			},
-			"arrival": {
-			  "DateTime": "15.10.2010 05:00 PM",
-			  "Price": 300,
-			  "BookingLink": "bus_return_booking_link"
+			"PersonalVehicle": {
+				"WayPoints": {
+					"WayPoint_1": {
+						"Location": "12.122121,23.23454598",
+						"DateTime": "10.10.2010 12:00 PM",
+						"Tags": ["scenic", "historic"],
+						"Comments": [
+						{
+							"ID": "comment_id_1",
+							"Writer": {
+								"Name": "user1",
+								"Reviews": {
+									"Count": 45,
+									"Photo": "writer_photo_1",
+									"Link": "writer_link_1"
+								}
+							},
+							"DateTime": "10.10.2010 01:30 PM",
+							"Rate": 4,
+							"Text": "Beautiful scenery and great roads!"
+						},
+						{
+							"ID": "comment_id_2",
+							"Writer": {
+								"Name": "user2",
+								"Reviews": {
+									"Count": 30,
+									"Photo": "writer_photo_2",
+									"Link": "writer_link_2"
+								}
+							},
+							"DateTime": "10.10.2010 02:45 PM",
+							"Rate": 5,
+							"Text": "Charming little towns along the way."
+						}
+						]
+					},
+					"WayPoint_2": {
+						"Location": "11.987654,21.123456",
+						"DateTime": "10.10.2010 03:00 PM",
+						"Tags": ["adventure", "nature"],
+						"Comments": [
+						{
+							"ID": "comment_id_3",
+							"Writer": {
+								"Name": "user3",
+								"Reviews": {
+									"Count": 60,
+									"Photo": "writer_photo_3",
+									"Link": "writer_link_3"
+								}
+							},
+							"DateTime": "10.10.2010 04:30 PM",
+							"Rate": 3,
+							"Text": "Off-road experience was thrilling!"
+						},
+						{
+							"ID": "comment_id_4",
+							"Writer": {
+								"Name": "user4",
+								"Reviews": {
+									"Count": 75,
+									"Photo": "writer_photo_4",
+									"Link": "writer_link_4"
+								}
+							},
+							"DateTime": "10.10.2010 05:45 PM",
+							"Rate": 4,
+							"Text": "Loved the scenic views."
+						}
+						]
+					}
+		  		}
 			}
-		  },
-		  "Train": {
-			"departure": {
-			  "DateTime": "11.10.2010 09:30 AM",
-			  "Price": 500,
-			  "BookingLink": "train_booking_link"
-			},
-			"arrival": {
-			  "DateTime": "14.10.2010 04:30 PM",
-			  "Price": 500,
-			  "BookingLink": "train_return_booking_link"
-			}
-		  }
 		},
-		"PersonalVehicle": {
-		  "WayPoints": {
-			"WayPoint_1": {
-			  "Location": "12.122121,23.23454598",
-			  "DateTime": "10.10.2010 12:00 PM",
-			  "Tags": ["scenic", "historic"],
-			  "Comments": [
-				{
-				  "ID": "comment_id_1",
-				  "Writer": {
-					"Name": "user1",
-					"Reviews": {
-					  "Count": 45,
-					  "Photo": "writer_photo_1",
-					  "Link": "writer_link_1"
-					}
-				  },
-				  "DateTime": "10.10.2010 01:30 PM",
-				  "Rate": 4,
-				  "Text": "Beautiful scenery and great roads!"
-				},
-				{
-				  "ID": "comment_id_2",
-				  "Writer": {
-					"Name": "user2",
-					"Reviews": {
-					  "Count": 30,
-					  "Photo": "writer_photo_2",
-					  "Link": "writer_link_2"
-					}
-				  },
-				  "DateTime": "10.10.2010 02:45 PM",
-				  "Rate": 5,
-				  "Text": "Charming little towns along the way."
-				}
-			  ]
-			},
-			"WayPoint_2": {
-			  "Location": "11.987654,21.123456",
-			  "DateTime": "10.10.2010 03:00 PM",
-			  "Tags": ["adventure", "nature"],
-			  "Comments": [
-				{
-				  "ID": "comment_id_3",
-				  "Writer": {
-					"Name": "user3",
-					"Reviews": {
-					  "Count": 60,
-					  "Photo": "writer_photo_3",
-					  "Link": "writer_link_3"
-					}
-				  },
-				  "DateTime": "10.10.2010 04:30 PM",
-				  "Rate": 3,
-				  "Text": "Off-road experience was thrilling!"
-				},
-				{
-				  "ID": "comment_id_4",
-				  "Writer": {
-					"Name": "user4",
-					"Reviews": {
-					  "Count": 75,
-					  "Photo": "writer_photo_4",
-					  "Link": "writer_link_4"
-					}
-				  },
-				  "DateTime": "10.10.2010 05:45 PM",
-				  "Rate": 4,
-				  "Text": "Loved the scenic views."
-				}
-			  ]
+	  	"Accommodation": {
+			"Hotels": {
+		  		"Hotel_A": {
+					"Location": "12.122121,23.23454598",
+					"DateTime": "10.10.2010",
+					"Tags": ["luxury", "comfort"],
+					"Price": 300,
+					"Period": "10.10.2010 - 15.10.2010",
+					"Comments": [
+			  		{
+						"ID": "comment_id_5",
+						"Writer": {
+				  			"Name": "user5",
+				  			"Reviews": {
+								"Count": 90,
+								"Photo": "writer_photo_5",
+								"Link": "writer_link_5"
+				  			}
+						},
+						"DateTime": "10.10.2010 06:30 PM",
+						"Rate": 5,
+						"Text": "Exceptional service and amenities!"
+			  		},
+			  		{
+						"ID": "comment_id_6",
+						"Writer": {
+				  			"Name": "user6",
+				  			"Reviews": {
+								"Count": 120,
+								"Photo": "writer_photo_6",
+								"Link": "writer_link_6"
+				  			}
+						},
+						"DateTime": "11.10.2010 08:00 AM",
+						"Rate": 4,
+						"Text": "Beautifully designed rooms."
+			  		}
+					]
+		  		},
+		  		"Hotel_B": {
+					"Location": "11.987654,21.123456",
+					"DateTime": "12.10.2010",
+					"Tags": ["budget", "cozy"],
+					"Price": 150,
+					"Period": "12.10.2010 - 14.10.2010",
+					"Comments": [
+			  		{
+						"ID": "comment_id_7",
+						"Writer": {
+				  			"Name": "user7",
+				  			"Reviews": {
+								"Count": 40,
+								"Photo": "writer_photo_7",
+								"Link": "writer_link_7"
+				  			}
+						},
+						"DateTime": "12.10.2010 02:00 PM",
+						"Rate": 3,
+						"Text": "Good value for money."
+			  		},
+			  		{
+						"ID": "comment_id_8",
+						"Writer": {
+				  			"Name": "user8",
+				  			"Reviews": {
+								"Count": 25,
+								"Photo": "writer_photo_8",
+								"Link": "writer_link_8"
+				  			}
+						},
+						"DateTime": "12.10.2010 03:30 PM",
+						"Rate": 4,
+						"Text": "Friendly staff and clean rooms."
+			  		}
+					]
+		  		}
 			}
-		  }
-		}
-	  },
-	  "Accommodation": {
-		"Hotels": {
-		  "Hotel_A": {
-			"Location": "12.122121,23.23454598",
-			"DateTime": "10.10.2010",
-			"Tags": ["luxury", "comfort"],
-			"Price": 300,
-			"Period": "10.10.2010 - 15.10.2010",
-			"Comments": [
-			  {
-				"ID": "comment_id_5",
-				"Writer": {
-				  "Name": "user5",
-				  "Reviews": {
-					"Count": 90,
-					"Photo": "writer_photo_5",
-					"Link": "writer_link_5"
-				  }
-				},
-				"DateTime": "10.10.2010 06:30 PM",
-				"Rate": 5,
-				"Text": "Exceptional service and amenities!"
-			  },
-			  {
-				"ID": "comment_id_6",
-				"Writer": {
-				  "Name": "user6",
-				  "Reviews": {
-					"Count": 120,
-					"Photo": "writer_photo_6",
-					"Link": "writer_link_6"
-				  }
-				},
-				"DateTime": "11.10.2010 08:00 AM",
-				"Rate": 4,
-				"Text": "Beautifully designed rooms."
-			  }
-			]
-		  },
-		  "Hotel_B": {
-			"Location": "11.987654,21.123456",
-			"DateTime": "12.10.2010",
-			"Tags": ["budget", "cozy"],
-			"Price": 150,
-			"Period": "12.10.2010 - 14.10.2010",
-			"Comments": [
-			  {
-				"ID": "comment_id_7",
-				"Writer": {
-				  "Name": "user7",
-				  "Reviews": {
-					"Count": 40,
-					"Photo": "writer_photo_7",
-					"Link": "writer_link_7"
-				  }
-				},
-				"DateTime": "12.10.2010 02:00 PM",
-				"Rate": 3,
-				"Text": "Good value for money."
-			  },
-			  {
-				"ID": "comment_id_8",
-				"Writer": {
-				  "Name": "user8",
-				  "Reviews": {
-					"Count": 25,
-					"Photo": "writer_photo_8",
-					"Link": "writer_link_8"
-				  }
-				},
-				"DateTime": "12.10.2010 03:30 PM",
-				"Rate": 4,
-				"Text": "Friendly staff and clean rooms."
-			  }
-			]
-		  }
-		}
-	  },
-	  "PointsOfInterest": {
-		"PlacesToVisit": {
-		  "Place_X": {
-			"Location": "12.122121,23.23454598",
-			"DateTime": "10.10.2010 12:55:55",
-			"Tags": ["historic", "scenic"],
-			"Price": 300,
-			"Comments": [
-			  {
-				"ID": "comment_id_9",
-				"Writer": {
-				  "Name": "user9",
-				  "Reviews": {
-					"Count": 55,
-					"Photo": "writer_photo_9",
-					"Link": "writer_link_9"
-				  }
-				},
-				"DateTime": "10.10.2010 01:30 PM",
-				"Rate": 4,
-				"Text": "Rich in history and picturesque views."
-			  },
-			  {
-				"ID": "comment_id_10",
-				"Writer": {
-				  "Name": "user10",
-				  "Reviews": {
-					"Count": 70,
-					"Photo": "writer_photo_10",
-					"Link": "writer_link_10"
-				  }
-				},
-				"DateTime": "10.10.2010 03:00 PM",
-				"Rate": 5,
-				"Text": "A must-visit destination."
-			  }
-			]
-		  }
-		}
-	  }
+	  	},
+	  	"PointsOfInterest": {
+			"PlacesToVisit": {
+		  		"Place_X": {
+					"Location": "12.122121,23.23454598",
+					"DateTime": "10.10.2010 12:55:55",
+					"Tags": ["historic", "scenic"],
+					"Price": 300,
+					"Comments": [
+			  		{
+						"ID": "comment_id_9",
+						"Writer": {
+				  			"Name": "user9",
+				  			"Reviews": {
+								"Count": 55,
+								"Photo": "writer_photo_9",
+								"Link": "writer_link_9"
+				  			}
+						},
+						"DateTime": "10.10.2010 01:30 PM",
+						"Rate": 4,
+						"Text": "Rich in history and picturesque views."
+			  		},
+			  		{
+						"ID": "comment_id_10",
+						"Writer": {
+				  			"Name": "user10",
+				  			"Reviews": {
+								"Count": 70,
+								"Photo": "writer_photo_10",
+								"Link": "writer_link_10"
+				  			}
+						},
+						"DateTime": "10.10.2010 03:00 PM",
+						"Rate": 5,
+						"Text": "A must-visit destination."
+			  		}
+					]
+		  		}
+			}
+	  	}
 	}
-  }
+}
 
-Here are the main categories and their possible values:
-1. "Transportation": ["Bus", "Train", "PersonalVehicle"] 
-2. "Waypoints":
-3. "Accommodation": ["Hotel", "Home", "PersonalHome"]
+Here are the main categories and their possible subcategories:
+1. "Transportation": ["PublicTransport", "PersonalVehicle", "OnFeet"]
+2. "Accommodation": ["Hotels", "RentedHome", "PersonalHome"]
+3. "PointsOfInterest": ["PlacesToVisit"]
 
-The part "tags" in this json file, should be containing all the related tags to that specific area. All the tags are listed below based on their types:
+Also, here are the subcategories with their possible subcategories:
+1. "PublicTransport": ["Bus", "Train", "Plane"]
+2. "PersonalVehicle": ["Waypoints"]
+
+These categories and the whole json example's explanation is here: TravelPlan is the travel planning with all of its detail for a person or multiple people. Transportation is the transport type that will be used to reach to the destination of the plan. Transportation may be PublicTransport (which means that the person will be using public transportation in order to reach her/his destination) or PersonalVehicle (which means that person has a car and (s)he will be using this to reach the destination) or OnFeet (which means the person wants to reach the destination by walking). Transportation may contain all of them, few of them or only one. Because a destination can be reached by using different methods. For example, s/he may start the travel with PersonalVehicle and after leaving her/his car in a suitable place, s/he may go on with plane to the final destination. In the PublicTransport options, there are departure and arrival subcategories. These represent the process of going from the initial location to the destination point and from the destination point to the initial point respectively. However, it may be one direction in any transport type. In both, there are DateTime (the date that the transport's departure/arrival will take place), Price (the money that is paid for that transport type for that exact date), BookingLink (the link that was used in order to buy the ticket in order to use that transport type in that exact date). For PersonalVehicle, there are Waypoints which represent the places that are visited by the user in his/her way to the destination. In Waypoints, there are Waypoint elements that represent a specific place such as a restaurant, park, school. Because a person can use his/her car to stop by many places. Each waypoint has its Location, DateTime (the time of the visiting takes place), Tags (the variables that represent the the place. There will be more information related to tags in the following parts of this text.), Comments (the comments that are wrote by the people who experienced being in that place or who wish to criticise/praise the place). In the Comments, there are ID (the comment's ID to be able to seperate it from the other comments), Writer (the person's nickname whom wrote that specific comment), DateTime (the date that the comment was made), Rate (the score that the person gave to the place in order to assess there), Text (the comment that is visible by the other users). The Writer has Name (the username of the person who made the comment in the current platform) and Reviews (the reviews for that comment) in it. In Reviews there are Count (the count of the views that comment had from the users in that platform), Photo(?) and Link (the link of that comment). Accommodation is the place that the person(s) will stay at the reached destination or any other destinations such as waypoints. This may have many values since that person(s) may stay at different places at different destinations. Accommodation has 3 types as stated before. If there is Hotels, there should be the spesific hotels in Hotels part. Each hotel has similar properties with the waypoints. The same ones are Location, DateTime, Tags, Price, Comments. These are the versions that are adapted for hotels instead of waypoints. Hotels has also one other subcategory named Period which has the value of the two dates (first and last day) that the person will be staying at that specific hotel.
+
+
+#tags#
+The part "tags" in this json file (mostly in the waypoints and accommodations), should be containing all the related tags to that specific area. All the tags are listed below based on their types. There are 3 types and their sub types below:
 
 1. Place Types:
 
@@ -556,11 +564,14 @@ serves_wine
 takeout
 user_ratings_total
 
-If any of these parts are incomplete, you need to write "null" for that part.
+You should understand these tags well and include each one of the related tags for the places. 
 
 
 #Definition 1#
-You are an application that provides users traveling service. They have information of their travel in the application. That information includes certain topics. Below, you can find the topics that the information will be provided to you related to the certain user's travel:
+You are an application that provides users traveling service. They have information of their travel in the application. That information includes certain topics. 
+
+#First Input Given for Definition 1#
+Below, you can find the topics that the information will be provided to you related to the certain user's travel:
 1. Departure date from the initial location
 2. Return date from the reached final location
 3. Departure location (the location that travel has began)
@@ -572,13 +583,16 @@ You are an application that provides users traveling service. They have informat
 9. The activities that will be done by and the preferences of the user
 10. Diet program of the user
 
+#Second Input Given for Definition 1#
 You are also given an additional information which user prefers to share with you. This will be a text that the user wrote and it will contain information about the user. That information might be related to the user's personality, phobia, family, feelings...
 
-You should be classifying all these information into a json file which is similar to that of #json file#. Base information will be created from the first 10 topics. The other details will be filled with the additional information that is provided by user's text. Especially, focus on the "tags" of the json file. Then, you will be returning that json file as a whole.
+#Outputs of Definition 1#
+You should be classifying all these input information into a json file which is similar to that of #json file#. Base information will be created from the #First Input Given for Definition 1# given. The other details will be filled with the additional information that is provided by user's text. Especially, focus on the "tags" of the json file. So, you should be returning this json file content as the first output.
+As for the second output, you will put 2 blank lines after the first output, then add the second there. This second output will contain tags related to the #Second Input Given for Definition 1#. You should include each implication made or suggestion that is present for that text input. So, you should be returning the tags with "," between them.
 
 #Example 1 on tags#
 User's Text: i am not able to walk, need to pray
-tags found by ChatGPT: (You will not be returning only the tags but also the whole json file, but this example is to show you how to do the tags part.)
+tags found by ChatGPT: (You will not be returning only the tags but the whole json file. This example is only to show you how to do the tags part.)
 "tags": [
         "wheelchair_accessible_entrance",
 	"church",
@@ -588,47 +602,76 @@ tags found by ChatGPT: (You will not be returning only the tags but also the who
       ]
 
 #Definition 2#
-You are a chat section of a travel application. You enable users to reach to the information they are curious about the traveling related inquiries. If necessary, they will be able to change their preferences which are already present, through talking to you. There is a json file that represents the travel plan of the user. You need to return the updated parts of that file when you get a request of changing anything for the user. Below, you can find the format:
+You are a chat section of a travel application. You enable users to reach to the information they are curious about the traveling related inquiries. If necessary, they will be able to change their preferences which are already present, through talking to you. There is a json file that is given which represents the travel plan of the user. You need to return the updated parts of that file when you get a request of changing anything for the user. Below, you can find the format:
+
 out = 
 {
-	[ADD, {"WayPoint_2": {
-			  "Location": "11.987654,21.123456",
-			  "DateTime": "10.10.2010 03:00 PM",
-			  "Tags": ["adventure", "nature"],
-			  "Comments": [
-				{
-				  "ID": "comment_id_3",
-				  "Writer": {
-					"Name": "user3",
-					"Reviews": {
-					  "Count": 60,
-					  "Photo": "writer_photo_3",
-					  "Link": "writer_link_3"
+	[ADD, 
+		{"WayPoint_2": {
+					"Location": "11.987654,21.123456",
+					"DateTime": "10.10.2010 03:00 PM",
+					"Tags": ["adventure", "nature"],
+					"Comments": [
+					{
+						"ID": "comment_id_3",
+						"Writer": {
+							"Name": "user3",
+							"Reviews": {
+								"Count": 60,
+								"Photo": "writer_photo_3",
+								"Link": "writer_link_3"
+							}
+						},
+						"DateTime": "10.10.2010 04:30 PM",
+						"Rate": 3,
+						"Text": "Off-road experience was thrilling!"
+					},
+					{
+						"ID": "comment_id_4",
+						"Writer": {
+							"Name": "user4",
+							"Reviews": {
+								"Count": 75,
+								"Photo": "writer_photo_4",
+								"Link": "writer_link_4"
+							}
+						},
+						"DateTime": "10.10.2010 05:45 PM",
+						"Rate": 4,
+						"Text": "Loved the scenic views."
 					}
-				  },
-				  "DateTime": "10.10.2010 04:30 PM",
-				  "Rate": 3,
-				  "Text": "Off-road experience was thrilling!"
-				},}],
-	[DELETE , {"PublicTransport": {
-		  "Bus": {
-			"departure": {
-			  "DateTime": "10.10.2010 08:00 AM",
-			  "Price": 300,
-			  "BookingLink": "bus_booking_link"
-			},
-			"arrival": {
-			  "DateTime": "15.10.2010 05:00 PM",
-			  "Price": 300,
-			  "BookingLink": "bus_return_booking_link"
+					]
+				}
 			}
-		  },"}],		
-	[UPDATE, {""Train": {
-			"departure": {
-			  "DateTime": "14.10.2010",
+	],
+	[DELETE , 
+		{"Bus": {
+				"departure": {
+					"DateTime": "10.10.2010 08:00 AM",
+					"Price": 300,
+					"BookingLink": "bus_booking_link"
+				},
+				"arrival": {
+					"DateTime": "15.10.2010 05:00 PM",
+					"Price": 300,
+					"BookingLink": "bus_return_booking_link"
+				}
 			},
-"}]
+		},
+		{
+		
+		}
+	],		
+	[UPDATE, 
+		{"Train": {
+			"departure": {
+				"DateTime": "14.10.2010",
+			},
+		}
+		}
+	]
 }
+
 More than 1 parts can be added, updated and deleted at once. "ADD" will take place when the user wants to experience something that isn't already in the json file. "DELETE" will take place when the user decides not to do the element in the json file. "UPDATE" will take place when the user wants to change anything related to the existing json file element and only the changed part will be included in the returned text.
 
 #Instruction 1 of Definition 2#
