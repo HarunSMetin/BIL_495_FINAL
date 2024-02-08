@@ -1,9 +1,11 @@
 import requests
 import time
+ 
+ 
 
 class GoogleApi: 
     def __init__(self, API_KEY=None):
-        self.API_KEY = API_KEY or "YOUR_API_KEY"
+        self.API_KEY = API_KEY or "AIzaSyDQfy3gT0zK66NuQE1DsFH6di40j5n9KHI"
     
     async def get_function(self,url,params):
         places = []
@@ -27,35 +29,61 @@ class GoogleApi:
 
         return places
 
-    async def fetch_places_nearby(self, location, types , radius=50000, language="tr" ): 
+    async def __fetch_places_nearby(self, location, types , radius=50000, language="tr" ): 
         url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json" 
         params = {
+            
+            "fields" : ["name","geometry","place_id","user_ratings_total","vicinity"],
             "location": location,
             "radius": radius,
             "key": self.API_KEY,
             "language": language, 
-            "type": "|".join(types) 
+            "type": "|".join(types),
+            "businessStatus" : "OPERATIONAL",
+
         } 
         return await self.get_function(url,params) 
 
-    async def fetch_places_text(self,input : str):
-        places = []
-        url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json"
-        params = {
-            "input": input,
-            "inputtype": "textquery",
-            "key": self.API_KEY, 
-        }
-        return await self.get_function(url,params) 
-     
+    #async def __fetch_places_text(self,input : str):
+    #    places = []
+    #    url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json"
+    #    params = {
+    #        "input": input,
+    #        "inputtype": "textquery",
+    #        "key": self.API_KEY, 
+    #    }
+    #    return await self.get_function(url,params)  
+
     async def fetch_places_query(self, input : str):
         places = []
         url = "https://maps.googleapis.com/maps/api/place/textsearch/json"
         params = {
+            
+            "fields" : ["name","geometry","place_id","user_ratings_total","vicinity"],
             "query": input,
-            "key": self.API_KEY,
+            "key": self.API_KEY, 
         }
         return await self.get_function(url,params)  
+
+    async def fetch_places_all_methods(self, input="", location="", types=[], radius=15000, language="tr"):
+        places = []
+        counts = [0,0]
+        if input !="" : 
+            query_places = await self.fetch_places_query(input)
+            for place in query_places:
+                if place not in places:
+                    places.append(place)
+                    counts[0]+=1 
+
+        if location!="" and types!=[]:
+            nearby_places = await self.__fetch_places_nearby(location, types, radius, language)
+
+            for place in nearby_places:
+                if place not in places:
+                    places.append(place)
+                    counts[1]+=1        
+        return places,counts
+    
 
     async def fetch_place_details(self ,place_id):
         url = "https://maps.googleapis.com/maps/api/place/details/json"
