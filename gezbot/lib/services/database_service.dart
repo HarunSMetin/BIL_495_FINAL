@@ -4,6 +4,7 @@ import 'package:gezbot/models/message.model.dart';
 import 'package:gezbot/models/question.model.dart';
 import 'package:gezbot/models/travel.model.dart';
 import 'package:gezbot/models/user.model.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class DatabaseService {
   final CollectionReference userCollection =
@@ -16,6 +17,18 @@ class DatabaseService {
       FirebaseFirestore.instance.collection('travelOptions');
   final CollectionReference friendRequestsCollection =
       FirebaseFirestore.instance.collection('friendRequests');
+
+  void printError(e) {
+    print('\x1B[31m$e\x1B[0m');
+  }
+
+  void printWarning(e) {
+    print('\x1B[33m$e\x1B[0m');
+  }
+
+  void printOkey(e) {
+    print('\x1B[32m$e\x1B[0m');
+  }
 
   void printInlinedJson(Map<String, dynamic> jsonData, {String indent = ''}) {
     jsonData.forEach((key, value) {
@@ -263,7 +276,8 @@ class DatabaseService {
     return Travel.fromMap(travelData);
   }
 
-  Future<List<TravelQuestion>> GetTravelQuestions() async {
+  Future<List<TravelQuestion>> GetTravelQuestions(
+      String UserID, String TravelID) async {
     QuerySnapshot querySnapshot = await travelOptionsCollection.get();
     List<TravelQuestion> questions = [];
     await Future.forEach(querySnapshot.docs, (result) async {
@@ -271,35 +285,35 @@ class DatabaseService {
       temp['questionId'] = result.id;
       questions.add(TravelQuestion.fromMap(temp));
     });
+    await GetTravelAnswersOfUser(UserID, TravelID).then((value) {
+      questions.forEach((element) {
+        if (value[value.keys.toList().first].containsKey(element.questionId)) {
+          dynamic _userAnswer =
+              value[value.keys.toList().first][element.questionId];
+          /*if (_userAnswer != "") {
+            element.userAnswer = _userAnswer;
+          }*/
+          if (_userAnswer != null) {
+            element.userAnswer = _userAnswer;
+          }
+        }
+      });
+    });
     return questions;
   }
 
-  Future<Map<String, dynamic>> GetTravelAnswersOfUser(String UserID) async {
+  Future<Map<String, dynamic>> GetTravelAnswersOfUser(
+      String UserID, String TravelID) async {
     //['01_DepartureDate','02_ReturnDate','03_DesiredDestination','04_TravelTransportation','06_PurposeOfVisit','05_EstimatedBudget','07_AccommodationPreferences','08_ActivitiesPreferences','09_DietaryRestrictions','10_TravelingWithOthers','11_SpecialComment','12_LocalRecommendations']
 
     Map<String, dynamic> jsonData = {};
-    QuerySnapshot querySnapshot =
-        await travelsCollection.where('creatorId', isEqualTo: UserID).get();
+    //get doc with id equals to TravelID
+    DocumentSnapshot doc = await travelsCollection.doc(TravelID).get();
+    Map<String, dynamic> travelData = doc.data() as Map<String, dynamic>;
+    travelData['id'] = doc.id;
+    jsonData[TravelID] = travelData;
 
-    Map<String, dynamic> travelData = {};
-    await Future.forEach(querySnapshot.docs, (result) async {
-      travelData = result.data() as Map<String, dynamic>;
-      jsonData[result.id] = {
-        '01_DepartureDate': travelData['01_DepartureDate'],
-        '02_ReturnDate': travelData['02_ReturnDate'],
-        '03_DesiredDestination': travelData['03_DesiredDestination'],
-        '04_TravelTransportation': travelData['04_TravelTransportation'],
-        '06_PurposeOfVisit': travelData['06_PurposeOfVisit'],
-        '05_EstimatedBudget': travelData['05_EstimatedBudget'],
-        '07_AccommodationPreferences':
-            travelData['07_AccommodationPreferences'],
-        '08_ActivitiesPreferences': travelData['08_ActivitiesPreferences'],
-        '09_DietaryRestrictions': travelData['09_DietaryRestrictions'],
-        '10_TravelingWithOthers': travelData['10_TravelingWithOthers'],
-        '11_SpecialComment': travelData['11_SpecialComment'],
-        '12_LocalRecommendations': travelData['12_LocalRecommendations'],
-      };
-    });
+    printOkey(jsonData);
     return jsonData;
   }
 
@@ -337,6 +351,7 @@ class DatabaseService {
       'isCompleted': false,
       'lastUpdate': DateTime.now(),
       'members': [UserID],
+      '00_DepartureLocation': '',
       '01_DepartureDate': DateTime(1010, 10, 10),
       '02_ReturnDate': DateTime(1010, 10, 10),
       '03_DesiredDestination': '',
@@ -844,6 +859,40 @@ class DatabaseService {
       }
     }
     return users;
+  }
+
+  Future<Map<String, dynamic>> fetchRecommendedPlaces(String travelId) async {
+    try {
+      DocumentSnapshot doc = await travelsCollection.doc(travelId).get();
+      if (!doc.exists) {
+        throw Exception("Travel not found");
+      }
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+
+      // Assuming 'initialPosition' and 'pointsToMark' are stored as Strings
+      String initialPositionStr = data['initialPosition'];
+      List<String> pointsToMarkStrList = List.from(data['pointsToMark']);
+
+      LatLng initialPosition = _parseLatLng(initialPositionStr);
+      List<LatLng> pointsToMark = pointsToMarkStrList
+          .map((pointStr) => _parseLatLng(pointStr))
+          .toList();
+
+      return {
+        'initialPosition': initialPosition,
+        'pointsToMark': pointsToMark,
+      };
+    } catch (e) {
+      print("Error fetching recommended places: $e");
+      return {};
+    }
+  }
+
+  LatLng _parseLatLng(String latLngStr) {
+    List<String> parts = latLngStr.split(',');
+    double latitude = double.parse(parts[0].trim());
+    double longitude = double.parse(parts[1].trim());
+    return LatLng(latitude, longitude);
   }
 
   Future<List<Travel>> SearchTravelsByTravelName(String query,

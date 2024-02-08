@@ -48,6 +48,10 @@ class _TravelsScreenState extends State<TravelsScreen> {
         !isFetchingMore) {}
   }
 
+  void printError(e) {
+    print('\x1B[31m$e\x1B[0m');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

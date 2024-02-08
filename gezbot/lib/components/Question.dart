@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:gezbot/models/question.model.dart';
 
-enum QuestionType { openEnded, date, multipleChoice, numberInput, yesNo }
+enum QuestionType {
+  openEnded,
+  date,
+  multipleChoice,
+  numberInput,
+  yesNo,
+  location
+}
 
 class QuestionWidget extends StatefulWidget {
   final TravelQuestion question;
+
   final Function(String) onAnswerChanged;
 
   const QuestionWidget(
@@ -21,6 +29,9 @@ class _QuestionWidgetState extends State<QuestionWidget> {
   bool yesSelected = false;
   bool noSelected = false;
   final TextEditingController _textController = TextEditingController();
+  void printError(String error) {
+    print('\x1B[31m$error\x1B[0m');
+  }
 
   @override
   void dispose() {
@@ -31,6 +42,16 @@ class _QuestionWidgetState extends State<QuestionWidget> {
   @override
   void initState() {
     super.initState();
+    if (widget.question.questionType == 'date') {
+      selectedDate = widget.question.userAnswer!.toDate();
+    } else if (widget.question.questionType == 'multipleChoice') {
+      selectedOption = widget.question.userAnswer;
+    } else if (widget.question.questionType == 'yesNo') {
+      yesSelected = widget.question.userAnswer == 'Yes';
+      noSelected = widget.question.userAnswer == 'No';
+    } else {
+      _textController.text = widget.question.userAnswer ?? '';
+    }
   }
 
   @override
@@ -55,33 +76,49 @@ class _QuestionWidgetState extends State<QuestionWidget> {
   Widget _buildAnswerField(QuestionType type) {
     switch (type) {
       case QuestionType.openEnded:
-        return _buildTextInputField(type);
+        if (widget.question.userAnswer != null) {
+          return _buildTextInputField(
+            type,
+          );
+        } else {
+          return _buildTextInputField(type);
+        }
       case QuestionType.numberInput:
-        return _buildTextInputField(type);
+        if (widget.question.userAnswer != null) {
+          return _buildTextInputField(
+            type,
+          );
+        } else {
+          return _buildTextInputField(type);
+        }
       case QuestionType.date:
-        return _buildDateButton();
+        if (widget.question.userAnswer != null) {
+          return _buildDateButton();
+        } else {
+          return _buildDateButton();
+        }
       case QuestionType.multipleChoice:
-        return _buildMultipleChoiceOptions();
+        if (widget.question.userAnswer != null) {
+          return _buildMultipleChoiceOptions();
+        } else {
+          return _buildMultipleChoiceOptions();
+        }
       case QuestionType.yesNo:
-        return _buildYesNoToggle();
+        if (widget.question.userAnswer != null) {
+          return _buildYesNoToggle();
+        } else {
+          return _buildYesNoToggle();
+        }
       default:
         return Container();
     }
-  }
-
-  void printError(String error) {
-    //print red
-    print('\x1B[31m$error\x1B[0m');
   }
 
   Widget _buildTextInputField(QuestionType type) {
     return TextField(
       controller: _textController,
       onChanged: (value) {
-        setState(() {
-          _textController.text = value;
-          widget.onAnswerChanged(value);
-        });
+        widget.onAnswerChanged(value);
       },
       keyboardType: type == QuestionType.numberInput
           ? TextInputType.number
@@ -145,7 +182,7 @@ class _QuestionWidgetState extends State<QuestionWidget> {
     );
     if (picked != null) {
       setState(() {
-        selectedDate = picked; // Update the state to reflect the date selection
+        selectedDate = picked;
         widget.onAnswerChanged(picked.toIso8601String());
       });
     }
