@@ -9,6 +9,7 @@ class Travel {
   final bool isCompleted;
   final DateTime lastUpdate;
   final List<String> members;
+  final String departureLocation;
   final DateTime departureDate;
   final DateTime returnDate;
   final String desiredDestination;
@@ -32,6 +33,7 @@ class Travel {
     required this.isCompleted,
     required this.lastUpdate,
     required this.members,
+    required this.departureLocation,
     required this.departureDate,
     required this.returnDate,
     required this.desiredDestination,
@@ -47,6 +49,10 @@ class Travel {
     required this.lastUpdatedQuestionId,
   });
 
+  static void printErrorRed(e) {
+    print('\x1B[31m$e\x1B[0m');
+  }
+
   factory Travel.fromMap(Map<String, dynamic> map) {
     return Travel(
       id: map['id'],
@@ -57,6 +63,7 @@ class Travel {
       isCompleted: map['isCompleted'],
       lastUpdate: (map['lastUpdate'] as Timestamp).toDate(),
       members: List<String>.from(map['members']),
+      departureLocation: map['00_DepartureLocation'],
       departureDate: (map['01_DepartureDate'] as Timestamp).toDate(),
       returnDate: (map['02_ReturnDate'] as Timestamp).toDate(),
       desiredDestination: map['03_DesiredDestination'],
@@ -83,6 +90,7 @@ class Travel {
       'isCompleted': isCompleted,
       'lastUpdate': lastUpdate,
       'members': members,
+      'departureLocation': departureLocation,
       'departureDate': departureDate,
       'returnDate': returnDate,
       'desiredDestination': desiredDestination,
@@ -109,6 +117,7 @@ class Travel {
       isCompleted: false,
       lastUpdate: DateTime.now(),
       members: [],
+      departureLocation: 'empty',
       departureDate: DateTime.now(),
       returnDate: DateTime.now(),
       desiredDestination: 'empty',
@@ -126,6 +135,8 @@ class Travel {
   }
   dynamic fieldFromQuestionId(String questionId) {
     switch (questionId) {
+      case '00_DepartureLocation':
+        return this.departureLocation;
       case '01_DepartureDate':
         return this.departureDate;
       case '02_ReturnDate':
@@ -153,5 +164,9 @@ class Travel {
       default:
         return null;
     }
+  }
+
+  String toString() {
+    return 'Travel: {id: $id, name: $name, description: $description, creatorId: $creatorId, isPublic: $isPublic, isCompleted: $isCompleted, lastUpdate: $lastUpdate, members: $members, departureLocation: $departureLocation, departureDate: $departureDate, returnDate: $returnDate, desiredDestination: $desiredDestination, travelTransportation: $travelTransportation, purposeOfVisit: $purposeOfVisit, estimatedBudget: $estimatedBudget, accommodationPreferences: $accommodationPreferences, activitiesPreferences: $activitiesPreferences, dietaryRestrictions: $dietaryRestrictions, travelingWithOthers: $travelingWithOthers, specialComment: $specialComment, localRecommendations: $localRecommendations, lastUpdatedQuestionId: $lastUpdatedQuestionId}';
   }
 }

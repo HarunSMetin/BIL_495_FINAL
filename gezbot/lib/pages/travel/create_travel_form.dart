@@ -9,17 +9,20 @@ import 'package:gezbot/components/Question.dart';
 class TravelQuestionService {
   final _database_service = DatabaseService();
 
-  Future<List<TravelQuestion>> fetchQuestions() {
-    return _database_service.GetTravelQuestions();
+  Future<List<TravelQuestion>> fetchQuestions(String UserID, String TravelID) {
+    return _database_service.GetTravelQuestions(UserID, TravelID);
   }
 }
 
 class TravelQuestionnaireForm extends StatefulWidget {
   final String travelId;
   final String travelName;
-
+  final String uid;
   const TravelQuestionnaireForm(
-      {super.key, required this.travelId, required this.travelName});
+      {super.key,
+      required this.travelId,
+      required this.travelName,
+      required this.uid});
   @override
   _TravelQuestionnaireFormState createState() =>
       _TravelQuestionnaireFormState();
@@ -39,8 +42,13 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
     _loadQuestions();
   }
 
+  void printWarning(e) {
+    print('\x1B[33m$e\x1B[0m');
+  }
+
   void _loadTravel() async {
     travel = await _service._database_service.GetTravelOfUser(widget.travelId);
+
     setState(() {
       int? parsedValue =
           int.tryParse(travel.lastUpdatedQuestionId.substring(0, 2));
@@ -50,17 +58,15 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
           type.toString() ==
           'QuestionType.${_questions[_currentQuestionIndex].questionType}');
     });
-    for (TravelQuestion question in _questions) {
-      dynamic answer = travel.fieldFromQuestionId(question.questionId);
-      if (answer != '') {
-        question.userAnswer = answer;
-        break;
-      }
-    }
   }
 
   void _loadQuestions() async {
-    var questions = await _service.fetchQuestions();
+    var questions = await _service.fetchQuestions(widget.uid, widget.travelId);
+    printWarning(widget.travelName);
+    questions.forEach((element) {
+      printWarning(element.questionId);
+      printWarning(element.userAnswer);
+    });
     setState(() {
       _questions = questions;
     });
@@ -70,8 +76,10 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
   void _nextQuestion() async {
     TravelQuestion currentQuestion = _questions[_currentQuestionIndex];
     dynamic firestoreAnswer = _currentAnswer;
+    printWarning(_questions[_currentQuestionIndex].isUserChanged);
     if (!currentQuestion.isUserChanged) {
     } else {
+      printWarning(_currentAnswer);
       if (_currentQuestionType == QuestionType.date) {
         firestoreAnswer = Timestamp.fromDate(_currentAnswer);
       } else if (_currentQuestionType == QuestionType.yesNo) {
@@ -88,8 +96,7 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
     if (_currentQuestionIndex < _questions.length - 1) {
       setState(() {
         _currentQuestionIndex++;
-        _currentAnswer = travel
-            .fieldFromQuestionId(_questions[_currentQuestionIndex].questionId);
+        _currentAnswer = _questions[_currentQuestionIndex].userAnswer;
         _currentAnswer ??= '';
         _currentQuestionType = QuestionType.values.firstWhere((type) =>
             type.toString() ==
@@ -105,6 +112,10 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
         );
       });
     }
+    var questions = await _service.fetchQuestions(widget.uid, widget.travelId);
+    setState(() {
+      _questions = questions;
+    });
   }
 
   void _onAnswerChanged(String answer) {
@@ -124,11 +135,20 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
         formattedAnswer = answer;
     }
 
-    _questions[_currentQuestionIndex].isUserChanged = true;
+    _questions[_currentQuestionIndex].isUserChanged =
+        _questions[_currentQuestionIndex].userAnswer != formattedAnswer;
     _currentAnswer = formattedAnswer;
   }
 
-  void _previousQuestion() {
+  void _previousQuestion() async {
+    var questions = await _service.fetchQuestions(widget.uid, widget.travelId);
+    questions.forEach((element) {
+      printWarning(element.questionId);
+      printWarning(element.userAnswer);
+    });
+    setState(() {
+      _questions = questions;
+    });
     if (_currentQuestionIndex > 0) {
       setState(() {
         _currentQuestionIndex--;

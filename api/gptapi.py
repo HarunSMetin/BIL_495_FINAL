@@ -33,10 +33,7 @@ def call_gpt_api(prompt):
     endpoint = "https://api.openai.com/v1/chat/completions"
     api_key = "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"  # Replace this with your OpenAI API key
 
-    headers = {
-        "Content-Type": "application/json",
-        "Authorization": f"Bearer {api_key}"
-    }
+    headers = {"Content-Type": "application/json", "Authorization": f"Bearer {api_key}"}
 
     data = {
         "model": "gpt-3.5-turbo",  # Adjust the model name as per your preference

@@ -87,10 +87,12 @@ class _PreTravelCreationState extends State<PreTravelCreation> {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => TravelQuestionnaireForm(
-                    travelId: value,
-                    travelName: _travelNameController.text,
-                  )),
+            builder: (context) => TravelQuestionnaireForm(
+              travelId: value,
+              travelName: _travelNameController.text,
+              uid: prefs.getString('uid')!,
+            ),
+          ),
         );
       }).catchError((error) {
         // Handle any errors here
@@ -105,9 +107,9 @@ class _PreTravelCreationState extends State<PreTravelCreation> {
       context,
       MaterialPageRoute(
         builder: (context) => TravelQuestionnaireForm(
-          travelId: widget.travel.id,
-          travelName: widget.travel.name,
-        ),
+            travelId: widget.travel.id,
+            travelName: widget.travel.name,
+            uid: prefs.getString('uid')!),
       ),
     );
   }
