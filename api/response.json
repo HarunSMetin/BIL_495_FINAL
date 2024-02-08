@@ -1,0 +1,3244 @@
+[
+  {
+    "business_status": "OPERATIONAL",
+    "formatted_address": "Söğütözü, Yaşam Cd. 4. sokak No:4, 06510 Çankaya/Ankara, Türkiye",
+    "geometry": {
+      "location": {
+        "lat": 39.91450409999999,
+        "lng": 32.8069629
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.91579647989272,
+          "lng": 32.80860242989272
+        },
+        "southwest": {
+          "lat": 39.91309682010728,
+          "lng": 32.80590277010728
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/bar-71.png",
+    "icon_background_color": "#FF9E67",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/bar_pinlet",
+    "name": "No4",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 3744,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/103296112369017109477\">A Google User</a>"
+        ],
+        "photo_reference": "AWU5eFjmTr82BD-_RDTNszaJ0I-opeAWJk8lxtFCRh-VULucg54Snv4sxsry9mlznbeS5wvm_imwMmgRxYkDvYDYVlfgslty-sMk16NdBzAyqFcp-bPbIl9kFPtdGPDqEdX9iLpo61WcQKmgd6RLabZD6VyQP_ctzKWapWGC3m63i8PEAhOi",
+        "width": 5616
+      }
+    ],
+    "place_id": "ChIJlXdguLRI0xQRSd8wtFnmTr4",
+    "plus_code": {
+      "compound_code": "WR74+RQ Çankaya, Ankara",
+      "global_code": "8GFJWR74+RQ"
+    },
+    "price_level": 3,
+    "rating": 4.5,
+    "reference": "ChIJlXdguLRI0xQRSd8wtFnmTr4",
+    "types": [
+      "bar",
+      "night_club",
+      "restaurant",
+      "food",
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 617
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "formatted_address": "Söğütözü Koç Kuleleri Söğütözü Mah. Söğütözü Cad. 2D Blok No:30/31, D:31, 06510 Çankaya/Ankara, Türkiye",
+    "geometry": {
+      "location": {
+        "lat": 39.911766,
+        "lng": 32.8051223
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.91332612989272,
+          "lng": 32.80657727989272
+        },
+        "southwest": {
+          "lat": 39.91062647010727,
+          "lng": 32.80387762010728
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+    "icon_background_color": "#FF9E67",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/restaurant_pinlet",
+    "name": "Tavacı Recep Usta Söğütözü",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 1920,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/106347091406676286085\">Kadim Daşbilek</a>"
+        ],
+        "photo_reference": "AWU5eFgiZ7SkG3n4xFRPZYor9ezy6WA5_dPWgiU45kQ5GAfNt2ZSDTJ58Dkpnc1DB5ge4qBIbhAZAeBf2aFgXAsHh6q0TxYX0JWQp7zvZDNmddv2xf7SuoylVWjClfpnVVVuJGN1DB_yv8NsK-vfCpoR7xAaR48f1Z6uCcWvtYMz4ghmuV63",
+        "width": 2560
+      }
+    ],
+    "place_id": "ChIJA5e1Z7FI0xQR5kCbNPzWTqU",
+    "plus_code": {
+      "compound_code": "WR64+P2 Çankaya, Ankara",
+      "global_code": "8GFJWR64+P2"
+    },
+    "rating": 4,
+    "reference": "ChIJA5e1Z7FI0xQR5kCbNPzWTqU",
+    "types": [
+      "restaurant",
+      "food",
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 268
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "formatted_address": "Emek, Söğütözü Cd. Kule İş Merkezi D:7/B, 06560 Çankaya/Ankara, Türkiye",
+    "geometry": {
+      "location": {
+        "lat": 39.91316990000001,
+        "lng": 32.8080599
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.91450022989272,
+          "lng": 32.80943237989272
+        },
+        "southwest": {
+          "lat": 39.91180057010727,
+          "lng": 32.80673272010728
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+    "icon_background_color": "#FF9E67",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/restaurant_pinlet",
+    "name": "Afitap Meyhane Söğütözü",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 4032,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/106163909367571547509\">Alper Ekmekçi</a>"
+        ],
+        "photo_reference": "AWU5eFgE6-RVUFFY7hoaw9Z2ha_V6JUoLHlvx4Ck_gmwe6gu1ecWwocbjMC_s5vueyzyC7sYG2J9b0cjmz6pNgCPbDLjcXJKWX-PV0hdKN8hP_zS7X8agrMhhp_A3iP_rXcqqo_7IuCOHWwjKak1RDGxz8EFXjQ_oqrqBCQ3pd0BgJj1luid",
+        "width": 3024
+      }
+    ],
+    "place_id": "ChIJnVtXKR1P0xQRPX8iPfe481E",
+    "plus_code": {
+      "compound_code": "WR75+76 Çankaya, Ankara",
+      "global_code": "8GFJWR75+76"
+    },
+    "price_level": 3,
+    "rating": 4.4,
+    "reference": "ChIJnVtXKR1P0xQRPX8iPfe481E",
+    "types": [
+      "restaurant",
+      "bar",
+      "food",
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 700
+  },
+  {
+    "business_status": "CLOSED_TEMPORARILY",
+    "formatted_address": "Söğütözü Mahallesi Nergis Sokak Via- Flat İş Merkezii, 06510 Çankaya/Ankara, Türkiye",
+    "geometry": {
+      "location": {
+        "lat": 39.9141697,
+        "lng": 32.8083986
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.91551952989272,
+          "lng": 32.80974842989272
+        },
+        "southwest": {
+          "lat": 39.91281987010728,
+          "lng": 32.80704877010727
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+    "icon_background_color": "#FF9E67",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/restaurant_pinlet",
+    "name": "Dolce Vita Brasserie",
+    "permanently_closed": true,
+    "photos": [
+      {
+        "height": 3024,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/107352442665789566306\">Eren Keskin</a>"
+        ],
+        "photo_reference": "AWU5eFgq3_6FfiNMKHYm_TnIRNN4ZMY1qWbmpKnKS67FyKv-beWNxayD_54xdpkN0BBH4rQmBksYWBU8luIMUqPdKAs8up_BKSfOKT2e6tI50_2xSYqquPEXGmGfUBAeNdkIidBfdyfNeNYlzp-gzAILBzbksP9HXTlhweC07wEiqlB9tyjk",
+        "width": 4032
+      }
+    ],
+    "place_id": "ChIJ_T6ns7RI0xQRGOlQJr4daGo",
+    "plus_code": {
+      "compound_code": "WR75+M9 Yenimahalle, Ankara",
+      "global_code": "8GFJWR75+M9"
+    },
+    "rating": 4.3,
+    "reference": "ChIJ_T6ns7RI0xQRGOlQJr4daGo",
+    "types": [
+      "restaurant",
+      "bar",
+      "food",
+      "point_of_interest",
+      "store",
+      "establishment"
+    ],
+    "user_ratings_total": 48
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "formatted_address": "Söğütözü Mah, Muhsin Yazıcıoğlu Cad. Jw Marriott No:1, 06510 Çankaya/Ankara, Türkiye",
+    "geometry": {
+      "location": {
+        "lat": 39.9094933,
+        "lng": 32.8071808
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.91091272989271,
+          "lng": 32.80851212989273
+        },
+        "southwest": {
+          "lat": 39.90821307010727,
+          "lng": 32.80581247010728
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+    "icon_background_color": "#FF9E67",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/restaurant_pinlet",
+    "name": "Fires & Flavors",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 3024,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/117209235734725455941\">EUN SUNG Kim&#39;s</a>"
+        ],
+        "photo_reference": "AWU5eFgiM6g9yTW4ymiK-dRhDLVxd8bO37DUQKHRqozz0gI0kPYiTB7r4NrJxgnJZoBGstAYF2FqgDPG4IQ5eyLTEqWd_P4_AMVATjEBzMuWghEbo9cg_Q6OP1CchEXQjaZwV13zjgMznj2iBxovFVGtv-hzLPlgBxbsRzKmnqO4GP6xQD7G",
+        "width": 4032
+      }
+    ],
+    "place_id": "ChIJP4KSGa1I0xQRwd74iX5A5n4",
+    "plus_code": {
+      "compound_code": "WR54+VJ Çankaya, Ankara",
+      "global_code": "8GFJWR54+VJ"
+    },
+    "rating": 4.1,
+    "reference": "ChIJP4KSGa1I0xQRwd74iX5A5n4",
+    "types": [
+      "restaurant",
+      "food",
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 10
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "formatted_address": "Beştepe, Dumlupınar Blv. 26-29, 06560 Yenimahalle/Ankara, Türkiye",
+    "geometry": {
+      "location": {
+        "lat": 39.9129448,
+        "lng": 32.8099569
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.91417117989272,
+          "lng": 32.81146687989273
+        },
+        "southwest": {
+          "lat": 39.91147152010727,
+          "lng": 32.80876722010728
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+    "icon_background_color": "#FF9E67",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/restaurant_pinlet",
+    "name": "Günaydın Kasap & Steakhouse Armada Avm",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 3024,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/107831207091718948675\">Shotaro Nakayama</a>"
+        ],
+        "photo_reference": "AWU5eFjKiWROdXW4wORS4vktJEc4sZPVHVKajgfiADnUkOnzBGVia7S0X3TGcizzlGwXgaKoEbXCUl7Kzube3DXbig2SLmKqz3P_088rG0vwdel241qNBz7T33MUjv0d6PgUA_78kbC0dIaT7IET3_zcobd7WXPABTh_Zm-JWIU-JVrgC3lx",
+        "width": 4032
+      }
+    ],
+    "place_id": "ChIJlfAqokxP0xQRZcGK8_o9RBI",
+    "plus_code": {
+      "compound_code": "WR75+5X Yenimahalle, Ankara",
+      "global_code": "8GFJWR75+5X"
+    },
+    "price_level": 3,
+    "rating": 4.2,
+    "reference": "ChIJlfAqokxP0xQRZcGK8_o9RBI",
+    "types": [
+      "restaurant",
+      "food",
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 665
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "formatted_address": "100. Yıl, Filistin Cd. No:37, 06700 Çankaya/Ankara, Türkiye",
+    "geometry": {
+      "location": {
+        "lat": 39.897412,
+        "lng": 32.8717225
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.89874062989272,
+          "lng": 32.87303472989272
+        },
+        "southwest": {
+          "lat": 39.89604097010728,
+          "lng": 32.87033507010727
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+    "icon_background_color": "#FF9E67",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/restaurant_pinlet",
+    "name": "Louise Cafe Brasserie & Loft",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 3024,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/108881483142816656368\">Lara çayan</a>"
+        ],
+        "photo_reference": "AWU5eFhwXQSezl5z9C8GZW1AQhwJnk-_GEQqCl27JRLhIQ9lAM2c2CYevqih265MkscaSJ8qymefx8aeVEdzSRAM-peCxeilMGqAUstU2BQc1GjfNaF_EyAN4e-qqJoXACcOYZDo4pbZUii-xOmOEzWjHEw2_m3hzzSG6LuPkqVjtSEPSgyt",
+        "width": 3024
+      }
+    ],
+    "place_id": "ChIJZQVkjpVP0xQRC1lkg94n9vk",
+    "plus_code": {
+      "compound_code": "VVWC+XM Çankaya, Ankara",
+      "global_code": "8GFJVVWC+XM"
+    },
+    "rating": 4.4,
+    "reference": "ChIJZQVkjpVP0xQRC1lkg94n9vk",
+    "types": [
+      "restaurant",
+      "cafe",
+      "bar",
+      "food",
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 1429
+  },
+  {
+    "geometry": {
+      "location": {
+        "lat": 39.9333635,
+        "lng": 32.8597419
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 40.07633195201663,
+          "lng": 33.00705601280067
+        },
+        "southwest": {
+          "lat": 39.73042105857623,
+          "lng": 32.51847347138715
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/geocode-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "name": "Ankara",
+    "photos": [
+      {
+        "height": 800,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/112831475927302640394\">Nermin Zukic</a>"
+        ],
+        "photo_reference": "AWU5eFiOA3MG7RE4SAK2bAYfrpxVCwnFxeyjbY-mxwCASBQjAKVrfA-_E8qYorKmA3M0ZZpI3GM2n7S8IMCsEPlbu4Gm9awKWtjXEoQeIDevGXomRuXI01Q9tEbz3uk04M-NU2Chn6U3gStVKjaJeB4IYd1r1R_ktOvSR8sdmN1RcrmK3o59",
+        "width": 533
+      }
+    ],
+    "place_id": "ChIJsS1zINVH0xQRjSuEwLBX3As",
+    "reference": "ChIJsS1zINVH0xQRjSuEwLBX3As",
+    "scope": "GOOGLE",
+    "types": [
+      "locality",
+      "political"
+    ],
+    "vicinity": "Ankara"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.9099879,
+        "lng": 32.7758776
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.91128243029149,
+          "lng": 32.7768196302915
+        },
+        "southwest": {
+          "lat": 39.9085844697085,
+          "lng": 32.77412166970851
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/shopping-71.png",
+    "icon_background_color": "#4B96F3",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/shopping_pinlet",
+    "name": "adidas",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 720,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/114593652692550669628\">adidas</a>"
+        ],
+        "photo_reference": "AWU5eFiomMbNLbUUT2OiETPMbRn5oe6S4hVYS25wE3KHQLzFW0kl8ovGzyUcdi_JaJ1qR1gV2wo-32lcr4ZEwD7N0Its6duExYFvqXGF_WyOfbR6aObsDfQ00GDTnax7XwbFheNQZzxmZ4J9FjtNbO0Mee-_bL9TaRM6fWS97GUrwebyrsN5",
+        "width": 960
+      }
+    ],
+    "place_id": "ChIJq7iQAdNH0xQRAHYk_Rp8I-E",
+    "plus_code": {
+      "compound_code": "WQ5G+X9 Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ5G+X9"
+    },
+    "rating": 3.7,
+    "reference": "ChIJq7iQAdNH0xQRAHYk_Rp8I-E",
+    "scope": "GOOGLE",
+    "types": [
+      "shoe_store",
+      "clothing_store",
+      "point_of_interest",
+      "store",
+      "establishment"
+    ],
+    "user_ratings_total": 82,
+    "vicinity": "Mustafa Kemal Mah. Dumlupınar Blv, Kentpark AVM No:164"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.9105557,
+        "lng": 32.7772289
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.9119062802915,
+          "lng": 32.77874148029149
+        },
+        "southwest": {
+          "lat": 39.9092083197085,
+          "lng": 32.7760435197085
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/cafe-71.png",
+    "icon_background_color": "#FF9E67",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/cafe_pinlet",
+    "name": "Mado",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 4000,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/101073509003673836198\">Monika Akar</a>"
+        ],
+        "photo_reference": "AWU5eFhA-swc2CQbefFiuYgrKy37kqiyNCj6SDFnS-I6z0YQmMw5NW4AQRuo4HUeA1WQmf9LfsJ-Dz67a12o4wiuBCbOjmKUo5XKjm6lWrj5P-Vcwro3URKyfQ1kKGClFk54oH9y08iOPDXtl5Ufm045Uh3F93lJsfQzHczuYGhDsVshRvc",
+        "width": 3000
+      }
+    ],
+    "place_id": "ChIJmbch8J1I0xQRlHKSI_SBsBM",
+    "plus_code": {
+      "compound_code": "WQ6G+6V Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ6G+6V"
+    },
+    "price_level": 3,
+    "rating": 3.4,
+    "reference": "ChIJmbch8J1I0xQRlHKSI_SBsBM",
+    "scope": "GOOGLE",
+    "types": [
+      "cafe",
+      "food",
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 525,
+    "vicinity": "2 Mustafa Kemal Kentpark AVM, Dumlupınar Bulvarı 7.Km"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.9138208,
+        "lng": 32.7758099
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.9150779802915,
+          "lng": 32.7768624302915
+        },
+        "southwest": {
+          "lat": 39.9123800197085,
+          "lng": 32.7741644697085
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "name": "Havelsan",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 1335,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/115440907641700737972\">Kamuran YUNAL</a>"
+        ],
+        "photo_reference": "AWU5eFisw1Q-zzFKfxH53Ic7KUVgYQtcC4Ykwz-yCT1_sMcms8L0lC6s93qEp6i5GGBEzomJfR7qf9Emfa3xJQ4pAtVj1OAhj6NBCSBlPqiNROAdFgYqpeQNg2hhfrmguQZ35PAvcSySuO2V1b7npwilvJ0ge203Rqh0Mq2ZHg72tPCI49iX",
+        "width": 1781
+      }
+    ],
+    "place_id": "ChIJbX--KJ1I0xQR9cqXMLzj6po",
+    "plus_code": {
+      "compound_code": "WQ7G+G8 Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ7G+G8"
+    },
+    "rating": 4.6,
+    "reference": "ChIJbX--KJ1I0xQR9cqXMLzj6po",
+    "scope": "GOOGLE",
+    "types": [
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 93,
+    "vicinity": "Mustafa Kemal, Şehit Öğretmen Şenay Aybüke Yalçın Caddesi No:39"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.90994999999999,
+        "lng": 32.776337
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.91166073029149,
+          "lng": 32.77779508029149
+        },
+        "southwest": {
+          "lat": 39.90896276970849,
+          "lng": 32.7750971197085
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/shopping-71.png",
+    "icon_background_color": "#4B96F3",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/shopping_pinlet",
+    "name": "Decathlon Kentpark",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 1836,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/108731716109266757066\">L U</a>"
+        ],
+        "photo_reference": "AWU5eFgzanlQISJtmFX5RuIFkEbQPmvh8wfxcgWsPZhJp9RL0bheAapCf4jh2KZ7pgYBCTPDe6H1qc9jTgo8DoAr6KfVLzt9hWh8Kym9Gy4oCyErePujYFvdCl2tx49xitTsZN4_FyKRN-AyPaQK4NvpOck5v69aXbQwtmq9r_IsfdbsWbG3",
+        "width": 3264
+      }
+    ],
+    "place_id": "ChIJJ6ONnSdG0xQRNhjrGp40gNI",
+    "plus_code": {
+      "compound_code": "WQ5G+XG Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ5G+XG"
+    },
+    "rating": 4.4,
+    "reference": "ChIJJ6ONnSdG0xQRNhjrGp40gNI",
+    "scope": "GOOGLE",
+    "types": [
+      "point_of_interest",
+      "store",
+      "establishment"
+    ],
+    "user_ratings_total": 5722,
+    "vicinity": "Kentpark AVM, Eskişehir Yolu No:164"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.910246,
+        "lng": 32.778416
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.9115865802915,
+          "lng": 32.78000258029149
+        },
+        "southwest": {
+          "lat": 39.9088886197085,
+          "lng": 32.7773046197085
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/shopping-71.png",
+    "icon_background_color": "#4B96F3",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/shopping_pinlet",
+    "name": "Boyner Cepa AVM",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 3456,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/115903259916279973878\">Tahir Feyzioğlu</a>"
+        ],
+        "photo_reference": "AWU5eFhThNz13kjyLrKBKSVI8cCNkBdkEiomIXfc2v1loWvET-Mr8qNz-oJT5Bb2Y29DLrnZ-O2bzLWw-OwmtZ-KCqORKg8iKpI4Fe_iNFCKXEP0U9rQb_AL3Ja8Mbq0fM1-LjoUiQtv1j9ns7whDlPpjNe-VTCaOSApNGm5yoW9MOI5kAu_",
+        "width": 4608
+      }
+    ],
+    "place_id": "ChIJIUk7iJ1I0xQRQ3yOrC-np-o",
+    "plus_code": {
+      "compound_code": "WQ6H+39 Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ6H+39"
+    },
+    "rating": 3.9,
+    "reference": "ChIJIUk7iJ1I0xQRQ3yOrC-np-o",
+    "scope": "GOOGLE",
+    "types": [
+      "department_store",
+      "point_of_interest",
+      "store",
+      "establishment"
+    ],
+    "user_ratings_total": 1231,
+    "vicinity": "Mustafa Kemal Mh 2123 Sokak, CEPA AVM No:2"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.91157609999999,
+        "lng": 32.7604556
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.91291123029151,
+          "lng": 32.7618232302915
+        },
+        "southwest": {
+          "lat": 39.91021326970851,
+          "lng": 32.75912526970851
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "name": "Era Enerji, Enerji Servis Hizmetleri ve Petrol Ticaret Ltd.Şti",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 4160,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/104875075658001639355\">İsmail Kurnaz</a>"
+        ],
+        "photo_reference": "AWU5eFi-OrtNaKnqzDqUHwD9e_b41pvrhKL477cUyozOegbJR1eaP_yzz4Qh9SxO8ZbsxGOxCQdy9qATtew1sS1MomWiEqWLZ6tLZyh7G757xQr0tj0fFxPBeSDUYbBer9uNqGS5tSoIzrGChyiOerrPtKkJuZnztsOFHp7ULPVmVVRpMJ8V",
+        "width": 2340
+      }
+    ],
+    "place_id": "ChIJ89ycWNRH0xQR9Re2yhsbzHc",
+    "plus_code": {
+      "compound_code": "WQ66+J5 Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ66+J5"
+    },
+    "rating": 5,
+    "reference": "ChIJ89ycWNRH0xQR9Re2yhsbzHc",
+    "scope": "GOOGLE",
+    "types": [
+      "health",
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 2,
+    "vicinity": "Mustafa Kemal, 2107. Sokak 64. Sk No:3"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.908645,
+        "lng": 32.761508
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.9100247802915,
+          "lng": 32.7632095302915
+        },
+        "southwest": {
+          "lat": 39.9073268197085,
+          "lng": 32.7605115697085
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "name": "TOBB Türkiye Odalar ve Borsalar Birliği",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 3456,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/111349316257056418446\">EKN 06</a>"
+        ],
+        "photo_reference": "AWU5eFieoFZbRCElAq-mrH8QnhqOgg7US3uGBZRJLeLIFf57Rr3AeO8i7OTPSKn3YxLOuY8APPRm8qEZA40uRDQjKsK1wZB4KiKI2fGhjezIk3BJzgy_qcBxMBx10LZWneQA23M9dHWb_pGQOcSO1ccSqA2h7VtcMLGNs6GQ-PPXPo8AJGoa",
+        "width": 4608
+      }
+    ],
+    "place_id": "ChIJObszFNNH0xQRVhd3Zs0XIqE",
+    "plus_code": {
+      "compound_code": "WQ56+FJ Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ56+FJ"
+    },
+    "rating": 4.4,
+    "reference": "ChIJObszFNNH0xQRVhd3Zs0XIqE",
+    "scope": "GOOGLE",
+    "types": [
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 741,
+    "vicinity": "Mustafa Kemal, Dumlupınar Bulvarı No:252, Eskişehir Yolu 9.Km"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.9092996,
+        "lng": 32.77567209999999
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.9106128802915,
+          "lng": 32.7768819802915
+        },
+        "southwest": {
+          "lat": 39.9079149197085,
+          "lng": 32.7741840197085
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "name": "Lokman Hekim Sağlık Grubu Genel Müdürlüğü",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 512,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/113195177914102653036\">Lokman Hekim Sağlık Grubu Genel Müdürlüğü</a>"
+        ],
+        "photo_reference": "AWU5eFgNySS0XTIQPEesDRPppl5InrV0cUpZDTSRTNxzEAXovnRhAR2Hk9v81MUvUIWQlDj8yXXwGqQKkbYuszDusDda7JOXpnoxUJFz_Qdy0tV69JBAchBYYnb5uZjdNYKYD0QTuxQyaL-ao6FUewHxhdExBi9f9UQ654cKn_OgJDS3NEMZ",
+        "width": 1024
+      }
+    ],
+    "place_id": "ChIJwxgUcIZO0xQReKu8xrEK2ZM",
+    "plus_code": {
+      "compound_code": "WQ5G+P7 Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ5G+P7"
+    },
+    "rating": 3.9,
+    "reference": "ChIJwxgUcIZO0xQReKu8xrEK2ZM",
+    "scope": "GOOGLE",
+    "types": [
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 21,
+    "vicinity": "Mustafa Kemal, Dumlupınar Bulvarı No:164 D:306"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.9094446,
+        "lng": 32.7763902
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.9106853802915,
+          "lng": 32.7772410302915
+        },
+        "southwest": {
+          "lat": 39.9079874197085,
+          "lng": 32.7745430697085
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/shopping-71.png",
+    "icon_background_color": "#4B96F3",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/shopping_pinlet",
+    "name": "Watsons",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 1836,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/112787736286513813837\">Evren Onur Soykut</a>"
+        ],
+        "photo_reference": "AWU5eFjgwaVIvGIaIv6s5XgAqHQ2X1yD0w8c-TIhpOmwVFoXhokE7KhZJRDvFlHwxpQqAftn5mKU0oavPLXz-aBWNKzDF848-eu7ffTFL51p7h6jO1swavkcbrMTNRvGnzfwecREMnYfS_YeMFU_mRLlkjaIZTFGKom9mFTTz1gvLnaOLR9w",
+        "width": 3264
+      }
+    ],
+    "place_id": "ChIJpd3XcJ1I0xQRNTSb9ntDqNg",
+    "plus_code": {
+      "compound_code": "WQ5G+QH Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ5G+QH"
+    },
+    "rating": 4,
+    "reference": "ChIJpd3XcJ1I0xQRNTSb9ntDqNg",
+    "scope": "GOOGLE",
+    "types": [
+      "point_of_interest",
+      "store",
+      "establishment"
+    ],
+    "user_ratings_total": 199,
+    "vicinity": "Mustafa Kemal, Mustafa Kemal Mah. Eskişehir Yolu, Kentpark AVM 7. Km No:164"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.9125417,
+        "lng": 32.7742694
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.91381893029149,
+          "lng": 32.7756695302915
+        },
+        "southwest": {
+          "lat": 39.9111209697085,
+          "lng": 32.7729715697085
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "name": "Livane Tarımsal Mühendislik ve Danışmanlık Ltd.Şti.",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 780,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/110083369788341400787\">Livane Tarımsal Mühendislik ve Danışmanlık Ltd.Şti.</a>"
+        ],
+        "photo_reference": "AWU5eFgSxG0ONqMBE-acuC5h3ipwqxsu2Fu-fhfV7UW201bT7WfrGWPNMbSwCVOqMqd49YN2-IyiLlx2wNoWWAiRYgKrhuuSJH3g7zTQX3G78PQMFyRBbmLa2shXnhNxaBScbbbPYUpu8NIFbzYnDopQ_TfMajS4Myg-bLJ_Tu8OyO0GBSI1",
+        "width": 1158
+      }
+    ],
+    "place_id": "ChIJneCesU9P0xQRBm6_8ajoSvk",
+    "plus_code": {
+      "compound_code": "WQ7F+2P Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ7F+2P"
+    },
+    "rating": 5,
+    "reference": "ChIJneCesU9P0xQRBm6_8ajoSvk",
+    "scope": "GOOGLE",
+    "types": [
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 5,
+    "vicinity": "Mustafa Kemal, 2157. Sokak Açıkalın Apt No:2/5"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.90997249999999,
+        "lng": 32.7783432
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.91131208029149,
+          "lng": 32.7799578802915
+        },
+        "southwest": {
+          "lat": 39.9086141197085,
+          "lng": 32.7772599197085
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+    "icon_background_color": "#FF9E67",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/restaurant_pinlet",
+    "name": "Zeynel Cepa AVM Şubesi",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 600,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/115110620301523107695\">Zeynel Cepa AVM Şubesi</a>"
+        ],
+        "photo_reference": "AWU5eFgDcAGvwHxySGrGxFcpde-7prZ8POlnFzkX5ntsoYAaTy-3J4-qE4KUYXYwYCFdt0c7jwTbeP27-Bbqo3BUKTecS6uJ3wS0aaCU8pxMABe3uUk-AGXjc81Afo4QLEegHS9mczwTLGomdiYog6WTKMPbQGriuLXDB4ThdsV54QFv1UoG",
+        "width": 600
+      }
+    ],
+    "place_id": "ChIJZedXkJ1I0xQRdD8vvPkPkEs",
+    "plus_code": {
+      "compound_code": "WQ5H+X8 Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ5H+X8"
+    },
+    "price_level": 2,
+    "rating": 2.9,
+    "reference": "ChIJZedXkJ1I0xQRdD8vvPkPkEs",
+    "scope": "GOOGLE",
+    "types": [
+      "restaurant",
+      "food",
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 34,
+    "vicinity": "Mustafa Kemal, Eskişehir Yolu 7. Km. 2/309, Çankaya"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.9101672,
+        "lng": 32.7783161
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.9115060802915,
+          "lng": 32.7799501802915
+        },
+        "southwest": {
+          "lat": 39.9088081197085,
+          "lng": 32.7772522197085
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/shopping-71.png",
+    "icon_background_color": "#4B96F3",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/shopping_pinlet",
+    "name": "Beymen Club",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 4032,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/100342376351078452494\">Ismail Abd</a>"
+        ],
+        "photo_reference": "AWU5eFi0-bPGkSWIFr8FdKrcsf0KN5IzIml2_6ODxxjbOs0tA0atnRy0b-whiIVnsAAACCkG4ejC7DixikGo-svCu-35a-SZ19ye_ingb0KF_Z2eGtMeJaeHPj0U60lW3aHBbnHw99yOFbHycr93UEUlVsKHcdI6n2ZjnlqEH4XY1q22BD80",
+        "width": 3024
+      }
+    ],
+    "place_id": "ChIJ56Pav51I0xQRujDbeKIc-qY",
+    "plus_code": {
+      "compound_code": "WQ6H+38 Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ6H+38"
+    },
+    "rating": 4,
+    "reference": "ChIJ56Pav51I0xQRujDbeKIc-qY",
+    "scope": "GOOGLE",
+    "types": [
+      "clothing_store",
+      "point_of_interest",
+      "store",
+      "establishment"
+    ],
+    "user_ratings_total": 73,
+    "vicinity": "Mustafa Kemal Mah. 17.sok. No:2 Çankaya Cepa Alışveriş Merkezi 1.kat Mağaza No:1-62f"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.91393,
+        "lng": 32.76772099999999
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.9152693302915,
+          "lng": 32.76896713029149
+        },
+        "southwest": {
+          "lat": 39.9125713697085,
+          "lng": 32.76626916970849
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "name": "Buz Reklam",
+    "opening_hours": {
+      "open_now": true
+    },
+    "place_id": "ChIJWXyCcpNF0xQRxADg23U1W6I",
+    "plus_code": {
+      "compound_code": "WQ79+H3 Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ79+H3"
+    },
+    "rating": 4.9,
+    "reference": "ChIJWXyCcpNF0xQRxADg23U1W6I",
+    "scope": "GOOGLE",
+    "types": [
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 8,
+    "vicinity": "Mustafa Kemal, Mahallesi No: /5, 2127. Sokak (47. Sk.) No:24"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.9154542,
+        "lng": 32.7707764
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.9168035302915,
+          "lng": 32.77222688029151
+        },
+        "southwest": {
+          "lat": 39.9141055697085,
+          "lng": 32.76952891970851
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "name": "Keymen İlaç",
+    "opening_hours": {
+      "open_now": true
+    },
+    "place_id": "ChIJMcQje3tB0xQRR1rQrW-Xrls",
+    "plus_code": {
+      "compound_code": "WQ8C+58 Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ8C+58"
+    },
+    "rating": 3.7,
+    "reference": "ChIJMcQje3tB0xQRR1rQrW-Xrls",
+    "scope": "GOOGLE",
+    "types": [
+      "health",
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 9,
+    "vicinity": "Mustafa Kemal, 2076. Sokak No: 8 D:3"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.9111198,
+        "lng": 32.765583
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.9124724802915,
+          "lng": 32.76704848029149
+        },
+        "southwest": {
+          "lat": 39.9097745197085,
+          "lng": 32.7643505197085
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "name": "GEN İlaç ve Sağlık Ürünleri A.Ş.",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 2250,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/106743675487464564612\">GEN İlaç ve Sağlık Ürünleri A.Ş.</a>"
+        ],
+        "photo_reference": "AWU5eFjqjq3Qa5fhL0Z1pUXdWKu2cojIG-uj7g7yzWGQHMc5pRjkJXcNOUk0Mf53h7-wgCUWsdabzqayUymmL_wGJEwfUG1O1gomUvDGwfDqPW3cWFLmaHFj90uuPnYBFrEf_A08QNYdzZqy120cOw_RP6wDPjkWaGp0Y9orpXb5hpkXKey1",
+        "width": 4000
+      }
+    ],
+    "place_id": "ChIJP1_VjipG0xQRk6LsUhiTRn8",
+    "plus_code": {
+      "compound_code": "WQ68+C6 Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ68+C6"
+    },
+    "rating": 3.7,
+    "reference": "ChIJP1_VjipG0xQRk6LsUhiTRn8",
+    "scope": "GOOGLE",
+    "types": [
+      "health",
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 15,
+    "vicinity": "Mustafa Kemal, 2119. Sokak No:3"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.9095492,
+        "lng": 32.776056
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.9107624302915,
+          "lng": 32.77707393029149
+        },
+        "southwest": {
+          "lat": 39.90806446970851,
+          "lng": 32.77437596970849
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/shopping-71.png",
+    "icon_background_color": "#4B96F3",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/shopping_pinlet",
+    "name": "MIKASA MOOR",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 4032,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/101527485791814839130\">Sevimli Geziler</a>"
+        ],
+        "photo_reference": "AWU5eFh1iEF2eUwKxCDKa9QWPHICo5U1kNianH2xXuBh6giVd8kk1IOvnl8xhgM3LNtnxogbDzzduW6aKM_vRuZ8_L_SMocLslcoR0ARgHrgwZEdkQGtw9Qrx_hy6xSOPM5Tu3cE5BT2O4LK0Qm4zTcwnxk9u697oyTP1VSoRCfOd4tg7dBH",
+        "width": 3024
+      }
+    ],
+    "place_id": "ChIJXZopmCdG0xQRlm5XvN0Jq3Y",
+    "plus_code": {
+      "compound_code": "WQ5G+RC Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ5G+RC"
+    },
+    "rating": 3.4,
+    "reference": "ChIJXZopmCdG0xQRlm5XvN0Jq3Y",
+    "scope": "GOOGLE",
+    "types": [
+      "home_goods_store",
+      "point_of_interest",
+      "store",
+      "establishment"
+    ],
+    "user_ratings_total": 10,
+    "vicinity": "Mustafa Kemal, Kentpark AVM"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.9095503,
+        "lng": 32.7762156
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.9107382302915,
+          "lng": 32.7771537302915
+        },
+        "southwest": {
+          "lat": 39.9080402697085,
+          "lng": 32.7744557697085
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/shopping-71.png",
+    "icon_background_color": "#4B96F3",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/shopping_pinlet",
+    "name": "Coquet",
+    "opening_hours": {
+      "open_now": true
+    },
+    "place_id": "ChIJKYaBGvtO0xQREkgU6lQdCDs",
+    "plus_code": {
+      "compound_code": "WQ5G+RF Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ5G+RF"
+    },
+    "rating": 5,
+    "reference": "ChIJKYaBGvtO0xQREkgU6lQdCDs",
+    "scope": "GOOGLE",
+    "types": [
+      "clothing_store",
+      "point_of_interest",
+      "store",
+      "establishment"
+    ],
+    "user_ratings_total": 1,
+    "vicinity": "Mustafa Kemal Mah. Eskişehir Yolu 7.Km, No:164, Çankaya"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.9161464,
+        "lng": 32.7691504
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.9175223802915,
+          "lng": 32.7704983302915
+        },
+        "southwest": {
+          "lat": 39.9148244197085,
+          "lng": 32.7678003697085
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "name": "Hach Lange Su Analiz Sistemleri",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 478,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/115960129474257425575\">Hach Lange Su Analiz Sistemleri</a>"
+        ],
+        "photo_reference": "AWU5eFjtLWH48s7tIfoLFYS7yjbkNqMntidVMNdI5xYolDHXuXGDAR3wN69HNXKzgPFbanwrcVE8coEbxkwyUcUTiRX7_zz2Iso6yHY8kFchQEyH3I0m05qeAqcoDf8YWethTbDE288Nw-krCooII06wjROi5iYsmn3EeFCafskWBlcKQfYk",
+        "width": 600
+      }
+    ],
+    "place_id": "ChIJlZxH4XVF0xQR-zvjeIIUzXE",
+    "plus_code": {
+      "compound_code": "WQ89+FM Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ89+FM"
+    },
+    "rating": 5,
+    "reference": "ChIJlZxH4XVF0xQR-zvjeIIUzXE",
+    "scope": "GOOGLE",
+    "types": [
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 1,
+    "vicinity": "Mustafa Kemal, 2141. Caddesi No:8, 06510"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.9106149,
+        "lng": 32.7681296
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.91218938029149,
+          "lng": 32.7695975802915
+        },
+        "southwest": {
+          "lat": 39.90949141970849,
+          "lng": 32.7668996197085
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "name": "Hitit Trans Uluslararası Nakliyat",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 260,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/114612213824314564152\">Hitit Trans Uluslararası Nakliyat</a>"
+        ],
+        "photo_reference": "AWU5eFilI90IFo_65dHIuv83D-n9uAO67ku3LoARe8YKp5o2zRqqKKALmEDIF52OuF9V4ZZ5205ri3h3B17SkM-myqirpdk7wrQwhRR421mpBsHqEzfBKCyR2_JpFMjBdJyV8BbmHTD4RfGB6TO9veeFzKV3_k5VWbW2L1ZIH8sRvQ2IenlE",
+        "width": 992
+      }
+    ],
+    "place_id": "ChIJuZIpYSRP0xQRYM7TJEIdxB0",
+    "plus_code": {
+      "compound_code": "WQ69+67 Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ69+67"
+    },
+    "rating": 4.2,
+    "reference": "ChIJuZIpYSRP0xQRYM7TJEIdxB0",
+    "scope": "GOOGLE",
+    "types": [
+      "storage",
+      "finance",
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 13,
+    "vicinity": "Mustafa Kemal, 2127. Caddesi No:2 D:5"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.9095569,
+        "lng": 32.7782326
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.9109091802915,
+          "lng": 32.77958153029149
+        },
+        "southwest": {
+          "lat": 39.9082112197085,
+          "lng": 32.7768835697085
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/shopping-71.png",
+    "icon_background_color": "#4B96F3",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/shopping_pinlet",
+    "name": "OXXO Cepa",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 3456,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/115903259916279973878\">Tahir Feyzioğlu</a>"
+        ],
+        "photo_reference": "AWU5eFiWXN7TBihzp8kPeWybjgK_EpU53W0jhuq9BiCxgz3hhn4fInjjEjVqxIuxsF3FyNH4ITh1NC0kPmA7cGiQK9YyFAAQrpnoOjA3wLIIp58JxUpTe7xjP11cF5tqGLccYchGkfH6KDg-jju9XDkWXzcrWzBRv7bg6Ok0Ks3a309phuty",
+        "width": 4608
+      }
+    ],
+    "place_id": "ChIJUfiWu51I0xQRKCleOpUR6rg",
+    "plus_code": {
+      "compound_code": "WQ5H+R7 Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ5H+R7"
+    },
+    "rating": 4.3,
+    "reference": "ChIJUfiWu51I0xQRKCleOpUR6rg",
+    "scope": "GOOGLE",
+    "types": [
+      "department_store",
+      "clothing_store",
+      "store",
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 18,
+    "vicinity": "Eskişehir Yolu Mustafa Kemal Mah. 2123 Sokak Cepa Alışveriş Merkezi, Kat: 1 No:2"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.9143124,
+        "lng": 32.7719258
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.91571243029149,
+          "lng": 32.7732369302915
+        },
+        "southwest": {
+          "lat": 39.91301446970849,
+          "lng": 32.7705389697085
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "name": "Ofis16 Mimarlık",
+    "photos": [
+      {
+        "height": 1000,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/117122559453684933287\">Ofis16 Mimarlık</a>"
+        ],
+        "photo_reference": "AWU5eFjP19J6-6HGDT7iUPfMhKg0m1Q1LlfcQZC9bUGd8AtpIYTdcvhQ1mkw2nDWiqOiYc7JRb2vQOiXL_peOsJOak2c4W_Aic8VqpsU1PaUCjArLC6ycNnOOulShNz4MNucPTL3RqMnQ1vJFPsJ80dYz_4Y8-ZkIVp_PWFQOwVMXm40J2ty",
+        "width": 2000
+      }
+    ],
+    "place_id": "ChIJjx0uU35P0xQRjXsJJl0aTx0",
+    "plus_code": {
+      "compound_code": "WQ7C+PQ Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ7C+PQ"
+    },
+    "rating": 4,
+    "reference": "ChIJjx0uU35P0xQRjXsJJl0aTx0",
+    "scope": "GOOGLE",
+    "types": [
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 1,
+    "vicinity": "Mustafa Kemal, 2131. Sokak No:30 D:8"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.9154542,
+        "lng": 32.7707764
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.9168035302915,
+          "lng": 32.77222688029151
+        },
+        "southwest": {
+          "lat": 39.9141055697085,
+          "lng": 32.76952891970851
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "name": "Redoks",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 768,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/103236500907565544753\">Süleyman Enes Pekkaya</a>"
+        ],
+        "photo_reference": "AWU5eFgVttcD4arXRNfSYD-uMJ_zMfxPRcR2oma0p1RG5KhdJDsjCNQ_fz1GdvIqcktEmLadJ857LlW6doqveVeMv6v55008Di7SFRloa05n9WCWEC5LxAFIV8fG-c3ke0IzDRHpBuHEuuTS2mM4TfpKy_fP6l6V0b8vBBxYAUZ6D4wKLGCM",
+        "width": 1024
+      }
+    ],
+    "place_id": "ChIJ5fm7mutF0xQRXELILuj0Fb8",
+    "plus_code": {
+      "compound_code": "WQ8C+58 Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ8C+58"
+    },
+    "rating": 4.6,
+    "reference": "ChIJ5fm7mutF0xQRXELILuj0Fb8",
+    "scope": "GOOGLE",
+    "types": [
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 32,
+    "vicinity": "Mustafa Kemal, 2076. Sokak No:8/1"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.9111448,
+        "lng": 32.7659935
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.91238938029149,
+          "lng": 32.76735628029149
+        },
+        "southwest": {
+          "lat": 39.90969141970849,
+          "lng": 32.7646583197085
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/school-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/school_pinlet",
+    "name": "Özel Sembol Anadolu Lisesi",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 600,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/104229607106071423751\">Özel Sembol Anadolu Lisesi</a>"
+        ],
+        "photo_reference": "AWU5eFjN8Epb9qQ0A8iY2Akrr1gjzLN4vpStSgPJMBCfONDySTnXMR6_6SKKtuxvSFF4IfoupmT0o9zwBRSXJ1eM0t5FfvHC7uZuS8lRBFuOhbsTO8Zfts-MBstq-05I0L1EVaOUhsh3ouGEcg9a8zkCArNEBmLvxt2qOt7z6HypA_ujRk1Q",
+        "width": 1920
+      }
+    ],
+    "place_id": "ChIJKY7V9hJG0xQRoXwuGFeCbCg",
+    "plus_code": {
+      "compound_code": "WQ68+F9 Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ68+F9"
+    },
+    "rating": 3.7,
+    "reference": "ChIJKY7V9hJG0xQRoXwuGFeCbCg",
+    "scope": "GOOGLE",
+    "types": [
+      "school",
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 21,
+    "vicinity": "Mustafa Kemal, Eskişehir Yolu, 2128. Sokak No:24"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.909696,
+        "lng": 32.7656964
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.9110176802915,
+          "lng": 32.7669235802915
+        },
+        "southwest": {
+          "lat": 39.9083197197085,
+          "lng": 32.7642256197085
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "name": "Türk Loydu Vakfı İktisadi İşletmesi-Ankara Ofisi",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 2448,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/107390959015615148230\">İlker Ergün</a>"
+        ],
+        "photo_reference": "AWU5eFgECkjGDJfVn6Do7dZ8S_Jx9b7otIPscRWWVF3aKcYO7Djcmr_TbSrkHwhhDtilg5cuPnSLyGbg32SBCobKBFeim9jtn4OiIV-qM5UiMHAl1uPPBuA_3dY9ynK66w6ESkAgkK4JzpbX5JnGZjBjm0JGSippZx6oISFALVubB7b8TWcq",
+        "width": 3264
+      }
+    ],
+    "place_id": "ChIJ0xl3qadP0xQRrzVpdO5SSIw",
+    "plus_code": {
+      "compound_code": "WQ58+V7 Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ58+V7"
+    },
+    "rating": 4.5,
+    "reference": "ChIJ0xl3qadP0xQRrzVpdO5SSIw",
+    "scope": "GOOGLE",
+    "types": [
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 4,
+    "vicinity": "Mustafa Kemal, Eskişehir Yolu, 2159. Sokak No:6/4"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.9100646,
+        "lng": 32.7762494
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.9117180302915,
+          "lng": 32.77763538029149
+        },
+        "southwest": {
+          "lat": 39.9090200697085,
+          "lng": 32.77493741970849
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/shopping-71.png",
+    "icon_background_color": "#4B96F3",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/shopping_pinlet",
+    "name": "Kentpark AVM Lazzoni Mobilya",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 3058,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/103232907967905342141\">Obscura 360</a>"
+        ],
+        "photo_reference": "AWU5eFiNNa_v7WSQPzdVJ-I8uk5Y8P6GcECR44gF8YYrp-36lq4YbE_iEoKy7HEaeiAuBvEDSTXyFxRqYdeVaHL8rAu_r2QRXt0t1G10E9ye6tFoY-_GGr_KnPwlCClzIyVULCuMSXfdauFSeuNt34KwLKYQ7pagfAJuluKuwAJkSYC4zXds",
+        "width": 5426
+      }
+    ],
+    "place_id": "ChIJlUIAo6pP0xQRHAT8nl9SSm8",
+    "plus_code": {
+      "compound_code": "WQ6G+2F Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ6G+2F"
+    },
+    "rating": 4.5,
+    "reference": "ChIJlUIAo6pP0xQRHAT8nl9SSm8",
+    "scope": "GOOGLE",
+    "types": [
+      "furniture_store",
+      "home_goods_store",
+      "store",
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 46,
+    "vicinity": "Eskişehir Yolu 7. Km, Kentpark AVM No:82 No:164 Kat:1"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.9125479,
+        "lng": 32.7673324
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.9138645802915,
+          "lng": 32.7686815802915
+        },
+        "southwest": {
+          "lat": 39.9111666197085,
+          "lng": 32.7659836197085
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "name": "Türkiye Ulusal Alerji ve Klinik İmmünoloji Derneği",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 843,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/100409516984054334512\">Türkiye Ulusal Alerji ve Klinik İmmünoloji Derneği</a>"
+        ],
+        "photo_reference": "AWU5eFicWFTkJ-dN5fs0TYLD7IvIbNRffCkE5wSLmd2mHysJXgWQrcfvvkmuGbKh09XkvlBzcGnDOmu9yhsSugSQ6_cfl9P5-NF4Eb-yFW3eaCEikvaPcxga9qvpYHSpOLIPtItW9MoCGrKuJhczz4tWwOpuIeGarDyeUEyFj8mmRnVezx4a",
+        "width": 1500
+      }
+    ],
+    "place_id": "ChIJjRr3G4JI0xQRCbydKqcgJHE",
+    "plus_code": {
+      "compound_code": "WQ78+2W Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ78+2W"
+    },
+    "rating": 4.9,
+    "reference": "ChIJjRr3G4JI0xQRCbydKqcgJHE",
+    "scope": "GOOGLE",
+    "types": [
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 8,
+    "vicinity": "Mustafa Kemal, 2124. Cd No:16/D:3-4"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.9125507,
+        "lng": 32.7712668
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.91394068029149,
+          "lng": 32.7727017802915
+        },
+        "southwest": {
+          "lat": 39.9112427197085,
+          "lng": 32.7700038197085
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/shopping-71.png",
+    "icon_background_color": "#4B96F3",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/shopping_pinlet",
+    "name": "Optomek",
+    "opening_hours": {
+      "open_now": true
+    },
+    "place_id": "ChIJAaGXWoJI0xQRqaWlbSxLubM",
+    "plus_code": {
+      "compound_code": "WQ7C+2G Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ7C+2G"
+    },
+    "reference": "ChIJAaGXWoJI0xQRqaWlbSxLubM",
+    "scope": "GOOGLE",
+    "types": [
+      "health",
+      "store",
+      "point_of_interest",
+      "establishment"
+    ],
+    "vicinity": "Mustafa Kemal, 2142. Sokak No:9 D:2"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.90994999999999,
+        "lng": 32.77633709999999
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.91068223029149,
+          "lng": 32.77775648029149
+        },
+        "southwest": {
+          "lat": 39.9079842697085,
+          "lng": 32.77505851970849
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/shopping-71.png",
+    "icon_background_color": "#4B96F3",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/shopping_pinlet",
+    "name": "Sevil Parfumeri",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 2988,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/112787736286513813837\">Evren Onur Soykut</a>"
+        ],
+        "photo_reference": "AWU5eFgPxi7MqHIJHrzViyeDYJjMS2fxhyl9Pze0WP-Tu8Jp-yJFR2JX8GSGZ_RPQtgzMq2cVXN4lixbfxeIYASaOTmt7p4ujuzB-WacIaBgV0CSkJIx9buncR_W8t4oP0_xdPOeKoVu-eoLofGH1Vgd94IEU_wjhKGXjm9SfDb9p7wlAnxn",
+        "width": 5312
+      }
+    ],
+    "place_id": "ChIJp74gdidG0xQRMf6IrwiC0wQ",
+    "plus_code": {
+      "compound_code": "WQ5G+XG Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ5G+XG"
+    },
+    "rating": 2.7,
+    "reference": "ChIJp74gdidG0xQRMf6IrwiC0wQ",
+    "scope": "GOOGLE",
+    "types": [
+      "store",
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 6,
+    "vicinity": "Mustafa Kemal Mahallesi Yolu7. Km, Kentpark AVM 164/1 D:97"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.9114496,
+        "lng": 32.772797
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.9128933302915,
+          "lng": 32.77400163029149
+        },
+        "southwest": {
+          "lat": 39.9101953697085,
+          "lng": 32.77130366970849
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "name": "Plato Bilgisayar",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 1152,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/116708885368861478312\">Plato Bilgisayar</a>"
+        ],
+        "photo_reference": "AWU5eFjDmv-MDz_H0G8XWypo5SA77ySYXvAv2u6l2ANcqy6QDlmP90DHkObrFUD8IKaS9iuaTr1xrewf6y3YPQ-l5zDL-ajyuUbjU_YIT4FeR7mcRF0zy3U8hADp3-fPZAiuGYYT42a85e7IkQ7UYm6qWVRD2SVTwgTvZ--TXJokKRcl8_DX",
+        "width": 2048
+      }
+    ],
+    "place_id": "ChIJlUIAo6pP0xQRKpl2xy4j11I",
+    "plus_code": {
+      "compound_code": "WQ6F+H4 Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ6F+H4"
+    },
+    "rating": 4.9,
+    "reference": "ChIJlUIAo6pP0xQRKpl2xy4j11I",
+    "scope": "GOOGLE",
+    "types": [
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 48,
+    "vicinity": "Mustafa Kemal, 2156. Sokak No: 16/1"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.912193,
+        "lng": 32.77210400000001
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.9134885802915,
+          "lng": 32.7733333302915
+        },
+        "southwest": {
+          "lat": 39.9107906197085,
+          "lng": 32.77063536970851
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "name": "NY Gümrük Müşavirliği",
+    "opening_hours": {
+      "open_now": true
+    },
+    "place_id": "ChIJI6YAW4JI0xQRefkOKXhy6o4",
+    "plus_code": {
+      "compound_code": "WQ6C+VR Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ6C+VR"
+    },
+    "rating": 3.7,
+    "reference": "ChIJI6YAW4JI0xQRefkOKXhy6o4",
+    "scope": "GOOGLE",
+    "types": [
+      "finance",
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 3,
+    "vicinity": "Mustafa Kemal, 2142. Sokak No:8 D:3"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.9111942,
+        "lng": 32.7698664
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.9125416802915,
+          "lng": 32.7712960302915
+        },
+        "southwest": {
+          "lat": 39.9098437197085,
+          "lng": 32.7685980697085
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "name": "Erhan Ozalit Kırtasiye kopyalama merkezi",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 3024,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/111772969483700071154\">ERHAN DİJİTAL KOPYALAMA MERKEZİ</a>"
+        ],
+        "photo_reference": "AWU5eFhl0MIXh8AQDAA5KCM4jxtSClt3gHBixPiyZeapA07xnrWK2QkzCW1v5iT7atnciu1KqyO1SiOhpb-30kygggyIf8ixqjGl1TH7Q_OiuFNKRLhPQOlynt-fc933kcOzme5li3ojICybLTX8MVSUWakF17fcoMzdabMZp-BNI2TUzTl4",
+        "width": 4032
+      }
+    ],
+    "place_id": "ChIJp4r6EYJI0xQRMsD0kjevDxY",
+    "plus_code": {
+      "compound_code": "WQ69+FW Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ69+FW"
+    },
+    "rating": 4.4,
+    "reference": "ChIJp4r6EYJI0xQRMsD0kjevDxY",
+    "scope": "GOOGLE",
+    "types": [
+      "store",
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 53,
+    "vicinity": "Mustafa Kemal, A, 2129. Sokak No:5"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.916,
+        "lng": 32.76883899999999
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.9174347302915,
+          "lng": 32.77017018029149
+        },
+        "southwest": {
+          "lat": 39.9147367697085,
+          "lng": 32.76747221970849
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "name": "VALFTEK ANKARA BÖLGE",
+    "opening_hours": {
+      "open_now": true
+    },
+    "place_id": "ChIJsQtqQIpO0xQR7uCJSXDnNTk",
+    "plus_code": {
+      "compound_code": "WQ89+9G Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ89+9G"
+    },
+    "reference": "ChIJsQtqQIpO0xQR7uCJSXDnNTk",
+    "scope": "GOOGLE",
+    "types": [
+      "point_of_interest",
+      "establishment"
+    ],
+    "vicinity": "Mustafa Kemal, 2141. Caddesi No:6 No:16"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.9134004,
+        "lng": 32.7677653
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.91474158029149,
+          "lng": 32.7690312302915
+        },
+        "southwest": {
+          "lat": 39.9120436197085,
+          "lng": 32.7663332697085
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "name": "Tesco Bilişim Hizmetleri",
+    "place_id": "ChIJQ7z6zylG0xQRSPo2Q6PMNeI",
+    "plus_code": {
+      "compound_code": "WQ79+94 Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ79+94"
+    },
+    "price_level": 1,
+    "rating": 4,
+    "reference": "ChIJQ7z6zylG0xQRSPo2Q6PMNeI",
+    "scope": "GOOGLE",
+    "types": [
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 1,
+    "vicinity": "Mustafa Kemal, 2127. Caddesi 18/3"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.9101621,
+        "lng": 32.7665765
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.9115887302915,
+          "lng": 32.7679275802915
+        },
+        "southwest": {
+          "lat": 39.9088907697085,
+          "lng": 32.76522961970851
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "name": "Prof. Dr. Vedat Okutan",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 2048,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/110084454655503589002\">Dr. Vedat Okutan</a>"
+        ],
+        "photo_reference": "AWU5eFgK3AJNMNJaKPLqIM3PHT3nH_o94B5WjfgDPJbvvjJW_gVGgAdViQ_FNJ1k6C36xxJjbCVej_Kee5GIkH2ianev9KG4Ca0shJ8f4c2-dC8-hyLxPPHFS9xaWshzFoRnXiTSyBlnPl2PaTSlh4T-5TDZHUriEfToaSDK9Y9gpF8neUBh",
+        "width": 1536
+      }
+    ],
+    "place_id": "ChIJ4ZXbOaxP0xQRRrn5x1EqZkY",
+    "plus_code": {
+      "compound_code": "WQ68+3J Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ68+3J"
+    },
+    "rating": 4.7,
+    "reference": "ChIJ4ZXbOaxP0xQRRrn5x1EqZkY",
+    "scope": "GOOGLE",
+    "types": [
+      "doctor",
+      "health",
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 44,
+    "vicinity": "Mustafa Kemal, Şehit Öğretmen Şenay Aybüke Yalçın Caddesi No:8/3"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.9108202,
+        "lng": 32.7625318
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.91219658029149,
+          "lng": 32.7639894802915
+        },
+        "southwest": {
+          "lat": 39.90949861970849,
+          "lng": 32.7612915197085
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "name": "Av. Koray Cengiz",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 565,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/115113457848361155121\">Av. Koray Cengiz</a>"
+        ],
+        "photo_reference": "AWU5eFh1VvPc5q4QTH0U5LCtDqhgi3IWZnneS9ZMMIC9EsY-BfmdxtJGQ2Grx1jpEvxmS0sM_4Lfv_8kCGHz1_sCCLULs72-_4gKlxszSuhQJsODEKqigEkEL626AgWqUzpotk8CXY6TMzHM4KyVW9mRCpCe1zcOgo1jyvxitRRqq6uN2N25",
+        "width": 850
+      }
+    ],
+    "place_id": "ChIJTWjx9pxP0xQROKEfKhoq7FM",
+    "plus_code": {
+      "compound_code": "WQ67+82 Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ67+82"
+    },
+    "reference": "ChIJTWjx9pxP0xQROKEfKhoq7FM",
+    "scope": "GOOGLE",
+    "types": [
+      "lawyer",
+      "point_of_interest",
+      "establishment"
+    ],
+    "vicinity": "Mustafa Kemal, 2112. Sokak No:1"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.9169941,
+        "lng": 32.7848171
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.9183309802915,
+          "lng": 32.7861697302915
+        },
+        "southwest": {
+          "lat": 39.91563301970851,
+          "lng": 32.7834717697085
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/school-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/school_pinlet",
+    "name": "DUET ONLINE MUSIC ACADEMY",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 3024,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/109157012444528929967\">Gökhan Aydemir</a>"
+        ],
+        "photo_reference": "AWU5eFjeaWT0EPkpWRfC6lJH7EfDCr9OR_UivA8M4ki-yOnn8oCyXDmWq1WNtofpCMQpDeU6TFzHtVZ1fB35snT2frHKbTwpCSjZozHVBkQGn69o0qRG-kRFvkTBz6L9KHa5OPNwgXKIx3HgUi9dBvfhMu-KIl-Rb0cc9oky4X3g2X6WgUHF",
+        "width": 4032
+      }
+    ],
+    "place_id": "ChIJNU5G7dRH0xQRoI5f4tYsUrk",
+    "plus_code": {
+      "compound_code": "WQ8M+QW Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ8M+QW"
+    },
+    "rating": 5,
+    "reference": "ChIJNU5G7dRH0xQRoI5f4tYsUrk",
+    "scope": "GOOGLE",
+    "types": [
+      "store",
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 7,
+    "vicinity": "Anadolu Sitesi A3 blok"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.90935019999999,
+        "lng": 32.7652087
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.91073583029149,
+          "lng": 32.76672123029149
+        },
+        "southwest": {
+          "lat": 39.90803786970849,
+          "lng": 32.7640232697085
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "name": "SERES Medikal",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 250,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/104947762759485124520\">SERES Medikal</a>"
+        ],
+        "photo_reference": "AWU5eFhPOnVDW0HVl8aKm1Mx_KzHByt8Bd-Gb5YXShMwsWzvkiwTqmDaxjZwGQjaZfvEv6zvnizvjlSoEmT2Ab1fw9kamVP_AHEiFSEtJY_mb4_b8PHx932t4WlfZ8gmPSpBsdrDRYxDUhmp1qyWaQuFvaTdKmJljT4QAw1HHrYTXIu6UfJO",
+        "width": 250
+      }
+    ],
+    "place_id": "ChIJKTrxMypG0xQRvGPWxBe2QRY",
+    "plus_code": {
+      "compound_code": "WQ58+P3 Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ58+P3"
+    },
+    "rating": 4.6,
+    "reference": "ChIJKTrxMypG0xQRvGPWxBe2QRY",
+    "scope": "GOOGLE",
+    "types": [
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 7,
+    "vicinity": "Mustafa Kemal Mah. 2118. Cad Maidan İş ve Yaşam Merkezi C-171"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.9090549,
+        "lng": 32.764458
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.9104066802915,
+          "lng": 32.7654652302915
+        },
+        "southwest": {
+          "lat": 39.9077087197085,
+          "lng": 32.7627672697085
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/shopping-71.png",
+    "icon_background_color": "#4B96F3",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/shopping_pinlet",
+    "name": "Uğur Saat&Rolex Service Center",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 1440,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/116564117694268967648\">Uğur Saat&amp;Rolex Service Center</a>"
+        ],
+        "photo_reference": "AWU5eFhY1p8PC_aNj8v08MsHUaLNB5c-L-95aBT000G-pau9eO7MuhVOF8BGl8QCKoNu8RA7PsUrA9WJqSmWaqwn-OixK1B0_hFEnq--JblFl0sHQDQxu88agCtVhXp825i6yQKav3j9TCBXiVeMNB057vmHjIpiA0HRyTqERkVgHDROU0Fd",
+        "width": 1440
+      }
+    ],
+    "place_id": "ChIJKVD_34FI0xQRLNTpeq6GHFI",
+    "plus_code": {
+      "compound_code": "WQ57+JQ Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ57+JQ"
+    },
+    "rating": 4.9,
+    "reference": "ChIJKVD_34FI0xQRLNTpeq6GHFI",
+    "scope": "GOOGLE",
+    "types": [
+      "store",
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 55,
+    "vicinity": "Mustafa Kemal Mahallesi Bilkent Kavşağı, 2118. Caddesi"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.9092892,
+        "lng": 32.76408179999999
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.9106394302915,
+          "lng": 32.76527873029149
+        },
+        "southwest": {
+          "lat": 39.9079414697085,
+          "lng": 32.7625807697085
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "name": "Ege Grup Yapı Endüstrisi",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 1204,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/110088423399149364041\">Ege Grup Yapı Endüstrisi</a>"
+        ],
+        "photo_reference": "AWU5eFj-UhKg3E79aePTmTiN1Cz1qWeIR1ViazGHm1TAIen8GzvXK0VQUHwjLjDLnJkV_bZ4jM_6Rq2hf9IyPQQjODl5418mDi2YQBaQ5SvwRWxwPMymgxQiUGfAbt7omXl0Amnzgk9VePKCDHnc7PEStzo7vNIQ-FBcWrDYHzRuZ4bOXAl6",
+        "width": 2048
+      }
+    ],
+    "place_id": "ChIJIVf_6LKd1BQRNR75Qap26mM",
+    "plus_code": {
+      "compound_code": "WQ57+PJ Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ57+PJ"
+    },
+    "rating": 4.4,
+    "reference": "ChIJIVf_6LKd1BQRNR75Qap26mM",
+    "scope": "GOOGLE",
+    "types": [
+      "general_contractor",
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 10,
+    "vicinity": "Mustafa Kemal, 2118. Caddesi No:4 A D:172"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.9095816,
+        "lng": 32.7760674
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.9107538802915,
+          "lng": 32.7770796302915
+        },
+        "southwest": {
+          "lat": 39.9080559197085,
+          "lng": 32.7743816697085
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/shopping-71.png",
+    "icon_background_color": "#4B96F3",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/shopping_pinlet",
+    "name": "Esse",
+    "opening_hours": {
+      "open_now": true
+    },
+    "place_id": "ChIJxYq_kydG0xQR28vXhYA4mdE",
+    "plus_code": {
+      "compound_code": "WQ5G+RC Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ5G+RC"
+    },
+    "rating": 3.5,
+    "reference": "ChIJxYq_kydG0xQR28vXhYA4mdE",
+    "scope": "GOOGLE",
+    "types": [
+      "home_goods_store",
+      "store",
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 4,
+    "vicinity": "Mustafa Kemal, Eskişehir Yolu 7.km. No:164, Söğütözü"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.9123125,
+        "lng": 32.7728798
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.9137021802915,
+          "lng": 32.7743145802915
+        },
+        "southwest": {
+          "lat": 39.9110042197085,
+          "lng": 32.7716166197085
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "name": "Alfa Kurumsal Hizmetler A.Ş.",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 441,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/100860329309892808598\">Alfa Kurumsal Hizmetler A.Ş.</a>"
+        ],
+        "photo_reference": "AWU5eFhekj7WLm0oHkGZoDF0UH0XDnGhM99cXm-8AS6dJEAD-vNJ5kbMfqCXlrX-XSyPfy-w480uCnWpXatf30HFXx6z2WZM07Je8sjazX45FKKlYlhWs4yIrfQz0gL19Hh-RSVtv6vpTQe5yjELmKnO3i2FrytIp7Vita2HqwA_Amfg7HY5",
+        "width": 1300
+      }
+    ],
+    "place_id": "ChIJdcbYDypG0xQRhQ5Lbg1J1yQ",
+    "plus_code": {
+      "compound_code": "WQ6F+W5 Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ6F+W5"
+    },
+    "rating": 4.5,
+    "reference": "ChIJdcbYDypG0xQRhQ5Lbg1J1yQ",
+    "scope": "GOOGLE",
+    "types": [
+      "food",
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 12,
+    "vicinity": "Mustafa Kemal, 2139. Sokak No: 3/2"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.9121358,
+        "lng": 32.7719519
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.9134639802915,
+          "lng": 32.7732542302915
+        },
+        "southwest": {
+          "lat": 39.9107660197085,
+          "lng": 32.7705562697085
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "name": "Fikirbaz",
+    "place_id": "ChIJecfL9IJI0xQRuZPDI4bVe4U",
+    "plus_code": {
+      "compound_code": "WQ6C+VQ Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ6C+VQ"
+    },
+    "rating": 4.8,
+    "reference": "ChIJecfL9IJI0xQRuZPDI4bVe4U",
+    "scope": "GOOGLE",
+    "types": [
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 4,
+    "vicinity": "Mustafa Kemal, 2142. Sokak (35. Sk.) No:8"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.9100973,
+        "lng": 32.7645972
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.9116007802915,
+          "lng": 32.7659678302915
+        },
+        "southwest": {
+          "lat": 39.9089028197085,
+          "lng": 32.7632698697085
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "name": "Ahsen Demirci Güzellik Salonu - Bölgesel İncelme ve Kaş Kontür",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 1333,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/105137851609816779508\">Ahsen Demirci Güzellik Salonu - Bölgesel İncelme ve Kaş Kontür</a>"
+        ],
+        "photo_reference": "AWU5eFhX8KCLDpTowgxtRkIl-eXJBbV-1iu_u8XcIBtymwIHBmLsU69WXg-8H8MjOX4w02YS9OZ4smGjHP0uCqqa-0T2T-2oGuXDt7-sNa5o5r4754PLRJAm6HtnWzIaj1fSsxXc4RGLQSeTs4W9unHnJiyQ5_WNWB-PTIBhMrdQdZllnLoD",
+        "width": 2000
+      }
+    ],
+    "place_id": "ChIJKYPmIN5F0xQRFxvCqI1zSho",
+    "plus_code": {
+      "compound_code": "WQ67+2R Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ67+2R"
+    },
+    "rating": 4.8,
+    "reference": "ChIJKYPmIN5F0xQRFxvCqI1zSho",
+    "scope": "GOOGLE",
+    "types": [
+      "beauty_salon",
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 14,
+    "vicinity": "Mustafa Kemal Mh. 2118. Caddesi MAIDAN İş ve Yaşam Merkezi Bulunduğu Blok:B 6/63"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.9122828,
+        "lng": 32.7663047
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.91363173029151,
+          "lng": 32.7677327302915
+        },
+        "southwest": {
+          "lat": 39.91093376970851,
+          "lng": 32.7650347697085
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "name": "PROBİLİŞİM Bilgisayar ve İletişim Sistemleri Tic. Ltd. Şti.",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 505,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/107460474633718971915\">PROBİLİŞİM Bilgisayar ve İletişim Sistemleri Tic. Ltd. Şti.</a>"
+        ],
+        "photo_reference": "AWU5eFjLtseTV9qCf1vPEoippPErLCbhsY_YvAwu0iLiIy0pUfEC71oNK0XfTXtEUQs4LpNVZdLgAYSnjGELzm36R4fZU_P9xFDpFblK-gdqeDwCmRB_Ts2N7A_PlpF3xJ412CAmVGSGWhrCe9Gvquef-XSawBnxJbH9VSkTO9Xq8gHb6Qee",
+        "width": 1110
+      }
+    ],
+    "place_id": "ChIJIX2qBvVF0xQR7evraMJGJ8Y",
+    "plus_code": {
+      "compound_code": "WQ68+WG Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ68+WG"
+    },
+    "rating": 4.8,
+    "reference": "ChIJIX2qBvVF0xQR7evraMJGJ8Y",
+    "scope": "GOOGLE",
+    "types": [
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 12,
+    "vicinity": "Mustafa Kemal Mah. 2125 sok. Kolbay İş merkezi No 6 A blok Daire 8"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.9152226,
+        "lng": 32.76745690000001
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.9165600302915,
+          "lng": 32.7687123802915
+        },
+        "southwest": {
+          "lat": 39.9138620697085,
+          "lng": 32.7660144197085
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "name": "Türkiye Asfalt Müteahhitleri Derneği",
+    "photos": [
+      {
+        "height": 1920,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/118106108156346508775\">Taner taner</a>"
+        ],
+        "photo_reference": "AWU5eFjwElwSKcIDeRi6Y9GVxrPt6HaQF5IHN6fCNsm3Z13nAGuzr5RvcdFK8-7KoBLVGn1wfVRJ79bjqWU8CuRakscfnyOjBkK35-EK4sLzC6-x2ESwNgwzKiPAEUChAArvXDgTxtwZzZcHgGJYTiDl_fUWZDYDnektpJJVaRZt5Sxks1Hb",
+        "width": 1080
+      }
+    ],
+    "place_id": "ChIJn0jd4JNP0xQRjJlWsHqZ6hQ",
+    "plus_code": {
+      "compound_code": "WQ88+3X Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ88+3X"
+    },
+    "rating": 4.5,
+    "reference": "ChIJn0jd4JNP0xQRjJlWsHqZ6hQ",
+    "scope": "GOOGLE",
+    "types": [
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 2,
+    "vicinity": "Mustafa Kemal, 2132. Sokak No: 7 D:2"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.9136722,
+        "lng": 32.7688488
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.9150344302915,
+          "lng": 32.77028123029149
+        },
+        "southwest": {
+          "lat": 39.9123364697085,
+          "lng": 32.7675832697085
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "name": "Arısu Mühendislik Mimarlık Müşavirlik Ltd. Şti.",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 554,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/115396534483585111663\">N.Gökçen GÜNER</a>"
+        ],
+        "photo_reference": "AWU5eFjwgNKPxASkEsQ0r4q6KRGWh9eeP_zCJJXqkiSbmRQ9YjSe8Y7JDKfQOdO2biDOKSNyJzixoHfcO8NCtyQJmRiD-54A_KORWtzFLldj31YnKyDkioa4PyfTpDeH1v_HIYugxmaMYP2KsfFGVX5ukP20JpdsPcl-ckXWynRU3DcAS_pv",
+        "width": 554
+      }
+    ],
+    "place_id": "ChIJ23I3WHRF0xQRDi0V7WXqnGg",
+    "plus_code": {
+      "compound_code": "WQ79+FG Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ79+FG"
+    },
+    "rating": 4.8,
+    "reference": "ChIJ23I3WHRF0xQRDi0V7WXqnGg",
+    "scope": "GOOGLE",
+    "types": [
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 19,
+    "vicinity": "Mustafa Kemal, 2140. Cadde No:1/17"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.91344400000001,
+        "lng": 32.770342
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.9147443302915,
+          "lng": 32.7715547302915
+        },
+        "southwest": {
+          "lat": 39.9120463697085,
+          "lng": 32.7688567697085
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "name": "Abant Su",
+    "place_id": "ChIJi24ayoNI0xQRh3NiREnOBXs",
+    "plus_code": {
+      "compound_code": "WQ7C+94 Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ7C+94"
+    },
+    "reference": "ChIJi24ayoNI0xQRh3NiREnOBXs",
+    "scope": "GOOGLE",
+    "types": [
+      "food",
+      "point_of_interest",
+      "establishment"
+    ],
+    "vicinity": "Türkiye"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.9106288,
+        "lng": 32.7659773
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.9119823802915,
+          "lng": 32.7672386302915
+        },
+        "southwest": {
+          "lat": 39.9092844197085,
+          "lng": 32.7645406697085
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "name": "Akar-Su Mühendislik Müşavirlik Ltd. Şti.",
+    "photos": [
+      {
+        "height": 273,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/103517525072956640000\">Akar-Su Mühendislik Müşavirlik Ltd. Şti.</a>"
+        ],
+        "photo_reference": "AWU5eFh3l-XlyW6PBnTFFh7qqhqZq360tFq9xv9Stgx_xXKCsjHxEOczSkxBP1Vk07frn9tsHFGOmQGY5faw5hwCoL2c3mItQEw7d76MC502sTEkmVQJXAQVrRv6q9r-ZK9dt_K8-f-jK3ZqdINkScrr17RwJHeKoFbov7xeRi2dqBcwP-wb",
+        "width": 529
+      }
+    ],
+    "place_id": "ChIJty3c3nRF0xQRfwyacB5499s",
+    "plus_code": {
+      "compound_code": "WQ68+79 Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ68+79"
+    },
+    "rating": 4.8,
+    "reference": "ChIJty3c3nRF0xQRfwyacB5499s",
+    "scope": "GOOGLE",
+    "types": [
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 16,
+    "vicinity": "Mustafa Kemal Mahallesi 2120. Cadde No:5/5 Gözüm İş Merkezi"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.91011340000001,
+        "lng": 32.7762792
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.91174213029149,
+          "lng": 32.77763538029149
+        },
+        "southwest": {
+          "lat": 39.9090441697085,
+          "lng": 32.77493741970849
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/shopping-71.png",
+    "icon_background_color": "#4B96F3",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/shopping_pinlet",
+    "name": "Yataş Bedding I Kentpark",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 1920,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/104797981595156025881\">Amine Sine Caliskan</a>"
+        ],
+        "photo_reference": "AWU5eFiDUjYwun8Kjdz7rt3OylMCWGp8zmi6ASHwntEyKj4YxfBiw_SKq5XeOEjA6xRPyi8GwGcwUI8YOtUtGi9-I0BJ9ZKksF2yvuicTqewnuyCQKKthPUF0lFvZgSsoyUUX3F1F9paWsNPLoBdPayDk4u94V4C8Wys3Ihr6L4QetKSSRAg",
+        "width": 1080
+      }
+    ],
+    "place_id": "ChIJq7iQAdNH0xQRVTNIdR-XNd8",
+    "plus_code": {
+      "compound_code": "WQ6G+2G Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ6G+2G"
+    },
+    "rating": 3.5,
+    "reference": "ChIJq7iQAdNH0xQRVTNIdR-XNd8",
+    "scope": "GOOGLE",
+    "types": [
+      "furniture_store",
+      "home_goods_store",
+      "store",
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 16,
+    "vicinity": "Kentpark Avm 1.Kat NO: 42, Mustafa Kemal Mah., Eskişehir yolu"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.9120667,
+        "lng": 32.767471
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.9134438802915,
+          "lng": 32.7689934802915
+        },
+        "southwest": {
+          "lat": 39.9107459197085,
+          "lng": 32.76629551970851
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "name": "Novatel Telsiz",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 762,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/116984253635283342029\">Novatel Telsiz</a>"
+        ],
+        "photo_reference": "AWU5eFidB86qjzDtSsSsifBxlqlWq_788D7GeLd-dyg9fzhpmUnUBIUdcVPEL6c4XlTLV4GO8-19onRTCNpNCMlndJSde-ryAkcGSJLYGDd8MN1KFX50_w1wLYEgucMYJSgxEgRHco8FLoCZDTXkkcUunDwsjH7v2fR-1l7-54hc-mQ0rd4",
+        "width": 1024
+      }
+    ],
+    "place_id": "ChIJ4_prlJFP0xQRCddnKeP8n3A",
+    "plus_code": {
+      "compound_code": "WQ68+RX Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ68+RX"
+    },
+    "rating": 2,
+    "reference": "ChIJ4_prlJFP0xQRCddnKeP8n3A",
+    "scope": "GOOGLE",
+    "types": [
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 4,
+    "vicinity": "Mustafa Kemal, 2127. Caddesi No:9 D:16b 4.kat"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.911168,
+        "lng": 32.780462
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.9125147302915,
+          "lng": 32.7816420802915
+        },
+        "southwest": {
+          "lat": 39.90981676970851,
+          "lng": 32.77894411970851
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "name": "ASV Teknoloji A.Ş.",
+    "place_id": "ChIJtyzj_aVP0xQREl2QnsdjdF4",
+    "plus_code": {
+      "compound_code": "WQ6J+F5 Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ6J+F5"
+    },
+    "rating": 5,
+    "reference": "ChIJtyzj_aVP0xQREl2QnsdjdF4",
+    "scope": "GOOGLE",
+    "types": [
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 1,
+    "vicinity": "Mustafa Kemal, 2152. Sokak No:2 D:8"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.9108422,
+        "lng": 32.7676841
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.91229483029149,
+          "lng": 32.7690279802915
+        },
+        "southwest": {
+          "lat": 39.90959686970849,
+          "lng": 32.7663300197085
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/restaurant-71.png",
+    "icon_background_color": "#FF9E67",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/restaurant_pinlet",
+    "name": "Bezmialem Fırın & Pastane",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 6016,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/105684502378522696548\">zeki gamzeli</a>"
+        ],
+        "photo_reference": "AWU5eFhPcJuF_sM4QXCkicqPDqKfxG41HrqaakEquCAGJPMNHfgqmnuauXLAdYZGnyhpDCwy8bGzjQmg95bWhRG52dDu3atrxKicXDSZOoxyyM6ZgS0BAsxwbwq24wlfFI1kfiw_g7jVSs7mKp_IrIL9gJzX3ntJpKCk_vlhOUpPlKMwHwVs",
+        "width": 8000
+      }
+    ],
+    "place_id": "ChIJ2SzYPipG0xQRPpJ2a2fOTRE",
+    "plus_code": {
+      "compound_code": "WQ69+83 Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ69+83"
+    },
+    "price_level": 2,
+    "rating": 4.1,
+    "reference": "ChIJ2SzYPipG0xQRPpJ2a2fOTRE",
+    "scope": "GOOGLE",
+    "types": [
+      "restaurant",
+      "food",
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 291,
+    "vicinity": "Mustafa Kemal, 2128. Sokak No:13/3"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.9091489,
+        "lng": 32.77615279999999
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.9102724802915,
+          "lng": 32.7775274802915
+        },
+        "southwest": {
+          "lat": 39.9075745197085,
+          "lng": 32.7748295197085
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/shopping-71.png",
+    "icon_background_color": "#4B96F3",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/shopping_pinlet",
+    "name": "Cellini Masaj Koltukları Baba Koltukları Masaj Aletleri",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 683,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/100472694730780694441\">Cellini Masaj Koltukları Baba Koltukları Masaj Aletleri</a>"
+        ],
+        "photo_reference": "AWU5eFjyR3pCPRwpm06pfCmsrW7gp4gZmpDUGMh9fp43IpHa6YCReahT1JEX0iOcWuEXLLFTeJKeF7PMX8mSrNt4fXczwEtvIr564zlZE_Jyq7AricNXat7xwNaOTf_PDC-LqwVOE2bFzr7EDjKeUwrfulezwoj0-AxDuXpG8txNjatj2mOE",
+        "width": 1024
+      }
+    ],
+    "place_id": "ChIJp74gdidG0xQRPfiaBz3g8cM",
+    "plus_code": {
+      "compound_code": "WQ5G+MF Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ5G+MF"
+    },
+    "rating": 4.6,
+    "reference": "ChIJp74gdidG0xQRPfiaBz3g8cM",
+    "scope": "GOOGLE",
+    "types": [
+      "store",
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 30,
+    "vicinity": "Mustafa Kemal Mahallesi, Eskişehir Yolu 7. Km. Kentpark Alışveriş Merkezi 164/1 D:101/A"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.91309179999999,
+        "lng": 32.7681218
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.9145146302915,
+          "lng": 32.76945333029149
+        },
+        "southwest": {
+          "lat": 39.9118166697085,
+          "lng": 32.76675536970849
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "name": "Prolink Mümessillik İç ve Dış Tic. A.Ş.",
+    "opening_hours": {
+      "open_now": true
+    },
+    "place_id": "ChIJMUxf9_RF0xQRVaW4fR6wZME",
+    "plus_code": {
+      "compound_code": "WQ79+66 Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ79+66"
+    },
+    "rating": 4.3,
+    "reference": "ChIJMUxf9_RF0xQRVaW4fR6wZME",
+    "scope": "GOOGLE",
+    "types": [
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 7,
+    "vicinity": "Mustafa Kemal, 2131. Sokak No:6 D:21"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.91432,
+        "lng": 32.77235700000001
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.9157882302915,
+          "lng": 32.7736175802915
+        },
+        "southwest": {
+          "lat": 39.9130902697085,
+          "lng": 32.7709196197085
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "name": "Sıtkı Şahin İnşaat",
+    "opening_hours": {
+      "open_now": true
+    },
+    "place_id": "ChIJd3USD7JJ0xQRct_KGjVW-3g",
+    "plus_code": {
+      "compound_code": "WQ7C+PW Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ7C+PW"
+    },
+    "reference": "ChIJd3USD7JJ0xQRct_KGjVW-3g",
+    "scope": "GOOGLE",
+    "types": [
+      "point_of_interest",
+      "establishment"
+    ],
+    "vicinity": "Mustafa Kemal, 2131. Sokak 32/4"
+  },
+  {
+    "business_status": "CLOSED_TEMPORARILY",
+    "geometry": {
+      "location": {
+        "lat": 39.9097354,
+        "lng": 32.77635740000001
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.9108307802915,
+          "lng": 32.7772246302915
+        },
+        "southwest": {
+          "lat": 39.9081328197085,
+          "lng": 32.7745266697085
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/shopping-71.png",
+    "icon_background_color": "#4B96F3",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/shopping_pinlet",
+    "name": "Arifoğlu",
+    "permanently_closed": true,
+    "photos": [
+      {
+        "height": 1000,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/113441900095475750074\">Arifoğlu</a>"
+        ],
+        "photo_reference": "AWU5eFg_Ko3xlPiF1L6wXAT3WqwkrZpFQkNK2aGR_TzwkIM6R_hSliPAaayKvwseheZfoLs5PRKplqdXrw23Ualv0F9rK1q1udGr8CUp5xrqlkUt64QGwU6tpzf4af03jBiNMu23oqa3LmYlXAJQehv28GUddqlfrpi-a9uXNSrZgQbmJ_SU",
+        "width": 1000
+      }
+    ],
+    "place_id": "ChIJr6DG51040xQRpSZ54Z0Fc6U",
+    "plus_code": {
+      "compound_code": "WQ5G+VG Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ5G+VG"
+    },
+    "rating": 2.9,
+    "reference": "ChIJr6DG51040xQRpSZ54Z0Fc6U",
+    "scope": "GOOGLE",
+    "types": [
+      "grocery_or_supermarket",
+      "store",
+      "food",
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 10,
+    "vicinity": "M.Kemal Mh., Eskişehir Yolu 7. Km. Kentpark Alışveriş Merkezi No:164 D:27/l"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.9072341,
+        "lng": 32.7638335
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.9085628802915,
+          "lng": 32.7650941302915
+        },
+        "southwest": {
+          "lat": 39.9058649197085,
+          "lng": 32.7623961697085
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "name": "Bilkent Murat Taksi",
+    "photos": [
+      {
+        "height": 3000,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/106751289774670710579\">Harun şahin</a>"
+        ],
+        "photo_reference": "AWU5eFgr-FoC2coYbqF_oR2GOaNBOZFQGdQyS7suX0RVVQ55pvQIwXm6q7CFO6NeHavv2Y00HMzJjQ2fPx_7HxGhooi9CSBsGTa8vyDsD8HDhkOkw6RdfzjO-AZ8cn0Db5h6Xt8D6araGLI5mxzrkP0ct96QcrCjUzlIzua7AqeeoD9ddDek",
+        "width": 4000
+      }
+    ],
+    "place_id": "ChIJ_0sg0SxG0xQRcxW3fAs66As",
+    "plus_code": {
+      "compound_code": "WQ47+VG Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ47+VG"
+    },
+    "rating": 3.3,
+    "reference": "ChIJ_0sg0SxG0xQRcxW3fAs66As",
+    "scope": "GOOGLE",
+    "types": [
+      "taxi_stand",
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 26,
+    "vicinity": "Üniversiteler"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.91341800000001,
+        "lng": 32.7718469
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.9147532802915,
+          "lng": 32.77320813029149
+        },
+        "southwest": {
+          "lat": 39.9120553197085,
+          "lng": 32.7705101697085
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/generic_business-71.png",
+    "icon_background_color": "#7B9EB0",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/generic_pinlet",
+    "name": "Ankaras Denetim Ve Yeminli Mali Müşavirlik",
+    "opening_hours": {
+      "open_now": true
+    },
+    "place_id": "ChIJBXSa0VZP0xQRNLYrrpxWtcc",
+    "plus_code": {
+      "compound_code": "WQ7C+9P Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ7C+9P"
+    },
+    "reference": "ChIJBXSa0VZP0xQRNLYrrpxWtcc",
+    "scope": "GOOGLE",
+    "types": [
+      "accounting",
+      "finance",
+      "point_of_interest",
+      "establishment"
+    ],
+    "vicinity": "Mustafa Kemal"
+  },
+  {
+    "business_status": "OPERATIONAL",
+    "geometry": {
+      "location": {
+        "lat": 39.9107929,
+        "lng": 32.7659494
+      },
+      "viewport": {
+        "northeast": {
+          "lat": 39.9121453802915,
+          "lng": 32.76723183029149
+        },
+        "southwest": {
+          "lat": 39.9094474197085,
+          "lng": 32.76453386970849
+        }
+      }
+    },
+    "icon": "https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/shopping-71.png",
+    "icon_background_color": "#4B96F3",
+    "icon_mask_base_uri": "https://maps.gstatic.com/mapfiles/place_api/icons/v2/shoppingcart_pinlet",
+    "name": "Bildirici",
+    "opening_hours": {
+      "open_now": true
+    },
+    "photos": [
+      {
+        "height": 5312,
+        "html_attributions": [
+          "<a href=\"https://maps.google.com/maps/contrib/108525149759869751860\">Kadir Tahir Savcıözen</a>"
+        ],
+        "photo_reference": "AWU5eFjSQCwL4Zm6_qfB4HqZqZnGfvBJRrm5chCfwmJLgkx2MHrFU2WiffUYdrcd6q_4GY4fikv3AwADWibtfwFmSXc6yc5s29D4snFwBVIxcBpoAbjIq5ZIWXeaVs4PEYH1nWRYUUazPy21uVgV9dD3FmUoRjVLyhltYqNy7kdSumF979ep",
+        "width": 2988
+      }
+    ],
+    "place_id": "ChIJx4r1-JtI0xQRDBKUjexuVLk",
+    "plus_code": {
+      "compound_code": "WQ68+89 Çankaya/Ankara, Türkiye",
+      "global_code": "8GFJWQ68+89"
+    },
+    "rating": 3.6,
+    "reference": "ChIJx4r1-JtI0xQRDBKUjexuVLk",
+    "scope": "GOOGLE",
+    "types": [
+      "supermarket",
+      "grocery_or_supermarket",
+      "store",
+      "food",
+      "point_of_interest",
+      "establishment"
+    ],
+    "user_ratings_total": 295,
+    "vicinity": "Mustafa Kemal, Şehit Öğretmen Şenay Aybüke Yalçın Caddesi No:5 D:7"
+  }
+]
