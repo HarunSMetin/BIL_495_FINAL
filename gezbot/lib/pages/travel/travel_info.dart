@@ -47,6 +47,8 @@ class _TravelInformationState extends State<TravelInformation> {
 
   @override
   Widget build(BuildContext context) {
+    MediaQueryData queryData;
+    queryData = MediaQuery.of(context);
     LatLng initialPosition =
         LatLng(37.77483, -122.41942); // Example: San Francisco
     List<LatLng> pointsToMark = [
@@ -59,113 +61,119 @@ class _TravelInformationState extends State<TravelInformation> {
       appBar: AppBar(title: Text(widget.travel.name)),
       body: Padding(
         padding: EdgeInsets.all(16.0),
-        child: Card(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15.0),
-          ),
-          elevation: 5,
-          child: Padding(
-            padding: EdgeInsets.all(16.0),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Text("Travel Ticket",
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                  Divider(),
-                  ticketDetail("Name", widget.travel.name),
-                  ticketDetail(
-                      "Departure Date", widget.travel.departureDate.toString()),
-                  ticketDetail(
-                      "Return Date", widget.travel.returnDate.toString()),
-                  ticketDetail(
-                      "Desired Destination", widget.travel.desiredDestination),
-                  SizedBox(height: 10),
-                  ExpansionTile(
-                    title: Text("Members",
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold)),
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15.0),
+                ),
+                elevation: 5,
+                child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      FutureBuilder<List<UserModel>>(
-                        future: _membersFuture,
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return Center(child: CircularProgressIndicator());
-                          } else if (snapshot.hasError) {
-                            return Text('Error: ${snapshot.error}');
-                          } else if (snapshot.hasData) {
-                            return ListView.builder(
-                              shrinkWrap: true,
-                              physics: NeverScrollableScrollPhysics(),
-                              itemCount: snapshot.data!.length,
-                              itemBuilder: (context, index) {
-                                UserModel member = snapshot.data![index];
-                                return FutureBuilder<String>(
-                                  future: _uidFuture,
-                                  builder: (context, uidSnapshot) {
-                                    if (uidSnapshot.connectionState ==
-                                        ConnectionState.waiting) {
-                                      return CircularProgressIndicator();
-                                    } else if (uidSnapshot.hasError) {
-                                      return Text(
-                                          'Error: ${uidSnapshot.error}');
-                                    } else if (uidSnapshot.hasData) {
-                                      bool canDelete = uidSnapshot.data ==
-                                          widget.travel.creatorId;
-                                      return UserTile(
-                                        user: member,
-                                        currentUserId: uidSnapshot.data!,
-                                        showAcceptButton: false,
-                                        onAccept: () {},
-                                        canDeleteUser: canDelete,
-                                        databaseService: DatabaseService(),
-                                        onTap: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => ProfilePage(
-                                                userId: member.id,
-                                              ),
-                                            ),
+                      Text("Travel Ticket",
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold)),
+                      Divider(),
+                      ticketDetail("Name", widget.travel.name),
+                      ticketDetail("Departure Date",
+                          widget.travel.departureDate.toString()),
+                      ticketDetail(
+                          "Return Date", widget.travel.returnDate.toString()),
+                      ticketDetail("Desired Destination",
+                          widget.travel.desiredDestination),
+                      SizedBox(height: 10),
+                      ExpansionTile(
+                        title: Text("Members",
+                            style: TextStyle(
+                                fontSize: 18, fontWeight: FontWeight.bold)),
+                        children: <Widget>[
+                          FutureBuilder<List<UserModel>>(
+                            future: _membersFuture,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return Center(
+                                    child: CircularProgressIndicator());
+                              } else if (snapshot.hasError) {
+                                return Text('Error: ${snapshot.error}');
+                              } else if (snapshot.hasData) {
+                                return ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: NeverScrollableScrollPhysics(),
+                                  itemCount: snapshot.data!.length,
+                                  itemBuilder: (context, index) {
+                                    UserModel member = snapshot.data![index];
+                                    return FutureBuilder<String>(
+                                      future: _uidFuture,
+                                      builder: (context, uidSnapshot) {
+                                        if (uidSnapshot.connectionState ==
+                                            ConnectionState.waiting) {
+                                          return CircularProgressIndicator();
+                                        } else if (uidSnapshot.hasError) {
+                                          return Text(
+                                              'Error: ${uidSnapshot.error}');
+                                        } else if (uidSnapshot.hasData) {
+                                          bool canDelete = uidSnapshot.data ==
+                                              widget.travel.creatorId;
+                                          return UserTile(
+                                            user: member,
+                                            currentUserId: uidSnapshot.data!,
+                                            showAcceptButton: false,
+                                            onAccept: () {},
+                                            canDeleteUser: canDelete,
+                                            databaseService: DatabaseService(),
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      ProfilePage(
+                                                    userId: member.id,
+                                                  ),
+                                                ),
+                                              );
+                                            },
                                           );
-                                        },
-                                      );
-                                    } else {
-                                      return Text('UID not found');
-                                    }
+                                        } else {
+                                          return Text('UID not found');
+                                        }
+                                      },
+                                    );
                                   },
                                 );
-                              },
-                            );
-                          } else {
-                            return Text('No members found');
-                          }
-                        },
+                              } else {
+                                return Text('No members found');
+                              }
+                            },
+                          ),
+                        ],
                       ),
+                      SizedBox(height: 20),
+                      SizedBox(
+                        height: queryData.size.height / 3,
+                        child: MapWidget(
+                          initialPosition: initialPosition,
+                          pointsToMark: pointsToMark,
+                        ),
+                      ),
+                      SizedBox(height: 5),
                     ],
                   ),
-                  SizedBox(height: 20),
-                  SizedBox(
-                    height: 300,
-                    child: MapWidget(
-                      initialPosition: initialPosition,
-                      pointsToMark: pointsToMark,
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  Center(
-                    child: ElevatedButton(
-                      onPressed: () =>
-                          _openChatScreen(context, widget.travel.id),
-                      child: Text('Chat about this travel'),
-                    ),
-                  ),
-                ],
+                ),
               ),
-            ),
+              SizedBox(height: 20),
+              Center(
+                child: ElevatedButton(
+                  onPressed: () => _openChatScreen(context, widget.travel.id),
+                  child: Text('Chat about this travel'),
+                ),
+              ),
+            ],
           ),
         ),
       ),
