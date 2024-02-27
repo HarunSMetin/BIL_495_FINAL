@@ -1,14 +1,11 @@
 import asyncio
 from fastapi import FastAPI, HTTPException
-from firebase_admin import firestore
-from api.models import PlaceCoordinates, RecommendedPlacesResponse
 
 from googleApi import GoogleApi
 
 
 app = FastAPI()
 googleApi = GoogleApi()
-db = firestore.client()
 
 
 @app.get("/")
