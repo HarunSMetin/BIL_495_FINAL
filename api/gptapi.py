@@ -2,30 +2,28 @@ import requests
 import json
 
 traveldata = {
-  "id": "PsSAcQDOSL4g5b6q7O7FN",
-  "name": "Ankara - İzmir Travel",
-  "description": "Travel",
-  "creatorId": "TDPuYUpUqvhzzVTAZoRnpw68Ym73",
-  "isPublic": True,
-  "isCompleted": True,
-  "lastUpdate": "2024-02-08 00:00:00.000",
-  "members": [
-    "TDPuYUpUqvhzzVTAZoRnpw68Ym73"
-  ],
-  "departureDate": "2024-02-08 00:00:00.000",
-  "returnDate": "2024-02-15 00:00:00.000",
-  "departureLocation" : "Ankara",
-  "desiredDestination": "İzmir",
-  "travelTransportation": "Bus",
-  "purposeOfVisit": "Cultural experiences and sightseeing",
-  "estimatedBudget": 5000,
-  "accommodationPreferences": "Mid-range",
-  "activitiesPreferences": "Relaxation and wellness (e.g., spas, beaches)",
-  "dietaryRestrictions": "No restrictions",
-  "travelingWithOthers": "Just Me",
-  "specialComment": "I love eating  local food and I am a big fan of Turkish cuisine. I would like to try local restaurants and street food. I am also interested in local recommendations for sightseeing and cultural experiences.",
-  "localRecommendations": "Yes",
-  "lastUpdatedQuestionId": "12_LocalRecommendations"
+    "id": "PsSAcQDOSL4g5b6q7O7FN",
+    "name": "Ankara - Çanakkale Travel",
+    "description": "Travel",
+    "creatorId": "TDPuYUpUqvhzzVTAZoRnpw68Ym73",
+    "isPublic": True,
+    "isCompleted": True,
+    "lastUpdate": "2024-02-08 00:00:00.000",
+    "members": ["TDPuYUpUqvhzzVTAZoRnpw68Ym73"],
+    "departureDate": "2024-02-08 00:00:00.000",
+    "returnDate": "2024-02-15 00:00:00.000",
+    "departureLocation": "Ankara",
+    "desiredDestination": "Çanakkale",
+    "travelTransportation": "Bus",
+    "purposeOfVisit": "Cultural experiences and sightseeing",
+    "estimatedBudget": 5000,
+    "accommodationPreferences": "Mid-range",
+    "activitiesPreferences": "Relaxation and wellness (e.g., spas, beaches)",
+    "dietaryRestrictions": "No restrictions",
+    "travelingWithOthers": "Just Me",
+    "specialComment": "I am a student and I want to visit the historical places in Çanakkale. I want to stay in a hotel with a sea view. I want to visit the beaches and the historical places in Çanakkale. I want to eat local food and I want to try the local desserts. I want to visit the historical places in Çanakkale. I want to stay in a hotel with a sea view. I want to visit the beaches and the historical places in Çanakkale. I want to eat local food and I want to try the local desserts. I want to visit the historical places in Çanakkale. I want to stay in a hotel with a sea view. I want to visit the beaches and the historical places in Çanakkale. I want to eat local food and I want to try the local desserts. I want to visit the historical places in Çanakkale. I want to stay in a hotel with a sea view. I want to visit the beaches and the historical places in Çanakkale. I want to eat local food and I want to try the local desserts. I want to visit the historical places in Çanakkale. I want to stay in a hotel with a sea view. I want to visit the beaches and the historical places in Çanakkale. I want to eat local food and I want to try the local desserts. I want to visit the historical places in Çanakkale. I want to stay in a hotel with a sea view. I want to visit the beaches and the historical places in Çanakkale. I want to eat local food and I want to try the local desserts. I want to visit the historical places in Çanakkale. I want to stay in a hotel with a sea view. I want to visit the beaches and the historical places in Çanakkale. I want to eat local food and I want to try the local desserts. I want to visit the historical places in Çanakkale. I want to stay in a hotel with a sea view. I want to visit the beaches and the historical places in Çanakkale. I want to eat local food and I want to try the local desserts. I want to visit the historical places in Çanakkale. I want to stay in a hotel with a sea view. I want to visit the beaches and the historical places in Çanakkale. I want to eat local",
+    "localRecommendations": "Yes",
+    "lastUpdatedQuestionId": "12_LocalRecommendations",
 }
 
 
@@ -38,16 +36,17 @@ def call_gpt_api(prompt):
     data = {
         "model": "gpt-3.5-turbo",  # Adjust the model name as per your preference
         "messages": [{"role": "user", "content": prompt}],
-        "temperature": 0.3,  # Adjust the temperature as per your preference 
+        "temperature": 0.3,  # Adjust the temperature as per your preference
     }
 
-    response = requests.post(endpoint, headers=headers, json=data)  
+    response = requests.post(endpoint, headers=headers, json=data)
     if response.status_code == 200:
         print(response.json()["usage"])
         return response.json()["choices"][0]["message"]["content"]
     else:
         print(f"Failed with status code {response.status_code}")
         return ""
+
 
 import os
 
@@ -77,12 +76,12 @@ try:
     jsonData = json.loads(generated_text)
     # Continue with the rest of your code that uses jsonData
 except json.decoder.JSONDecodeError as e:
-    print(f"Error decoding JSON: {e}") 
-    
+    print(f"Error decoding JSON: {e}")
+
     # Handle the error appropriately
 
 # Save the generated text to a file as JSON
 with open(generated_text_file_path, "w") as file:
-    file.write(json.dumps(jsonData,ensure_ascii=False))
+    file.write(json.dumps(jsonData))
 
 print(len(jsonData["suggestions"]))

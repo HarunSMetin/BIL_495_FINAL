@@ -22,7 +22,7 @@ class MapWidget extends StatefulWidget {
 class _MapWidgetState extends State<MapWidget> {
   late GoogleMapController mapController;
 
-  Set<Polyline> _polylines = Set<Polyline>();
+  Set<Polyline> _polylines = <Polyline>{};
 
   void _onMapCreated(GoogleMapController controller) async {
     mapController = controller;
@@ -36,7 +36,6 @@ class _MapWidgetState extends State<MapWidget> {
 
   Future<String> _getRoute(List<LatLng> waypoints) async {
     final String apiKey = dotenv.env['API_KEY']!;
-    printErrorRed(apiKey);
     ;
     final String waypointsString = waypoints
         .map((point) => '${point.latitude},${point.longitude}')
@@ -109,11 +108,11 @@ class _MapWidgetState extends State<MapWidget> {
         zoom: 11.0,
       ),
       polylines: _polylines,
-      gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
-        new Factory<OneSequenceGestureRecognizer>(
-          () => new EagerGestureRecognizer(),
+      gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
+        Factory<OneSequenceGestureRecognizer>(
+          () => EagerGestureRecognizer(),
         ),
-      ].toSet(),
+      },
     );
   }
 }

@@ -1,0 +1,34 @@
+{
+  "suggestions": [
+    {
+      "place_types": {
+        "culture_based": ["museum", "historical_landmark"],
+        "accommodation_based": ["hotel"],
+        "food_and_drink_based": ["local_cuisine"]
+      },
+      "fields": { "atmospheric_data_fields": ["user_ratings_total"] },
+      "query": "Historical places in \u00c7anakkale"
+    },
+    {
+      "place_types": {
+        "accommodation_based": ["hotel"],
+        "entertainment_and_recreation_center": ["beach"]
+      },
+      "fields": { "atmospheric_data_fields": ["user_ratings_total"] },
+      "query": "Hotels with sea view in \u00c7anakkale"
+    },
+    {
+      "place_types": { "food_and_drink_based": ["local_cuisine", "dessert"] },
+      "fields": { "atmospheric_data_fields": ["user_ratings_total"] },
+      "query": "Local food and desserts in \u00c7anakkale"
+    },
+    {
+      "place_types": {
+        "entertainment_and_recreation_center": ["beach"],
+        "culture_based": ["museum", "historical_landmark"]
+      },
+      "fields": { "atmospheric_data_fields": ["user_ratings_total"] },
+      "query": "Beaches and historical places in \u00c7anakkale"
+    }
+  ]
+}
