@@ -32,7 +32,7 @@ def compute_embedding(text):
 def process_reviews(review_list: ReviewList):
     local_restaurant_vectors = {}
     local_restaurant_weights = {}
-    for review in review_list.reviews:
+    for review in review_list.data:
         review_text = review.review
         restaurant_name = review.place
         rating = review.rating
@@ -42,13 +42,13 @@ def process_reviews(review_list: ReviewList):
         local_restaurant_weights[restaurant_name] = 0
         review_vector = compute_embedding(review_text)
         if rating == 1 or rating == 5:
-            weighted_review_vector = review_vector * 2
+            weighted_review_vector = review_vector
             local_restaurant_weights[restaurant_name] += 2
-        if rating == 2 or rating == 4:
-            weighted_review_vector = review_vector * 1.5
+        elif rating == 2 or rating == 4:
+            weighted_review_vector = review_vector
             local_restaurant_weights[restaurant_name] += 1.5
-        if rating == 3:
-            weighted_review_vector = review_vector * 1
+        else:
+            weighted_review_vector = review_vector
             local_restaurant_weights[restaurant_name] += 1
 
         if restaurant_name in local_restaurant_vectors:
@@ -57,10 +57,8 @@ def process_reviews(review_list: ReviewList):
             local_restaurant_vectors[restaurant_name] = weighted_review_vector
 
     for restaurant in local_restaurant_vectors:
-        count = len([r for r in review_list.reviews if r.place == restaurant])
-        local_restaurant_vectors[restaurant] /= local_restaurant_weights[
-            restaurant_name
-        ]
+        count = len([r for r in review_list.data if r.place == restaurant])
+        local_restaurant_vectors[restaurant]
 
     return local_restaurant_vectors
 
