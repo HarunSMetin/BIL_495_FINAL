@@ -82,8 +82,7 @@ class _PreTravelCreationState extends State<PreTravelCreation> {
       _databaseService.CreateTravel(
               prefs.getString('uid')!, _travelNameController.text)
           .then((value) {
-        // Only navigate to the new screen after the future is complete
-        Navigator.of(context).pop(); // Close the current screen first
+        Navigator.of(context).pop();
         Navigator.push(
           context,
           MaterialPageRoute(

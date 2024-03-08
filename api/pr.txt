@@ -30,7 +30,7 @@ The input comprises a JSON object with the following fields:
 #Process:#
 1. Calculate the travel period duration from `departureDate` to `returnDate`.
 2. Consider `specialComment` to understand user preferences.
-3. Generate suggestions proportional to the travel duration, ensuring at least (travel period as days * 6) suggestions in the list.
+3. Generate suggestions proportional to the travel duration, ensuring  minimum 10 maximum 18 suggestions in the list.
 4. Select destinations based on predefined tags like parks, restaurants, etc.
 5. Customize suggestions with relevant tags and query strings.
 
@@ -63,7 +63,7 @@ A JSON object with a curated list of suggestions, each containing:
 #Constraints:#
 - Ensure diverse suggestions catering to various interests.
 - Output adheres to specified structure with relevant tags and queries.
-- Provide at least (travel period as days * 6) suggestions in the list but you can make it little longer upper bound is (travel period as days * 10) , for example, if the travel duration is 3 days, there should be at least 18 suggestions.
-
+- Provide minimum 10 maximum 18 suggestions in the list .
+- make it json properly for charmap codec dont use Turkish chars change them english chars
 
 Here is the Travel data for you make Suggestions YOU MUST PROVIDE FULL STRUCTURE AS ALREADY DEFINED inlened json: 
