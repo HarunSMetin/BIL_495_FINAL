@@ -7,13 +7,23 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys  
 import json
 import time
+import re
+
+def clean_string(input_string):
+    # Define regex pattern to match punctuation and special characters
+    pattern = r'[^\w\s]|[\']/g'
+    
+    # Replace punctuation and special characters with spaces
+    clean_string = re.sub(pattern, ' ', input_string)
+    
+    return clean_string
  
 # record start time
 start = time.time()
 
 inputLoc = 'The Hunger Ankara'#"Mama's Burger Dikmen"
 inputPlaceId = 'ChIJczooWulP0xQRqKZM1YQEWw0'#'ChIJ83EOeClF0xQRpmgaAmrCMqA' 
-maxReviews = 60
+maxReviews = 1000
 
 
 URL = "https://www.google.com/maps/search/?api=1" 
@@ -72,7 +82,7 @@ for review in reviews:
             textandmore[1].click()
             textandmore = WebDriverWait(upper[ind],10).until(EC.presence_of_all_elements_located((By.XPATH,"div[2]/div/span"))) 
 
-        rewievsResult.append({"name": inputLoc ,"rating":rate,"text":textandmore[0].text})
+        rewievsResult.append({"place": inputLoc ,"rating":rate,"review":clean_string(textandmore[0].text)})
     except Exception as e:
         print(e)  
 # record end time
@@ -88,4 +98,4 @@ json_data = json.dumps(rewievsResult, ensure_ascii=False)
 with open('reviews.json', 'w', encoding='utf-8') as file:
     file.write(json_data)
 
-
+ 

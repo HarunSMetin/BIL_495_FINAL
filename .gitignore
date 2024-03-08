@@ -151,3 +151,4 @@ gezbot/windows/flutter/generated_plugins.cmake
 
 *key.properties
 *.env
+api/reviews.json 
