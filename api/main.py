@@ -11,8 +11,16 @@ import os
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import firestore
-cred = credentials.Certificate('gezbot-112ee-firebase-adminsdk-2ul3v-1c8e3c6f68.json')
 
+import os
+files = [f for f in os.listdir('.') if os.path.isfile(f)]
+json_file = ""
+for f in files:
+    if f.startswith("gezbot"):
+        json_file = f
+
+
+cred = firebase_admin.credentials.Certificate(json_file) 
 firebase_admin.initialize_app(cred)
 
 db = firestore.client()
