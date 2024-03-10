@@ -150,5 +150,6 @@ gezbot/windows/flutter/generated_plugin_registrant.cc
 gezbot/windows/flutter/generated_plugins.cmake
 
 *key.properties
-*.env
-api/reviews.json 
+*.env 
+
+api/config.json
