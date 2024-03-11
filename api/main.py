@@ -1,11 +1,36 @@
+
 import asyncio
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException    
+import json
+import os  
 
 from googleApi import GoogleApi
-import gptapi
+from gptapi import gpt_api 
+import scrapper
+import os 
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import firestore
 
-app = FastAPI()
+import os
+files = [f for f in os.listdir('.') if os.path.isfile(f)]
+json_file = ""
+for f in files:
+    if f.startswith("gezbot"):
+        json_file = f
+
+
+cred = firebase_admin.credentials.Certificate(json_file) 
+firebase_admin.initialize_app(cred)
+
+db = firestore.client()
+
+app = FastAPI() 
+
+
 googleApi = GoogleApi()
+GPTAPI = gpt_api()
+
 
 
 @app.get("/")
@@ -28,82 +53,53 @@ async def create_hotel_suggestions(
 
 
 @app.post("/create_place_suggestions")
-async def create_place_suggestions(travelID: str,TravelData, coordinates: str, additionals: dict):
+async def create_place_suggestions(travel_id: str ):
     places = []
     counts = [0, 0]
-    if (
-        additionals is not None
-        and additionals["placeType"] is not None
-        and coordinates != ""
-        and additionals["query"] is not None
-    ):
-        try:
-            places, counts = await googleApi.fetch_places_all_methods(
-                additionals["query"], coordinates, additionals["placeType"]
-            )
-        except Exception as e:
-            print(e)
-    print(len(places))
-    print("query_places : ", counts[0])
-    print("nearby_places : ", counts[1])
-    return places
-'''
-async def create_place_suggestions(travelID: str, coordinates: str, additionals: dict):
-    places = []
-    counts = [0, 0]
-    if (
-        additionals is not None
-        and additionals["placeType"] is not None
-        and coordinates != ""
-        and additionals["query"] is not None
-    ):
-        try:
-            places, counts = await googleApi.fetch_places_all_methods(
-                additionals["query"], coordinates, additionals["placeType"]
-            )
-        except Exception as e:
-            print(e)
-    print(len(places))
-    print("query_places : ", counts[0])
-    print("nearby_places : ", counts[1])
-    return places 
-'''
+    TravelData = await travel_details(travel_id)
+    if TravelData is not None:
+        place = await googleApi.fetch_places_query(TravelData["03_DesiredDestination"])
+        place = place[0]["geometry"]["location"]
+        coordinates = "{},{}".format(place["lat"], place["lng"])
+        TAGS = GPTAPI.Get_google_search_tags(TravelData)
+        if TAGS is not None:
+            for suggestion in TAGS['suggestions']:
+                query = suggestion['query']
+                types = []
+                for type in suggestion['place_types']: 
+                    for t in type:
+                        types.append(t) 
+
+                if (types != [] and coordinates != "," and query is not None):
+                    try:
+                        p, counts = await googleApi.fetch_places_all_methods( query, coordinates, types )
+                        for p1 in p:
+                           places.append(p1)
+                    except Exception as e:
+                        print(e)
+
+            print(len(places))
+            print("query_places : ", counts[0])
+            print("nearby_places : ", counts[1])
+    
+        return scrapper.get_all_reviews(places)
+    return 'null'
+
+
 @app.post("/query")
 async def query(query: str):
     return await googleApi.fetch_places_query(query)
 
 
-"""
-@app.post("/recommended_places_coordinates/{travelID}")
-async def recommended_places_coordinates(travelID: str):
+@app.get("/travel_details/{travelID}")
+async def travel_details(travelID: str):  
     try:
-        # Fetch travel details from Firestore
-        doc_ref = db.collection("travels").document(travelID)
-        doc = await doc_ref.get()
+        doc = db.collection("travels").document(travelID).get()
         if doc.exists:
-            travel_data = doc.to_dict()
-
-            # Assuming initialPosition is a string "lat,lng"
-            initial_position_str = travel_data.get("initialPosition", "0,0")
-            initial_lat, initial_lng = map(float, initial_position_str.split(","))
-            initial_position = {"lat": initial_lat, "lng": initial_lng}
-
-            # Assuming pointsToMark is a list of strings ["lat,lng", "lat,lng", ...]
-            points_to_mark_str = travel_data.get("pointsToMark", [])
-            points_to_mark = [
-                {
-                    "lat": float(lat_lng.split(",")[0]),
-                    "lng": float(lat_lng.split(",")[1]),
-                }
-                for lat_lng in points_to_mark_str
-            ]
-            response = RecommendedPlacesResponse(
-                initialPosition=PlaceCoordinates(**initial_position),
-                pointsToMark=[PlaceCoordinates(**point) for point in points_to_mark],
-            )
-            return response
+            return doc.to_dict()
         else:
             raise HTTPException(status_code=404, detail="Travel not found")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-"""
+
+#muqlwBIQ0celiszh1d3T

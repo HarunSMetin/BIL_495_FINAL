@@ -10,7 +10,7 @@ class GoogleApi:
             apikey = json.load(f)['google_api_key']
         self.API_KEY = API_KEY or apikey
     
-    async def get_function(self,url,params):
+    async def get_function(self,url,params,limit=False):
         places = []
         while True:
             response = requests.get(url, params=params) 
@@ -25,7 +25,7 @@ class GoogleApi:
                 places.append(result)
                  
             next_page_token = data.get("next_page_token")
-            if not next_page_token :
+            if limit or not next_page_token :
                 break 
             time.sleep(2) 
             params["pagetoken"] = next_page_token
@@ -45,7 +45,7 @@ class GoogleApi:
         } 
         return await self.get_function(url,params) 
 
-    async def fetch_places_query(self, input : str, types=[]):
+    async def fetch_places_query(self, input : str, types=[], limit = False):
         places = []
         url = "https://maps.googleapis.com/maps/api/place/textsearch/json"
         params = {  
@@ -54,7 +54,7 @@ class GoogleApi:
         }
         if types != []:
             params["type"] = "|".join(types)
-        return await self.get_function(url,params)  
+        return await self.get_function(url,params,limit=limit)  
 
     async def fetch_places_all_methods(self, input="", location="", types=[], radius=15000, language="tr"):
         places = []
