@@ -46,7 +46,7 @@ class gpt_api:
         headers = {"Content-Type": "application/json", "Authorization": f"Bearer {self.api_key}"}
 
         data = {
-            "model": "gpt-3.5-turbo",  # Adjust the model name as per your preference
+            "model": "gpt-3.5-turbo-0125",  # Adjust the model name as per your preference
             "messages": [{"role": "user", "content": prompt}],
             "temperature": 0.3,  # Adjust the temperature as per your preference
         }

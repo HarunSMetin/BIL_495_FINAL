@@ -29,7 +29,7 @@ Calculate the travel period duration from `departureDate` to `returnDate`.
 Consider `specialComment` to understand user preferences.
 Generate suggestions proportional to the travel duration, ensuring 10 suggestions in the list.
 Select destinations based on predefined tags like parks, restaurants, etc.
- Customize suggestions with relevant tags and query strings.
+Customize suggestions with relevant tags and query strings.
 #Output:#
 A JSON object with a curated list of suggestions, each containing:
 Tags categorizing the suggested place/activity.

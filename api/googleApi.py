@@ -32,6 +32,16 @@ class GoogleApi:
 
         return places
 
+    async def post_function(self,url, json:dict):
+        response = requests.post(url, json=json) 
+        if response.status_code != 200 :
+            return f"Error making API request! Response Code : {response.status_code }"
+        elif response.json().get("status")  != "OK":
+            return f"Error making API request! Status : {response.json().get('status') }"
+        return response.json()
+    
+
+
     async def __fetch_places_nearby(self, location, types , radius=50000, language="tr" ): 
         url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json" 
         params = { 
@@ -45,23 +55,23 @@ class GoogleApi:
         } 
         return await self.get_function(url,params) 
 
-    async def fetch_places_query(self, input : str, types=[], limit = False):
+    async def fetch_places_query(self, queryString : str, types=[], limit = False):
         places = []
         url = "https://maps.googleapis.com/maps/api/place/textsearch/json"
         params = {  
-            "query": input, 
+            "query": queryString, 
             "key": self.API_KEY, 
         }
         if types != []:
             params["type"] = "|".join(types)
         return await self.get_function(url,params,limit=limit)  
 
-    async def fetch_places_all_methods(self, input="", location="", types=[], radius=15000, language="tr"):
+    async def fetch_places_all_methods(self, queryString="", location="", types=[], radius=15000, language="tr"):
         places = []
         counts = [0,0]
         flag = False
-        if input !="" : 
-            query_places = await self.fetch_places_query(input,types)
+        if queryString !="" : 
+            query_places = await self.fetch_places_query(queryString,types)
             for place in query_places:
                 flag = False
                 for p in places:

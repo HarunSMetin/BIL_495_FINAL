@@ -22,12 +22,8 @@ for f in files:
 
 cred = firebase_admin.credentials.Certificate(json_file) 
 firebase_admin.initialize_app(cred)
-
 db = firestore.client()
-
-app = FastAPI() 
-
-
+app = FastAPI()  
 googleApi = GoogleApi()
 GPTAPI = gpt_api()
 
@@ -82,7 +78,7 @@ async def create_place_suggestions(travel_id: str ):
             print("query_places : ", counts[0])
             print("nearby_places : ", counts[1])
     
-        return scrapper.get_all_reviews(places)
+        return places
     return 'null'
 
 
