@@ -8,7 +8,17 @@ import json
 import time
 import re
 from multiprocessing import Process, Manager
-import requests 
+import requests
+from google_flight_analysis.scrape import *
+
+from selenium import webdriver
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
+from bs4 import BeautifulSoup as bs
+import csv
+import time
+
 
 start = time.time()
 json = [
@@ -26,6 +36,7 @@ json = [
 
 rewievsResult = []
 
+
 def clean_string(input_string):
     # Define regex pattern to match punctuation and special characters
     pattern = r"[^\w\s]|[\']/g"
@@ -35,31 +46,35 @@ def clean_string(input_string):
 
     return clean_string
 
-def get_all_reviews(json):  
+
+def get_all_reviews(json):
     rewievsResult.clear()
     with Manager() as manager:
-        lock = manager.Lock() 
-        for J in json: 
+        lock = manager.Lock()
+        for J in json:
             processes = []
             for data in J:
-                processes.append(Process(target=_get_reviews, args = (data['name'], data['place_id'],lock))) 
+                processes.append(
+                    Process(
+                        target=_get_reviews, args=(data["name"], data["place_id"], lock)
+                    )
+                )
             for process in processes:
-                process.start() 
+                process.start()
             for process in processes:
-                process.join()   
+                process.join()
                 print("Length Of rewievsResult {} ".format(len(rewievsResult)))
 
     return rewievsResult
- 
- 
- 
-def _get_reviews(inputLoc, inputPlaceId,lock ,maxReviews=100, save = False): 
-    URL = "https://www.google.com/maps/search/?api=1" 
 
-    if(inputLoc  != ""):
-        URL = URL +("&query={}".format(requests.utils.quote(inputLoc)))
-    if(inputPlaceId != ""):
-        URL = URL + ("&query_place_id={}".format(inputPlaceId)) 
+
+def _get_reviews(inputLoc, inputPlaceId, lock, maxReviews=100, save=False):
+    URL = "https://www.google.com/maps/search/?api=1"
+
+    if inputLoc != "":
+        URL = URL + ("&query={}".format(requests.utils.quote(inputLoc)))
+    if inputPlaceId != "":
+        URL = URL + ("&query_place_id={}".format(inputPlaceId))
 
     driver = webdriver.Firefox()
     driver.get(URL)
@@ -95,9 +110,15 @@ def _get_reviews(inputLoc, inputPlaceId,lock ,maxReviews=100, save = False):
 
         while len(reviews) > reviewsCount and len(reviews) < maxReviews * 3:
             reviewsCount = len(reviews)
-            ActionChains(driver).key_down(Keys.END).perform()    
-            WebDriverWait(driver,10).until(EC.presence_of_all_elements_located((By.XPATH,comments+"[{}]".format(reviewsCount+1)) ))
-            reviews=WebDriverWait(driver,10).until(EC.presence_of_all_elements_located((By.XPATH,comments) ))
+            ActionChains(driver).key_down(Keys.END).perform()
+            WebDriverWait(driver, 10).until(
+                EC.presence_of_all_elements_located(
+                    (By.XPATH, comments + "[{}]".format(reviewsCount + 1))
+                )
+            )
+            reviews = WebDriverWait(driver, 10).until(
+                EC.presence_of_all_elements_located((By.XPATH, comments))
+            )
     except Exception as e:
         print(e)
     i = 0
@@ -108,8 +129,8 @@ def _get_reviews(inputLoc, inputPlaceId,lock ,maxReviews=100, save = False):
             i += 1
 
     reviewsCount = len(reviews)
-    #vzX5Ic
-    
+    # vzX5Ic
+
     for review in reviews:
         try:
             upper = review.find_elements(By.XPATH, "div/div/div")
@@ -128,12 +149,20 @@ def _get_reviews(inputLoc, inputPlaceId,lock ,maxReviews=100, save = False):
             textandmore = upper[ind].find_elements(By.XPATH, "div[2]/div/span")
             if len(textandmore) > 1:
                 textandmore[1].click()
-                textandmore = WebDriverWait(upper[ind],10).until(EC.presence_of_all_elements_located((By.XPATH,"div[2]/div/span"))) 
+                textandmore = WebDriverWait(upper[ind], 10).until(
+                    EC.presence_of_all_elements_located((By.XPATH, "div[2]/div/span"))
+                )
             with lock:
-                rewievsResult.append({"place": inputLoc ,"rating":rate,"review":clean_string(textandmore[0].text)})
+                rewievsResult.append(
+                    {
+                        "place": inputLoc,
+                        "rating": rate,
+                        "review": clean_string(textandmore[0].text),
+                    }
+                )
 
         except Exception as e:
-            print(e) 
+            print(e)
     # Convert rewievsResult to JSON
     if save:
         json_data = json.dumps(rewievsResult, ensure_ascii=False)
@@ -141,7 +170,83 @@ def _get_reviews(inputLoc, inputPlaceId,lock ,maxReviews=100, save = False):
         # Write JSON data to a file with utf-8 encoding
         with open("reviews.json", "a", encoding="utf-8") as file:
             file.write(json_data)
-    
+
     driver.close()
     return rewievsResult
 
+
+# _get_flights(from_, to, departure_date, return_date)
+def _get_flights(from_, to, departure_date, return_date):
+    result = Scrape(to, from_, departure_date, return_date)
+    ScrapeObjects(result)
+    return result.data.to_json(orient="split")
+
+
+# _get_hotels(place, checkin, checkout)
+def _get_hotels(place, checkin, checkout):
+
+    driver = webdriver.Chrome()
+
+    url = f"https://www.google.com/travel/hotels/{place}?g2lb=2502548%2C2503781%2C4258168%2C4270442%2C4306835%2C4308226%2C4317915%2C4328159%2C4371335%2C4401769%2C4419364%2C4463666%2C4482194%2C4482438%2C4486153%2C4491350%2C4495816%2C4504283%2C4270859%2C4284970%2C4291517&hl=en-IN&gl=in&ap=EgAwA2gB&q=hotels%20in%20{place}&rp=EL6UyOLs5vfPQRDotoKJvc_3vPQBELHWl5u8lMHO0AEQiNvdjujJnZRrOAFAAEgCogETQmh1YmFuZXN3YXIsIE9kaXNoYQ&ictx=1&sa=X&utm_campaign=sharing&utm_medium=link&utm_source=htls&ts=CAESABo3ChkSFToTQmh1YmFuZXN3YXIsIE9kaXNoYRoAEhoSFAoHCOUPEAIYGRIHCOUPEAIYGhgBMgIQACoPCgsoAUoCIAE6A0lOUhoA&ved=0CAAQ5JsGahcKEwiQ6qvDt4TvAhUAAAAAHQAAAAAQfw"
+    driver.get(url)
+
+    soup = bs(driver.page_source, "html.parser")
+
+    ##### Hotel  #####
+    hotel_names = soup.find_all("h2", class_="BgYkof ogfYpf ykx2he")[:5]
+
+    #### RATING #####
+    ratings = soup.find_all("span", class_="NPG4zc")[:5]
+
+    #### Num of reviews ####
+    num_reviews = soup.find_all("span", class_="sSHqwe uTUoTb XLC8M")[:5]
+
+    for i in range(len(hotel_names)):
+        review = num_reviews[i]
+        wait = WebDriverWait(driver, 10)
+        review_bt = wait.until(
+            EC.element_to_be_clickable(
+                (By.XPATH, f"//span[contains(text(),'{review.text}')]")
+            )
+        )
+        review_bt.click()
+        time.sleep(3)
+
+    reviews = []
+
+    for i in range(len(hotel_names), 0, -1):
+        driver.switch_to_window(driver.window_handles[i])
+        soup = bs(driver.page_source, "html.parser")
+        hotel_reviews = soup.find_all("div", class_="K7oBsc")
+        hotel_reviews_list = []
+        for i in range(len(hotel_reviews)):
+            hotel_review = str(hotel_reviews[i].div.span.text)
+            try:
+                if hotel_review.find(" ...") >= 0:
+                    hotel_review = hotel_review.replace(" ...", "")
+                next_review = str(
+                    hotel_reviews[i + 1].div.span.text
+                )  # sometimes detailed review is show when clicked on read more
+                if next_review.find(hotel_review) >= 0:
+                    continue
+            except:
+                pass
+            hotel_reviews_list.append(hotel_review)
+        reviews.append(hotel_reviews_list)
+
+    #### WRITE TO CSV ####
+    with open("hotels.csv", mode="w") as csv_file:
+        fieldnames = ["Name", "Rating", "Reviews"]
+        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+
+        writer.writeheader()
+        for i in range(len(hotel_names)):
+            hotel_reviews = reviews[i]
+            review_text = "\n\n".join(hotel_reviews)
+            writer.writerow(
+                {
+                    "Name": f"{hotel_names[i].text}",
+                    "Rating": f"{ratings[i].span.text}",
+                    "Reviews": f"{review_text}",
+                }
+            )
