@@ -117,3 +117,25 @@ async def flights(from_: str, to: str, departure_date: str, return_date: str):
 @app.post("/get_hotels")
 async def get_hotels(place: str, checkin: str, checkout: str, stars = [3,4,5] , hotel_types = ["hostel", "boutique", "motel", "inn", "resort", "other"] ,  hotel_options = ["free_wifi", "free_breakfast",  "air_conditioned"] ,adults = 1, children = 0):
     return await HotelAPI.findHotel(place, checkin, checkout, stars, hotel_types, hotel_options, adults, children)
+
+@app.post("/create_car_route")
+async def create_car_route(
+    origin_lat: float, origin_lng: float, destination_lat: float, destination_lng: float
+):
+    origin = {
+        "location": {
+            "latLng": {
+                "latitude": origin_lat,
+                "longitude": origin_lng
+            }
+        }
+    }
+    destination = {
+        "location": {
+            "latLng": {
+                "latitude": destination_lat,
+                "longitude": destination_lng
+            }
+        }
+    }
+    return await googleApi.fetch_car_route(query, origin, destination)
