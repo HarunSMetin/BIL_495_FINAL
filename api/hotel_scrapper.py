@@ -48,11 +48,11 @@ class HotelOptions(Enum):
 class Hotel_Api:
 
     #USAGE : 
-    #findHotel("Istanbul" ,  "2024-05-18", "2024-06-01",2000, 3000, stars=[4,5], hotelType=['spa', 'hostel'], hotelOptions=['free_wifi', 'free_breakfast'], adults=2, childeren= 0)
+    #findHotel("Istanbul" , "2024-05-18", "2024-06-01", stars=[4,5], hotelType=['spa', 'hostel'], hotelOptions=['free_wifi', 'free_breakfast'], adults=2, childeren= 0)
     def __init__(self):
         pass 
     
-    def findHotel( self, queryString:str ,checkin:str , checkout:str, budgetLower:int ,budgetUpper:int ,stars =[] , hotelType =[] ,hotelOptions = [], adults = 1, childeren = 0):
+    def findHotel( self, queryString:str ,checkin:str , checkout:str,stars =[] , hotelType =[] ,hotelOptions = [], adults = 1, childeren = 0):
         URL = "https://www.google.com/travel" 
 
         if(queryString  != ""):

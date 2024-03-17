@@ -5,6 +5,7 @@ import os
 
 from googleApi import GoogleApi
 from gptapi import gpt_api
+from hotel_scrapper import Hotel_Api
 import scrapper
 import os
 import firebase_admin
@@ -26,6 +27,7 @@ db = firestore.client()
 app = FastAPI()
 googleApi = GoogleApi()
 GPTAPI = gpt_api()
+HotelAPI =  Hotel_Api()
 
 
 @app.get("/")
@@ -109,6 +111,9 @@ async def flights(from_: str, to: str, departure_date: str, return_date: str):
     return scrapper._get_flights(from_, to, departure_date, return_date)
 
 
+# STARS : 1,2,3,4,5 
+# HOTEL TYPES : spa, hostel, boutique, bed_and_breakfast, beach, motel, apartment, inn, resort, other
+# HOTEL OPTIONS : free_wifi, free_breakfast, restaurant, bar, kid_friendly, pet_friendly, free_parking, parking, ev_charger, room_service, fitness_center, spa, pool, indoor_pool, outdoor_pool, air_conditioned, wheelchair_accessible, beach_access, all_inclusive_available
 @app.post("/get_hotels")
-async def get_hotels(place: str, checkin: str, checkout: str):
-    return scrapper._get_hotels(place, checkin, checkout)
+async def get_hotels(place: str, checkin: str, checkout: str, stars = [3,4,5] , hotel_types = ["hostel", "boutique", "motel", "inn", "resort", "other"] ,  hotel_options = ["free_wifi", "free_breakfast",  "air_conditioned"] ,adults = 1, children = 0):
+    return await HotelAPI.findHotel(place, checkin, checkout, stars, hotel_types, hotel_options, adults, children)
