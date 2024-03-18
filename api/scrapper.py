@@ -9,8 +9,7 @@ import time
 import re
 from multiprocessing import Process, Manager
 import requests
-from google_flight_analysis.scrape import *
-
+import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -18,10 +17,10 @@ from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup as bs
 import csv
 import time
-
+from scrape import Scrape, ScrapeObjects
 
 start = time.time()
-json = [
+places_json = [
     {
         "inputLoc": "The Hunger Ankara",
         "inputPlaceId": "ChIJczooWulP0xQRqKZM1YQEWw0",
@@ -51,7 +50,7 @@ def get_all_reviews(json):
     rewievsResult.clear()
     with Manager() as manager:
         lock = manager.Lock()
-        for J in json:
+        for J in places_json:
             processes = []
             for data in J:
                 processes.append(
@@ -175,11 +174,25 @@ def _get_reviews(inputLoc, inputPlaceId, lock, maxReviews=100, save=False):
     return rewievsResult
 
 
-# _get_flights(from_, to, departure_date, return_date)
 def _get_flights(from_, to, departure_date, return_date):
     result = Scrape(to, from_, departure_date, return_date)
     ScrapeObjects(result)
-    return result.data.to_json(orient="split")
+
+    result.data["Departure datetime"] = result.data["Departure datetime"].dt.strftime(
+        "%Y-%m-%dT%H:%M:%S"
+    )
+    result.data["Arrival datetime"] = result.data["Arrival datetime"].dt.strftime(
+        "%Y-%m-%dT%H:%M:%S"
+    )
+    result.data["Access Date"] = result.data["Access Date"].dt.strftime("%Y-%m-%d")
+
+    aggregated_data = []
+    for index, row in enumerate(result.data.to_dict("records")):
+        row_data = {key: value for key, value in row.items() if key != "Airline(s)"}
+        row_data["id"] = index
+        aggregated_data.append(row_data)
+
+    return aggregated_data
 
 
 # _get_hotels(place, checkin, checkout)

@@ -14,6 +14,9 @@ from firebase_admin import firestore
 
 import os
 
+import scrape
+
+
 files = [f for f in os.listdir(".") if os.path.isfile(f)]
 json_file = ""
 for f in files:
@@ -27,7 +30,7 @@ db = firestore.client()
 app = FastAPI()
 googleApi = GoogleApi()
 GPTAPI = gpt_api()
-HotelAPI =  Hotel_Api()
+HotelAPI = Hotel_Api()
 
 
 @app.get("/")
@@ -35,9 +38,10 @@ def read_root():
     return {"gezBot": "Backend"}
 
 
-# STARS : 1,2,3,4,5 
+# STARS : 1,2,3,4,5
 # HOTEL TYPES : spa, hostel, boutique, bed_and_breakfast, beach, motel, apartment, inn, resort, other
 # HOTEL OPTIONS : free_wifi, free_breakfast, restaurant, bar, kid_friendly, pet_friendly, free_parking, parking, ev_charger, room_service, fitness_center, spa, pool, indoor_pool, outdoor_pool, air_conditioned, wheelchair_accessible, beach_access, all_inclusive_available
+
 
 @app.post("/create_hotel_suggestions")
 async def create_hotel_suggestions(
@@ -114,6 +118,18 @@ async def travel_details(travelID: str):
 async def flights(from_: str, to: str, departure_date: str, return_date: str):
     return scrapper._get_flights(from_, to, departure_date, return_date)
 
+
 @app.post("/get_hotels")
-async def get_hotels(place: str, checkin: str, checkout: str, stars = [3,4,5] , hotel_types = ["hostel", "boutique", "motel", "inn", "resort", "other"] ,  hotel_options = ["free_wifi", "free_breakfast",  "air_conditioned"] ,adults = 1, children = 0):
-    return await HotelAPI.findHotel(place, checkin, checkout, stars, hotel_types, hotel_options, adults, children)
+async def get_hotels(
+    place: str,
+    checkin: str,
+    checkout: str,
+    stars=[3, 4, 5],
+    hotel_types=["hostel", "boutique", "motel", "inn", "resort", "other"],
+    hotel_options=["free_wifi", "free_breakfast", "air_conditioned"],
+    adults=1,
+    children=0,
+):
+    return await HotelAPI.findHotel(
+        place, checkin, checkout, stars, hotel_types, hotel_options, adults, children
+    )
