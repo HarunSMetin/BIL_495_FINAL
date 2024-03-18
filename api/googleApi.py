@@ -31,16 +31,42 @@ class GoogleApi:
             params["pagetoken"] = next_page_token
 
         return places
-
+    
     async def post_function(self,url, json:dict):
         response = requests.post(url, json=json) 
         if response.status_code != 200 :
             return f"Error making API request! Response Code : {response.status_code }"
         elif response.json().get("status")  != "OK":
             return f"Error making API request! Status : {response.json().get('status') }"
-        return response.json()
+        return response.json() 
     
+    def save_as_json(self, data, filename):
+        with open(filename, 'w', encoding='utf8') as f:
+            json.dump(data, f, indent=4, ensure_ascii=False)
 
+
+    async def coordinates_to_address(self, lat, lng, language="tr", detailed=False):
+        url = "https://maps.googleapis.com/maps/api/geocode/json"
+        params = {
+            "latlng": f"{lat},{lng}",
+            "key": self.API_KEY,
+            "language": language
+        }
+        result = requests.get(url, params=params) 
+
+        if result.status_code != 200:
+            return f"Error making API request! Response Code : {result.status_code }"
+        elif result.json().get("status")  != "OK":
+            return f"Error making API request! Status : {result.json().get('status') }"
+        
+        data = result.json()
+
+        if detailed: 
+            return data["results"][0]["formatted_address"].strip()
+        else:
+            address = data["plus_code"]["compound_code"]
+            first_space_index = address.find(" ")
+            return address[first_space_index+1:].strip()
 
     async def __fetch_places_nearby(self, location, types , radius=50000, language="tr" ): 
         url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json" 
