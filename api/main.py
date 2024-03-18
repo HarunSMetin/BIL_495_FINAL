@@ -35,14 +35,9 @@ def read_root():
     return {"gezBot": "Backend"}
 
 
-# STARS : 1,2,3,4,5 
-# HOTEL TYPES : spa, hostel, boutique, bed_and_breakfast, beach, motel, apartment, inn, resort, other
-# HOTEL OPTIONS : free_wifi, free_breakfast, restaurant, bar, kid_friendly, pet_friendly, free_parking, parking, ev_charger, room_service, fitness_center, spa, pool, indoor_pool, outdoor_pool, air_conditioned, wheelchair_accessible, beach_access, all_inclusive_available
 
 @app.post("/create_hotel_suggestions")
-async def create_hotel_suggestions(
-    travelID: str, coordinates: str, checkin: str, checkout: str, adults: int
-):
+async def create_hotel_suggestions(travelID: str, coordinates: str, checkin: str, checkout: str, adults: int):
     hotels = []
     if coordinates != "":
         try:
@@ -113,6 +108,11 @@ async def travel_details(travelID: str):
 @app.post("/flights")
 async def flights(from_: str, to: str, departure_date: str, return_date: str):
     return scrapper._get_flights(from_, to, departure_date, return_date)
+
+
+# STARS : 1,2,3,4,5 
+# HOTEL TYPES : spa, hostel, boutique, bed_and_breakfast, beach, motel, apartment, inn, resort, other
+# HOTEL OPTIONS : free_wifi, free_breakfast, restaurant, bar, kid_friendly, pet_friendly, free_parking, parking, ev_charger, room_service, fitness_center, spa, pool, indoor_pool, outdoor_pool, air_conditioned, wheelchair_accessible, beach_access, all_inclusive_available
 
 @app.post("/get_hotels")
 async def get_hotels(place: str, checkin: str, checkout: str, stars = [3,4,5] , hotel_types = ["hostel", "boutique", "motel", "inn", "resort", "other"] ,  hotel_options = ["free_wifi", "free_breakfast",  "air_conditioned"] ,adults = 1, children = 0):
