@@ -105,28 +105,22 @@ class GoogleApi:
         } 
         return await self.get_function(url,params) 
     
-    async def fetch_car_route(self, origin, destination, intermediates=None, travel_mode="DRIVE", routing_preference=None, polyline_quality=None, polyline_encoding=None, departure_time=None, arrival_time=None, alternative_routes=True, route_modifiers=None, language="tr", region="TR", units="metric", optimize_waypoint_order=True, requested_reference_routes=None, extra_computations=None, traffic_model=None, transit_preferences=None):
-        url = "https://routes.googleapis.com/directions/v2:computeRoutes"
+    async def fetch_car_route(self ,origin, destination, mode="driving", alternatives=True, avoid=None, language="tr", units="metric", departure_time=None, arrival_time=None, transit_mode=None, transit_routing_preference=None, traffic_model=None):
+        url = "https://maps.googleapis.com/maps/api/directions/json"
         params = {
             "origin": origin,
             "destination": destination,
-            "intermediates": intermediates,
             "key": self.API_KEY,
-            "travelMode": travel_mode,
-            "routingPreference": routing_preference,
-            "polylineQuality": polyline_quality,
-            "polylineEncoding": polyline_encoding,
-            "departureTime": departure_time,
-            "arrivalTime": arrival_time,
-            "computeAlternativeRoutes": alternative_routes,
-            "routeModifiers": route_modifiers,
-            "languageCode": language,
-            "regionCode": region,
+            "mode": mode,
+            "alternatives": alternatives,
+            "avoid": avoid,
+            "language": language,
             "units": units,
-            "optimizeWaypointOrder": optimize_waypoint_order,
-            "requestedReferenceRoutes": requested_reference_routes,
-            "extraComputations": extra_computations,
-            "trafficModel": traffic_model,
-            "transitPreferences": transit_preferences
+            "departure_time": departure_time,
+            "arrival_time": arrival_time,
+            "transit_mode": transit_mode,
+            "transit_routing_preference": transit_routing_preference,
+            "traffic_model": traffic_model
         }
-        return await self.get_function(url,params)
+        return await self.get_function(url,params) 
+ 
