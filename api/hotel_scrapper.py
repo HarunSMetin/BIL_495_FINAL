@@ -60,7 +60,7 @@ class Hotel_Api:
 
         options = webdriver.ChromeOptions()
         options.add_experimental_option('prefs', {'intl.accept_languages': 'en,en_US'})
-        options.add_experimental_option("detach", True)
+        #options.add_experimental_option("detach", True)
         driver = webdriver.Chrome(options=options)   
         driver.get(URL)
         driver.maximize_window() 
@@ -74,63 +74,68 @@ class Hotel_Api:
         
         hotels_Path = "/html/body/c-wiz[2]/div/c-wiz/div[1]/div[1]/div[2]/div[2]/main/c-wiz/span/c-wiz/c-wiz"
         search_index = 0
-        for i in ["relevance", "lowest_price", "highest_rating", "most_viewed"]:
-            if search_index != 0 :
-                self.setSearchIndex(search_index, driver)
-
-            hotels = WebDriverWait(driver, 15).until(
-                EC.presence_of_all_elements_located(
-                    (
-                        By.XPATH,
-                        hotels_Path,
+        try:
+            for i in ["relevance", "lowest_price", "highest_rating", "most_viewed"]:
+                if search_index != 0 :
+                    self.setSearchIndex(search_index, driver)
+                sleep(0.5)
+                hotels = WebDriverWait(driver, 15).until(
+                    EC.presence_of_all_elements_located(
+                        (
+                            By.XPATH,
+                            hotels_Path,
+                        )
                     )
-                )
-            ) 
-            hotelIndex=0
+                ) 
+                hotelIndex=0
 
-            for h in hotels: 
-                hotelIndex = hotelIndex + 1
-                if h.get_attribute("jsrenderer") == "hAbFdb": 
-                    HTMLInner = h.get_attribute('innerHTML')
-                    soup = BeautifulSoup(HTMLInner, 'html.parser')
-                    hotel_name = soup.find("h2", class_="BgYkof").text.strip()
-                    print("Hotel Name:", hotel_name)
+                for h in hotels: 
+                    hotelIndex = hotelIndex + 1
+                    if h.get_attribute("jsrenderer") == "hAbFdb": 
+                        HTMLInner = h.get_attribute('innerHTML')
+                        soup = BeautifulSoup(HTMLInner, 'html.parser')
+                        hotel_name = soup.find("h2", class_="BgYkof").text.strip()
+                        print("Hotel Name:", hotel_name)
 
-                    starting_price =int(self.remove_non_decimal_chars(soup.find("span", class_="qQOQpe").text.strip()))
-                    print("Starting Price:", starting_price)
+                        starting_price =int(self.remove_non_decimal_chars(soup.find("span", class_="qQOQpe").text.strip()))
+                        print("Starting Price:", starting_price)
 
-                    amenities = [item.text.strip() for item in soup.select(".RJM8Kc .XX3dkb .QYEgn")]
-                    print("Amenities:", amenities)
-                    
-                    try:
-                        hotel_rate = float(soup.find("span", class_="KFi5wf lA0BZ").text.strip() )
-                        print("Hotel Rate:", hotel_rate)
-                    except Exception as e:
-                        print(e)
-                        hotel_rate = 0
+                        amenities = [item.text.strip() for item in soup.select(".RJM8Kc .XX3dkb .QYEgn")]
+                        print("Amenities:", amenities)
+                        
+                        try:
+                            hotel_rate = float(soup.find("span", class_="KFi5wf lA0BZ").text.strip() )
+                            print("Hotel Rate:", hotel_rate)
+                        except Exception as e:
+                            print(e)
+                            hotel_rate = 0
 
-                    try:
-                        hotel_review_count = int(self.remove_non_decimal_chars(soup.find("span", class_="jdzyld XLC8M").text.strip()))
-                        print("Hotel Review Count:", hotel_review_count)
-                    except Exception as e:
-                        print(e)
-                        hotel_review_count = 0
+                        try:
+                            hotel_review_count = int(self.remove_non_decimal_chars(soup.find("span", class_="jdzyld XLC8M").text.strip()))
+                            print("Hotel Review Count:", hotel_review_count)
+                        except Exception as e:
+                            print(e)
+                            hotel_review_count = 0
 
-                    href_attribute = "https://www.google.com" +soup.find("div").find("a")["href"]
-                    print("Href Attribute:", href_attribute)  
-                    
-                    result[i][hotelIndex] = {
-                        "hotel_name": hotel_name,
-                        "starting_price": starting_price,
-                        "amenities": amenities,
-                        "hotel_rate": hotel_rate,
-                        "hotel_review_count": hotel_review_count,
-                        "href_attribute": href_attribute
-                    }
-                    
-            search_index = search_index + 1
-
-        return json.dumps(result, indent=4, ensure_ascii=False)
+                        href_attribute = "https://www.google.com" +soup.find("div").find("a")["href"]
+                        print("Href Attribute:", href_attribute)  
+                        
+                        result[i][hotelIndex] = {
+                            "hotel_name": hotel_name,
+                            "starting_price": starting_price,
+                            "amenities": amenities,
+                            "hotel_rate": hotel_rate,
+                            "hotel_review_count": hotel_review_count,
+                            "href_attribute": href_attribute
+                        }
+                        
+                search_index = search_index + 1 
+            
+        except Exception as e:
+            print(e)
+           
+        driver.quit()
+        return result
 
     def setDate(self, checkin:str, checkout:str, driver):
         WebDriverWait(driver, 15).until(
@@ -451,8 +456,7 @@ class Hotel_Api:
                         "/html/body/c-wiz[2]/div/c-wiz/div[1]/div[1]/div[1]/c-wiz/div/div/div[1]/div/div[2]/div[1]/div/div[2]/div[3]/div/div[2]/div/div[1]/div/div/section[1]/div/div/div/div["+str(index+1)+"]/div/input", 
                     )  
                 )
-            ).click()      
-
+            ).click()     
             WebDriverWait(driver, 15).until(
                 EC.element_to_be_clickable(
                     (
@@ -460,7 +464,8 @@ class Hotel_Api:
                         "/html/body/c-wiz[2]/div/c-wiz/div[1]/div[1]/div[1]/c-wiz/div/div/div[1]/div/div[2]/div[1]/div/div/div[1]/div/button",
                     )
                 )
-            ).click()     
+            ).click()  
+            sleep(0.5)    
         except Exception as e:
             print(e)
             pass
@@ -538,3 +543,4 @@ class Hotel_Api:
             return re.sub(r'[^\d]', '', input_string)
         except ValueError:
             return 0  
+ 
