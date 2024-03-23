@@ -14,6 +14,7 @@ class PreTravelCreation extends StatefulWidget {
   }) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _PreTravelCreationState createState() => _PreTravelCreationState();
 }
 
@@ -22,6 +23,7 @@ class _PreTravelCreationState extends State<PreTravelCreation> {
   final DatabaseService _databaseService = DatabaseService();
   String? _errorText;
   bool _completedExists = false;
+  // ignore: prefer_typing_uninitialized_variables
   late final prefs;
 
   @override
@@ -29,8 +31,6 @@ class _PreTravelCreationState extends State<PreTravelCreation> {
     super.initState();
     if (widget.travel.id != 'empty') {
       _completedExists = !widget.travel.isCompleted;
-
-      print("Completed exists: $_completedExists");
     }
     fetchPrefs();
   }
@@ -42,7 +42,7 @@ class _PreTravelCreationState extends State<PreTravelCreation> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(16.0),
+      padding: const EdgeInsets.all(16.0),
       child: Column(
         mainAxisSize:
             MainAxisSize.min, // Ensure the dialog is only as tall as needed
@@ -54,16 +54,16 @@ class _PreTravelCreationState extends State<PreTravelCreation> {
               errorText: _errorText,
             ),
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () => _createNewTravel(),
-            child: Text("New Travel"),
+            child: const Text("New Travel"),
           ),
           // The Continue button is conditionally displayed
           if (_completedExists)
             ElevatedButton(
               onPressed: () => _continueTravel(),
-              child: Text("Continue ${widget.travel!.name}"),
+              child: Text("Continue ${widget.travel.name}"),
             ),
         ],
       ),
@@ -95,7 +95,6 @@ class _PreTravelCreationState extends State<PreTravelCreation> {
         );
       }).catchError((error) {
         // Handle any errors here
-        print("Error creating travel: $error");
       });
     }
   }

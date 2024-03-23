@@ -341,20 +341,20 @@ class DatabaseService {
   }
   //Get lastCompletedQuestionOfTravel database contaions: lastUpdatedQuestionId on travels
 
-  Future CreateTravel(String UserID, String travelName) async {
+  Future CreateTravel(String userID, String travelName) async {
     var documentReference = await travelsCollection.add({
       'lastUpdatedQuestionId': '',
-      'creatorId': UserID,
+      'creatorId': userID,
       'name': travelName,
       'description': '',
       'isPublic': false,
       'isCompleted': false,
       'lastUpdate': DateTime.now(),
-      'members': [UserID],
+      'members': [userID],
       '00_DepartureLocation': '',
-      '01_DepartureDate': DateTime(1010, 10, 10),
-      '02_ReturnDate': DateTime(1010, 10, 10),
-      '03_DesiredDestination': '',
+      '02_DepartureDate': DateTime(1010, 10, 10),
+      '03_ReturnDate': DateTime(1010, 10, 10),
+      '01_DesiredDestination': '',
       '04_TravelTransportation': '',
       '06_PurposeOfVisit': '',
       '05_EstimatedBudget': '',
@@ -364,6 +364,8 @@ class DatabaseService {
       '10_TravelingWithOthers': '',
       '11_SpecialComment': '',
       '12_LocalRecommendations': '',
+      'departureLocationGeoPoint': const LatLng(0, 0),
+      'desiredDestinationGeoPoint': const LatLng(0, 0),
     });
     //create messages collection
     await travelsCollection
@@ -371,7 +373,7 @@ class DatabaseService {
         .collection('messages')
         .add({
       'message': 'Travel created',
-      'sender': UserID,
+      'sender': userID,
       'time': DateTime.now()
     });
 
@@ -382,6 +384,15 @@ class DatabaseService {
       String TravelID, String QuestionId, dynamic answer) async {
     if (answer == null) {
       return;
+    }
+    if (QuestionId == '00_DepartureLocation' ||
+        QuestionId == '01_DesiredDestination') {
+      return await travelsCollection.doc(TravelID).set({
+        QuestionId: answer,
+        'lastUpdatedQuestionId': QuestionId,
+        'lastUpdate': DateTime.now(),
+        'departureLocationGeoPoint': answer,
+      }, SetOptions(merge: true));
     }
     Map<String, dynamic> updateData = {};
 
