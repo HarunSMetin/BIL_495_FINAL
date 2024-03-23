@@ -128,3 +128,25 @@ async def get_hotels(
     return await HotelAPI.findHotel(
         place, checkin, checkout, stars, hotel_types, hotel_options, adults, children
     )
+
+@app.post("/create_car_route")
+async def create_car_route(
+    origin_lat: float, origin_lng: float, destination_lat: float, destination_lng: float
+):
+    origin = {
+        "location": {
+            "latLng": {
+                "latitude": origin_lat,
+                "longitude": origin_lng
+            }
+        }
+    }
+    destination = {
+        "location": {
+            "latLng": {
+                "latitude": destination_lat,
+                "longitude": destination_lng
+            }
+        }
+    }
+    return await googleApi.fetch_car_route(query, origin, destination)
