@@ -78,7 +78,7 @@ class Hotel_Api:
             for i in ["relevance", "lowest_price", "highest_rating", "most_viewed"]:
                 if search_index != 0 :
                     self.setSearchIndex(search_index, driver)
-                sleep(0.5)
+                sleep(2)
                 hotels = WebDriverWait(driver, 15).until(
                     EC.presence_of_all_elements_located(
                         (
@@ -101,7 +101,13 @@ class Hotel_Api:
                         print("Starting Price:", starting_price)
 
                         amenities = [item.text.strip() for item in soup.select(".RJM8Kc .XX3dkb .QYEgn")]
-                        print("Amenities:", amenities)
+                        icons=[]
+                        try:
+                            icons =  [item.find("svg").find("path").get("d")  for item in soup.select(".RJM8Kc .XX3dkb .pCsNve")]
+                        except Exception as e:
+                            print(e)
+                            icons = []
+                        print("Amenities:", [amenities , icons])
                         
                         try:
                             hotel_rate = float(soup.find("span", class_="KFi5wf lA0BZ").text.strip() )
@@ -123,7 +129,7 @@ class Hotel_Api:
                         result[i][hotelIndex] = {
                             "hotel_name": hotel_name,
                             "starting_price": starting_price,
-                            "amenities": amenities,
+                            "amenities": [amenities , icons],
                             "hotel_rate": hotel_rate,
                             "hotel_review_count": hotel_review_count,
                             "href_attribute": href_attribute
@@ -543,4 +549,14 @@ class Hotel_Api:
             return re.sub(r'[^\d]', '', input_string)
         except ValueError:
             return 0  
- 
+    
+    def main():
+        h = Hotel_Api()
+        result = h.findHotel("Istanbul" , "2024-05-18", "2024-06-01", stars=[4,5], hotelType=['spa', 'hostel'], hotelOptions=['free_wifi', 'free_breakfast'], adults=2, childeren= 0)
+        with open('data.json', 'w',encoding="utf8") as f:
+            json.dump(result, f)
+    
+
+if __name__ == "__main__":
+    Hotel_Api.main()
+    

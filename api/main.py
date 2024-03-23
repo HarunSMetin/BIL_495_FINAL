@@ -128,3 +128,49 @@ async def get_hotels(
     return await HotelAPI.findHotel(
         place, checkin, checkout, stars, hotel_types, hotel_options, adults, children
     )
+'''
+{
+    place: "istanbul",   
+    checkin: "yyyy-mm-dd",
+    checkout: "yyyy-mm-dd",
+    "HotelStars": [
+            3,
+            4,
+            5
+    ],
+    "HotelType": [
+        "spa",
+        "hostel",
+        "boutique",
+        "bed_and_breakfast",
+        "beach",
+        "motel",
+        "apartment",
+        "inn",
+        "resort",
+        "other"
+    ],
+    "HotelOptions": [
+        "free_wifi",
+        "free_breakfast",
+        "restaurant",
+        "bar",
+        "kid_friendly",
+        "pet_friendly",
+        "free_parking",
+        "parking",
+        "ev_charger",
+        "room_service",
+        "fitness_center",
+        "spa",
+        "pool",
+        "indoor_pool",
+        "outdoor_pool",
+        "air_conditioned",
+        "wheelchair_accessible",
+        "beach_access",
+        "all_inclusive_available"
+    ]
+}
+
+'''

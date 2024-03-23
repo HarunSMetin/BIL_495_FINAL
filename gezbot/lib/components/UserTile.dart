@@ -54,7 +54,7 @@ class _UserTileState extends State<UserTile> {
                     child: Text('Decline'),
                     onPressed: onDecline,
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.red,
+                      backgroundColor: Colors.red,
                     ),
                   ),
                 ],
