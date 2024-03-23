@@ -21,23 +21,22 @@ class SearchBloc extends Cubit<SearchState> {
     emit(SearchState.loading);
 
     try {
-      users = await databaseService.SearchByUserNameAndEmail(query);
+      users = await databaseService.searchByUserNameAndEmail(query);
       emit(SearchState.loaded);
     } catch (e) {
       emit(SearchState.error);
     }
   }
 
-  void searchTravel(String query, String SenderID) async {
+  void searchTravel(String query, String senderID) async {
     // Add logic to fetch and process user data
     emit(SearchState.loading);
 
     try {
       travelsByTravelNameSearch =
-          await databaseService.SearchTravelsByTravelName(query, SenderID);
-      travelsByUserNameSearch =
-          await databaseService.SearchTravelsByUserNameAndEmail(
-              query, SenderID);
+          await databaseService.searchTravelsByTravelName(query, senderID);
+      travelsByUserNameSearch = await databaseService
+          .searchTravelsByUserNameAndEmail(query, senderID);
       emit(SearchState.loaded);
     } catch (e) {
       emit(SearchState.error);
@@ -50,7 +49,7 @@ class SearchBloc extends Cubit<SearchState> {
 
     try {
       travelsByDestinationSearch =
-          await databaseService.SearchTravelsByDestination(query);
+          await databaseService.searchTravelsByDestination(query);
       emit(SearchState.loaded);
     } catch (e) {
       emit(SearchState.error);

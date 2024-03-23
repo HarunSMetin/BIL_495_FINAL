@@ -177,6 +177,7 @@ class Travel {
     }
   }
 
+  @override
   String toString() {
     return 'Travel: {id: $id, name: $name, description: $description, creatorId: $creatorId, isPublic: $isPublic, isCompleted: $isCompleted, lastUpdate: $lastUpdate, members: $members, departureLocation: $departureLocation, departureDate: $departureDate, returnDate: $returnDate, desiredDestination: $desiredDestination, travelTransportation: $travelTransportation, purposeOfVisit: $purposeOfVisit, estimatedBudget: $estimatedBudget, accommodationPreferences: $accommodationPreferences, activitiesPreferences: $activitiesPreferences, dietaryRestrictions: $dietaryRestrictions, travelingWithOthers: $travelingWithOthers, specialComment: $specialComment, localRecommendations: $localRecommendations, lastUpdatedQuestionId: $lastUpdatedQuestionId} departureLocationGeoPoint: $departureLocationGeoPoint, desiredDestinationGeoPoint: $desiredDestinationGeoPoint}';
   }

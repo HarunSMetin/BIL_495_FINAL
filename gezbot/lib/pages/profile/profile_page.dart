@@ -30,12 +30,6 @@ class _ProfilePageState extends State<ProfilePage> {
     userDetailsFuture = _userService.fetchUserDetails(widget.userId);
   }
 
-  Future<UserModel> _fetchUserDetails() async {
-    final prefs = await SharedPreferences.getInstance();
-    String sessionUserId = prefs.getString('uid') ?? '';
-    return _userService.fetchUserDetails(sessionUserId);
-  }
-
   void _initializeViewerID() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -45,18 +39,19 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void _logout() async {
     final prefs = await SharedPreferences.getInstance();
-    final GoogleSignIn _googleSignIn = GoogleSignIn(
+    final GoogleSignIn googleSignIn = GoogleSignIn(
         clientId:
             "1027985224810-jeioofe75dtanigd4r1vtgv4v4glemis.apps.googleusercontent.com");
     await FirebaseAuth.instance.signOut();
     await prefs.clear();
-    await _googleSignIn.signOut();
+    await googleSignIn.signOut();
+    // ignore: use_build_context_synchronously
     Navigator.of(context).pushReplacementNamed('/login');
   }
 
   void _navigateToNotifications() {
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => NotificationsWidget()),
+      MaterialPageRoute(builder: (context) => const NotificationsWidget()),
     );
   }
 
@@ -67,12 +62,12 @@ class _ProfilePageState extends State<ProfilePage> {
         actions: [
           if (widget.userId == _viewerID)
             IconButton(
-              icon: Icon(Icons.notifications),
+              icon: const Icon(Icons.notifications),
               onPressed: _navigateToNotifications,
             ),
           if (widget.userId == _viewerID)
             IconButton(
-              icon: Icon(Icons.logout),
+              icon: const Icon(Icons.logout),
               onPressed: _logout,
             ),
         ],

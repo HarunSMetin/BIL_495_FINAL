@@ -10,6 +10,7 @@ class FollowingsScreen extends StatefulWidget {
   const FollowingsScreen({Key? key, required this.userId}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _FollowingsScreenState createState() => _FollowingsScreenState();
 }
 
@@ -17,7 +18,7 @@ class _FollowingsScreenState extends State<FollowingsScreen> {
   final DatabaseService _databaseService = DatabaseService();
 
   Future<List<UserModel>> _fetchFollowings() async {
-    return _databaseService.GetFollowingsOfUser(widget.userId);
+    return _databaseService.getFollowingsOfUser(widget.userId);
   }
 
   @override

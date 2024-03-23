@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:gezbot/models/travel.model.dart';
-import 'package:gezbot/services/database_service.dart';
 import 'package:http/http.dart' as http;
+import 'dart:developer' as developer;
 
 class AICreatedTravel {
   final String travelId;
@@ -41,14 +41,12 @@ class GPTService {
           }),
         )
         .timeout(const Duration(seconds: 60));
-    ;
-    print(response.body);
     if (response.statusCode == 200) {
       var jsonResponse = jsonDecode(response.body);
-      // GPT-3.5 Turbo'nun cevabını işleme
+
       return _parseAIResponse(jsonResponse, travel.id);
     } else {
-      print(response.body);
+      developer.log('Failed to load recommendations');
       throw Exception('Failed to load recommendations');
     }
   }
@@ -58,12 +56,9 @@ class GPTService {
   }
 
   AICreatedTravel _parseAIResponse(String response, String travelId) {
-    print(response);
     return AICreatedTravel(
       travelId: travelId,
-
-      additionalNotes:
-          response, // veya daha detaylı bir parse işlemi yapılabilir
+      additionalNotes: response,
     );
   }
 }

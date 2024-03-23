@@ -9,7 +9,7 @@ class UserStats extends StatefulWidget {
   final UserModel user;
   final String userId;
 
-  UserStats({Key? key, required this.user, required this.userId})
+  const UserStats({Key? key, required this.user, required this.userId})
       : super(key: key);
 
   @override
@@ -22,7 +22,7 @@ class _UserStatsState extends State<UserStats> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Map<String, dynamic>>(
-      future: _databaseService.GetUserSummary(widget.user.id),
+      future: _databaseService.getUserSummary(widget.user.id),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const CircularProgressIndicator();
@@ -54,8 +54,6 @@ class _UserStatsState extends State<UserStats> {
     return GestureDetector(
       onTap: () {
         if (label == "Travels") {
-          print(widget.user.id);
-          print(widget.userId);
           Navigator.push(
             context,
             MaterialPageRoute(

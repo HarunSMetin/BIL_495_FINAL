@@ -7,7 +7,7 @@ class ProfileActionButtons extends StatefulWidget {
   final String userId;
   final String viewerId;
 
-  ProfileActionButtons({
+  const ProfileActionButtons({
     Key? key,
     required this.userId,
     required this.viewerId,
@@ -18,8 +18,8 @@ class ProfileActionButtons extends StatefulWidget {
 }
 
 class _ProfileActionButtonsState extends State<ProfileActionButtons> {
-  DatabaseService _databaseService = DatabaseService();
-  UserService _userService = UserService();
+  final DatabaseService _databaseService = DatabaseService();
+  final UserService _userService = UserService();
   String relationshipStatus = 'none';
 
   @override
@@ -31,7 +31,6 @@ class _ProfileActionButtonsState extends State<ProfileActionButtons> {
   void _fetchRelationshipStatus() async {
     String status = await _userService.checkRelationshipStatus(
         widget.viewerId, widget.userId);
-    print(status);
     setState(() {
       relationshipStatus = status;
     });
@@ -43,7 +42,7 @@ class _ProfileActionButtonsState extends State<ProfileActionButtons> {
           relationshipStatus == 'cancelled' ||
           relationshipStatus == 'rejected') {
         // Send friend request
-        String documentId = await _databaseService.SendFriendRequest(
+        String documentId = await _databaseService.sendFriendRequest(
             widget.viewerId, widget.userId);
         if (documentId.isNotEmpty) {
           setState(() {
@@ -51,7 +50,7 @@ class _ProfileActionButtonsState extends State<ProfileActionButtons> {
           });
         }
       } else if (relationshipStatus == 'pending') {
-        await _databaseService.CancelFriendRequest(
+        await _databaseService.cancelFriendRequest(
             widget.viewerId, widget.userId);
         setState(() {
           relationshipStatus = 'none';

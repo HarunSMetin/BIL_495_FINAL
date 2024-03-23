@@ -7,12 +7,13 @@ class PlaceSelectorWidget extends StatefulWidget {
   const PlaceSelectorWidget({super.key, required this.onAnswerChanged});
 
   @override
+  // ignore: library_private_types_in_public_api
   _PlaceSelectorWidgetState createState() => _PlaceSelectorWidgetState();
 }
 
 class _PlaceSelectorWidgetState extends State<PlaceSelectorWidget> {
   late GoogleMapController mapController;
-  final LatLng _initialLocation = LatLng(
+  final LatLng _initialLocation = const LatLng(
       37.42796133580664, -122.085749655962); // Default or fetched user location
   Set<Marker> _markers = {};
 
@@ -22,7 +23,7 @@ class _PlaceSelectorWidgetState extends State<PlaceSelectorWidget> {
     // Initialize markers
     _markers.add(
       Marker(
-        markerId: MarkerId("initial-location"),
+        markerId: const MarkerId("initial-location"),
         position: _initialLocation,
       ),
     );

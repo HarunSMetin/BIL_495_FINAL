@@ -12,7 +12,7 @@ class UserTile extends StatefulWidget {
   final VoidCallback onAccept;
   final bool isFollowersPage;
 
-  UserTile({
+  const UserTile({
     Key? key,
     required this.user,
     required this.currentUserId,
@@ -46,16 +46,16 @@ class _UserTileState extends State<UserTile> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   ElevatedButton(
-                    child: Text('Accept'),
                     onPressed: widget.onAccept,
+                    child: const Text('Accept'),
                   ),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   ElevatedButton(
-                    child: Text('Decline'),
                     onPressed: onDecline,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.red,
                     ),
+                    child: const Text('Decline'),
                   ),
                 ],
               )
@@ -64,10 +64,10 @@ class _UserTileState extends State<UserTile> {
                     icon: const Icon(Icons.remove_circle_outline),
                     onPressed: () async {
                       if (!widget.isFollowersPage) {
-                        await widget.databaseService.CancelFriendRequest(
+                        await widget.databaseService.cancelFriendRequest(
                             widget.currentUserId, widget.user.id);
                       } else {
-                        await widget.databaseService.CancelFriendRequest(
+                        await widget.databaseService.cancelFriendRequest(
                             widget.user.id, widget.currentUserId);
                       }
                     },
@@ -79,7 +79,8 @@ class _UserTileState extends State<UserTile> {
 
   void onDecline() async {
     await widget.databaseService
-        .DeclineFriendRequest(widget.user.id, widget.currentUserId);
+        .declineFriendRequest(widget.user.id, widget.currentUserId);
+    // ignore: use_build_context_synchronously
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text('Declined ${widget.user.userName}'),

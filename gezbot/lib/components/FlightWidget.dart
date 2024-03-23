@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:gezbot/services/scrapper_service.dart'; // Ensure this import points to your ScrapperService file
 
 class FlightWidget extends StatefulWidget {
+  const FlightWidget({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _FlightWidgetState createState() => _FlightWidgetState();
 }
 
@@ -21,13 +24,13 @@ class _FlightWidgetState extends State<FlightWidget> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Available Flights'),
+        title: const Text('Available Flights'),
       ),
       body: FutureBuilder<List<dynamic>>(
         future: flights,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text("Error: ${snapshot.error}"));
           } else if (snapshot.hasData) {
@@ -43,7 +46,7 @@ class _FlightWidgetState extends State<FlightWidget> {
               },
             );
           } else {
-            return Center(child: Text("No flights found"));
+            return const Center(child: Text("No flights found"));
           }
         },
       ),

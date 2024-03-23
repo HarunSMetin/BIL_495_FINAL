@@ -10,7 +10,7 @@ class TravelQuestionService {
   final databaseService = DatabaseService();
 
   Future<List<TravelQuestion>> fetchQuestions(String userID, String travelID) {
-    return databaseService.GetTravelQuestions(userID, travelID);
+    return databaseService.getTravelQuestions(userID, travelID);
   }
 }
 
@@ -44,7 +44,7 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
   }
 
   void _loadTravel() async {
-    travel = await _service.databaseService.GetTravelOfUser(widget.travelId);
+    travel = await _service.databaseService.getTravelOfUser(widget.travelId);
 
     setState(() {
       int? parsedValue =
@@ -80,8 +80,6 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
       });
       return;
     } else {
-      print(
-          'Updating question ${currentQuestion.questionId}, answer: $firestoreAnswer, type: $_currentQuestionType');
       if (_currentAnswer != null) {
         if (_currentQuestionType == QuestionType.date) {
           firestoreAnswer = Timestamp.fromDate(_currentAnswer);
@@ -97,7 +95,7 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
       } else {
         firestoreAnswer = '';
       }
-      await _service.databaseService.UpdateTravel(
+      await _service.databaseService.updateTravel(
           widget.travelId, currentQuestion.questionId, firestoreAnswer);
     }
 
@@ -111,7 +109,7 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
             'QuestionType.${_questions[_currentQuestionIndex].questionType}');
       });
     } else {
-      _service.databaseService.CompleteTravel(widget.travelId).then((travel) {
+      _service.databaseService.completeTravel(widget.travelId).then((travel) {
         Navigator.push(
           context,
           MaterialPageRoute(

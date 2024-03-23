@@ -98,10 +98,6 @@ class ChangeScreenAnimation {
     isInitialized = true;
   }
 
-  static void printError(String text) {
-    print('\x1B[31m$text\x1B[0m');
-  }
-
   static void dispose() {
     for (final controller in [
       topTextController,

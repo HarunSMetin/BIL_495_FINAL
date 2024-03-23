@@ -9,7 +9,8 @@ class HotelWidget extends StatelessWidget {
   final int hotelReviewCount;
   final String hrefAttribute;
 
-  HotelWidget({
+  const HotelWidget({
+    super.key,
     required this.hotelName,
     required this.startingPrice,
     required this.amenities,
@@ -46,7 +47,7 @@ class HotelWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 4,
-      margin: EdgeInsets.all(8),
+      margin: const EdgeInsets.all(8),
       child: InkWell(
         onTap: () {
           // Handle onTap event
@@ -55,26 +56,26 @@ class HotelWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: EdgeInsets.all(8),
+              padding: const EdgeInsets.all(8),
               child: Text(
                 hotelName,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Text(
                 'Starting price: \$${startingPrice.toString()}',
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 16,
                 ),
               ),
             ),
             Padding(
-              padding: EdgeInsets.all(8),
+              padding: const EdgeInsets.all(8),
               child: Wrap(
                 spacing: 8,
                 runSpacing: 8,
@@ -94,30 +95,30 @@ class HotelWidget extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 8),
               child: Row(
                 children: [
-                  Icon(Icons.star, color: Colors.amber),
-                  SizedBox(width: 4),
+                  const Icon(Icons.star, color: Colors.amber),
+                  const SizedBox(width: 4),
                   Text(
                     hotelRate.toString(),
-                    style: TextStyle(fontSize: 16),
+                    style: const TextStyle(fontSize: 16),
                   ),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   Text(
                     '(${hotelReviewCount.toString()} reviews)',
-                    style: TextStyle(fontSize: 16),
+                    style: const TextStyle(fontSize: 16),
                   ),
                 ],
               ),
             ),
             Padding(
-              padding: EdgeInsets.all(8),
+              padding: const EdgeInsets.all(8),
               child: TextButton(
                 onPressed: () {
                   // Handle See More Details button tap
                 },
-                child: Text('See More Details'),
+                child: const Text('See More Details'),
               ),
             ),
           ],

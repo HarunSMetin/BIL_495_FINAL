@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ionicons/ionicons.dart';
 import 'package:gezbot/utils/helper_functions.dart';
+import 'dart:developer' as developer;
 
 import 'package:gezbot/shared/constants.dart';
 import '../animations/change_screen_animation.dart';
@@ -39,27 +40,28 @@ class _LoginContentState extends State<LoginContent>
   final TextEditingController _loginPasswordController =
       TextEditingController();
 
-  void login_or_register(
+  void loginOrRegister(
     BuildContext context,
-    void Function(String) _showErrorDialog,
+    void Function(String) showErrorDialog,
   ) async {
     if (ChangeScreenAnimation.currentScreen == Screens.createAccount) {
       try {
         await _userService.signUpWithGoogle(
           context: context,
-          showErrorDialog: _showErrorDialog,
+          showErrorDialog: showErrorDialog,
         );
       } catch (e) {
-        printError(e.toString());
+        //log error using a logging framework
+        developer.log(e.toString());
       }
     } else {
       try {
         await _userService.signInWithGoogle(
           context: context,
-          showErrorDialog: _showErrorDialog,
+          showErrorDialog: showErrorDialog,
         );
       } catch (e) {
-        printError(e.toString());
+        developer.log(e.toString());
       }
     }
   }
@@ -85,9 +87,9 @@ class _LoginContentState extends State<LoginContent>
   void _registerUser() async {
     // Use the _userService to register the user
     // Use _nameController.text, _emailController.text, _passwordController.text
-    UserService _userService = UserService();
+    UserService userService = UserService();
     try {
-      await _userService.registerUser(
+      await userService.registerUser(
         email: _registerEmailController.text,
         password: _registerPasswordController.text,
         username: _nameController.text,
@@ -95,23 +97,23 @@ class _LoginContentState extends State<LoginContent>
         context: context,
       );
     } catch (e) {
-      printError(e.toString());
+      developer.log(e.toString());
     }
   }
 
   void _signInUser() async {
     // Use the _userService to sign in the user
     // Use _emailController.text, _passwordController.text
-    UserService _userService = UserService();
+    UserService userService = UserService();
     try {
-      await _userService.signInWithEmailAndPassword(
+      await userService.signInWithEmailAndPassword(
         email: _loginEmailController.text,
         password: _loginPasswordController.text,
         showErrorDialog: _showErrorDialog,
         context: context,
       );
     } catch (e) {
-      printError(e.toString());
+      developer.log(e.toString());
     }
   }
 
@@ -214,7 +216,7 @@ class _LoginContentState extends State<LoginContent>
       child: Center(
         child: TextButton(
           onPressed: () {
-            void _showErrorDialog(String message) {
+            void showErrorDialog(String message) {
               showDialog(
                 context: context,
                 builder: (ctx) => AlertDialog(
@@ -232,7 +234,7 @@ class _LoginContentState extends State<LoginContent>
               );
             }
 
-            login_or_register(context, _showErrorDialog);
+            loginOrRegister(context, showErrorDialog);
           },
           child: Image.asset('assets/images/google.png'),
         ),
@@ -256,10 +258,6 @@ class _LoginContentState extends State<LoginContent>
         ),
       ),
     );
-  }
-
-  void printError(String text) {
-    print('\x1B[31m$text\x1B[0m');
   }
 
   @override

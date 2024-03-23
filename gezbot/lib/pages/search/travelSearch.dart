@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gezbot/models/travel.model.dart';
-import 'package:gezbot/models/user.model.dart';
 import 'package:gezbot/pages/search/helperSearchFunc.dart';
 import 'package:gezbot/pages/travel/travel_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class TravelView extends StatefulWidget {
+  const TravelView({super.key});
+
   @override
   State<TravelView> createState() => _TravelViewState();
 }
@@ -14,68 +15,68 @@ class TravelView extends StatefulWidget {
 class _TravelViewState extends State<TravelView> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Expanded(
-        child: Column(
-          children: [
-            buildSearchForm(context),
-            SearchView(),
-            Divider(height: 10.0, color: const Color.fromARGB(120, 97, 94, 94)),
-            Text(
-              'Travels by User Name',
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
+    return Expanded(
+      child: Column(
+        children: [
+          buildSearchForm(context),
+          SearchView(),
+          const Divider(height: 10.0, color: Color.fromARGB(120, 97, 94, 94)),
+          const Text(
+            'Travels by User Name',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
             ),
-            SearchViewForUsernameSearchedTravel(),
-          ],
-        ),
+          ),
+          searchViewForUsernameSearchedTravel(),
+        ],
       ),
     );
   }
 
+  // ignore: non_constant_identifier_names
   Widget SearchView() {
     return BlocBuilder<SearchBloc, SearchState>(
       builder: (context, state) {
         if (state == SearchState.loading) {
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(),
           );
         } else if (state == SearchState.loaded) {
           // Render the list of users
           return buildSearchResults();
         } else if (state == SearchState.error) {
-          return Center(
+          return const Center(
             child: Text('Error fetching Travels. Please try again.'),
           );
-        } else
-          return Expanded(
+        } else {
+          return const Expanded(
             child: Center(
               child: Text('Please enter a query to begin'),
             ),
           );
+        }
       },
     );
   }
 
-  Widget SearchViewForUsernameSearchedTravel() {
+  Widget searchViewForUsernameSearchedTravel() {
     return BlocBuilder<SearchBloc, SearchState>(
       builder: (context, state) {
         if (state == SearchState.loading) {
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(),
           );
         } else if (state == SearchState.loaded) {
           // Render the list of users
           return buildSearchByUserName();
         } else if (state == SearchState.error) {
-          return Center(
+          return const Center(
             child: Text(
                 'Error fetching Travels Based UserName. Please try again.'),
           );
         } else {
-          return Expanded(
+          return const Expanded(
             child: Center(
               child: Text('User Name based travel search results.'),
             ),
@@ -97,9 +98,9 @@ class _TravelViewState extends State<TravelView> {
         padding: const EdgeInsets.all(16.0),
         child: FutureBuilder<String>(
           future: _fetchUID(),
-          builder: (context, UID) =>
+          builder: (context, uID) =>
               //if snapshot has data, then build the form
-              UID.hasData
+              uID.hasData
                   ? Column(
                       children: [
                         TextField(
@@ -109,26 +110,26 @@ class _TravelViewState extends State<TravelView> {
                             final query = searchController.text;
                             context
                                 .read<SearchBloc>()
-                                .searchTravel(query, UID.data!);
+                                .searchTravel(query, uID.data!);
                           },
                           decoration: InputDecoration(
                             hintText:
                                 'Search for travels (User Name, Travel Name) ',
                             suffixIcon: IconButton(
-                              icon: Icon(Icons.search),
+                              icon: const Icon(Icons.search),
                               onPressed: () {
                                 // Trigger the search using the entered query
                                 final query = searchController.text;
                                 context
                                     .read<SearchBloc>()
-                                    .searchTravel(query, UID.data!);
+                                    .searchTravel(query, uID.data!);
                               },
                             ),
                           ),
                         ),
                       ],
                     )
-                  : Center(child: CircularProgressIndicator()),
+                  : const Center(child: CircularProgressIndicator()),
         ));
   }
 

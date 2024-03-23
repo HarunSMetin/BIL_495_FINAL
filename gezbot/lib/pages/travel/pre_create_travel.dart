@@ -79,8 +79,8 @@ class _PreTravelCreationState extends State<PreTravelCreation> {
       setState(() {
         _errorText = null;
       });
-      _databaseService.CreateTravel(
-              prefs.getString('uid')!, _travelNameController.text)
+      _databaseService
+          .createTravel(prefs.getString('uid')!, _travelNameController.text)
           .then((value) {
         Navigator.of(context).pop();
         Navigator.push(

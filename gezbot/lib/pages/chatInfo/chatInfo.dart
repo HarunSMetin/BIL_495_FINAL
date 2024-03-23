@@ -5,19 +5,20 @@ import 'package:gezbot/services/database_service.dart';
 import 'package:gezbot/shared/constants.dart';
 import 'package:gezbot/components/UserInfoCard.dart';
 
+// ignore: must_be_immutable
 class ChatInfo extends StatelessWidget {
   final Travel travelInfo;
-  DatabaseService _databaseService = DatabaseService();
+  final DatabaseService _databaseService = DatabaseService();
   ChatInfo({Key? key, required this.travelInfo}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Chat Info',
           style: TextStyle(
-            color: MessageBoxMessageColor,
+            color: messageBoxMessageColor,
           ),
         ),
         backgroundColor: kPrimaryColor,
@@ -35,14 +36,14 @@ class ChatInfo extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
+              const Text(
                 'Travel Members',
                 style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                     color: darkColor),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               for (var member in travelInfo.members) buildInfoRow(member),
             ],
           ),
@@ -53,7 +54,7 @@ class ChatInfo extends StatelessWidget {
 
   Widget buildInfoRow(String userId) {
     return FutureBuilder<UserModel>(
-      future: _databaseService.GetUser(userId),
+      future: _databaseService.getUser(userId),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           UserModel user = snapshot.data as UserModel;
@@ -63,7 +64,7 @@ class ChatInfo extends StatelessWidget {
             height: 100,
             width: double.infinity,
             alignment: Alignment.center,
-            child: CircularProgressIndicator(),
+            child: const CircularProgressIndicator(),
           );
         }
       },

@@ -121,7 +121,7 @@ class _UserInfoCardState extends State<UserInfoCard> {
                 Padding(
                   padding: const EdgeInsets.only(left: 8.0, right: 8.0),
                   child: FutureBuilder<Map<String, dynamic>>(
-                    future: _databaseService.GetUserSummary(widget.user.id),
+                    future: _databaseService.getUserSummary(widget.user.id),
                     builder: (context, snapshot) {
                       if (snapshot.hasData) {
                         return Row(
