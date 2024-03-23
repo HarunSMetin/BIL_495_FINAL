@@ -128,3 +128,71 @@ async def get_hotels(
     return await HotelAPI.findHotel(
         place, checkin, checkout, stars, hotel_types, hotel_options, adults, children
     )
+'''
+{
+    place: "istanbul",   
+    checkin: "yyyy-mm-dd",
+    checkout: "yyyy-mm-dd",
+    "HotelStars": [
+            3,
+            4,
+            5
+    ],
+    "HotelType": [
+        "spa",
+        "hostel",
+        "boutique",
+        "bed_and_breakfast",
+        "beach",
+        "motel",
+        "apartment",
+        "inn",
+        "resort",
+        "other"
+    ],
+    "HotelOptions": [
+        "free_wifi",
+        "free_breakfast",
+        "restaurant",
+        "bar",
+        "kid_friendly",
+        "pet_friendly",
+        "free_parking",
+        "parking",
+        "ev_charger",
+        "room_service",
+        "fitness_center",
+        "spa",
+        "pool",
+        "indoor_pool",
+        "outdoor_pool",
+        "air_conditioned",
+        "wheelchair_accessible",
+        "beach_access",
+        "all_inclusive_available"
+    ]
+}
+
+'''
+
+@app.post("/create_car_route")
+async def create_car_route(
+    origin_lat: float, origin_lng: float, destination_lat: float, destination_lng: float
+):
+    origin = {
+        "location": {
+            "latLng": {
+                "latitude": origin_lat,
+                "longitude": origin_lng
+            }
+        }
+    }
+    destination = {
+        "location": {
+            "latLng": {
+                "latitude": destination_lat,
+                "longitude": destination_lng
+            }
+        }
+    }
+    return await googleApi.fetch_car_route(query, origin, destination)
