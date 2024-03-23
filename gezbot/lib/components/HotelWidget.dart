@@ -79,15 +79,12 @@ class HotelWidget extends StatelessWidget {
                 spacing: 8,
                 runSpacing: 8,
                 children: List.generate(amenities[0].length, (index) {
-                  print(amenities[1][index]);
                   return Chip(
                     label: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         SvgPicture.string(
-                          amenities[1][index].trim(),
-                          width: 16,
-                          height: 16,
+                          "<svg  width=\"30\" height=\"30\"   fill=\"none\"><path d=\"${amenities[1][index]}\" fill=\"black\" /></svg>",
                         ),
                         Text(amenities[0][index]),
                       ],
