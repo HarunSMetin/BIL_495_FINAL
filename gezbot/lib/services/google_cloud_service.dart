@@ -66,35 +66,41 @@ class GoogleCloudService {
 
     final result = await _getFunction(url, params, limit: true);
     if (result is String) {
-      // Error message, return an empty map or handle accordingly
-      return {'error': result};
+      return {"error": result};
     }
 
-    String city = '';
-    String country = '';
-    for (var address in result) {
-      for (var component in address['address_components']) {
-        if (component['types'].contains('locality') && city.isEmpty) {
-          city = component['long_name'];
-        } else if (component['types'].contains('country') && country.isEmpty) {
-          country = component['long_name'];
-        }
-      }
-
-      // Once both city and country are found, no need to continue
-      if (city.isNotEmpty && country.isNotEmpty) {
-        break;
+    // Default values for the address components
+    String city = "", country = "", street = "", postalCode = "", state = "";
+    for (var component in result[0]['address_components']) {
+      if (component['types'].contains('locality')) {
+        city = component['long_name'];
+      } else if (component['types'].contains('country')) {
+        country = component['long_name'];
+      } else if (component['types'].contains('route')) {
+        street = component['long_name'];
+      } else if (component['types'].contains('postal_code')) {
+        postalCode = component['long_name'];
+      } else if (component['types'].contains('administrative_area_level_1')) {
+        state = component['long_name'];
       }
     }
 
-    // Handle case where city or country might not be found
-    if (city.isEmpty || country.isEmpty) {
-      // Log error, return an empty map, or handle as needed
-      print('Could not find both city and country in the results.');
-      return {};
+    Map<String, String> addressDetails = {
+      "city": city,
+      "country": country,
+      "street": street,
+      "postalCode": postalCode,
+      "state": state
+    };
+
+    if (!detailed) {
+      // If not detailed, remove additional information except city and country.
+      addressDetails.remove("street");
+      addressDetails.remove("postalCode");
+      addressDetails.remove("state");
     }
 
-    return {'city': city, 'country': country};
+    return addressDetails;
   }
 
   Future<dynamic> fetchPlacesNearby(String location, List<String> types,

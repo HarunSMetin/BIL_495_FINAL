@@ -392,19 +392,25 @@ class DatabaseService {
       //split on ,
       String latitude = answer.split(',')[0];
       String longtude = answer.split(',')[1];
-      Map<String, String> _address = await _googleCloudService
-          .coordinatesToAddress(double.parse(latitude), double.parse(longtude));
+      Map<String, String> address = await _googleCloudService
+          .coordinatesToAddress(double.parse(latitude), double.parse(longtude),
+              detailed: true);
 
+      print(address);
+      String allAddress = "";
+      for (var item in address.values) {
+        allAddress += '$item,';
+      }
       if (QuestionId == '00_DepartureLocation') {
         return await travelsCollection.doc(TravelID).set({
-          QuestionId: _address["city"]! + ',' + _address["country"]!,
+          QuestionId: allAddress,
           'lastUpdatedQuestionId': QuestionId,
           'lastUpdate': DateTime.now(),
           'departureLocationGeoPoint': answer,
         }, SetOptions(merge: true));
       } else {
         return await travelsCollection.doc(TravelID).set({
-          QuestionId: _address["city"]! + ',' + _address["country"]!,
+          QuestionId: allAddress,
           'lastUpdatedQuestionId': QuestionId,
           'lastUpdate': DateTime.now(),
           'desiredDestinationGeoPoint': answer,

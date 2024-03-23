@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:gezbot/components/tempTravelQuestion.dart';
 import 'dart:math' as math;
 import 'package:gezbot/pages/profile/profile_page.dart';
 import 'package:gezbot/pages/search/search.dart';

@@ -215,7 +215,16 @@ class _TravelInformationState extends State<TravelInformation> {
       child: Row(
         children: <Widget>[
           Text("$label: ", style: const TextStyle(fontWeight: FontWeight.bold)),
-          Text(value),
+          Flexible(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                value,
+                softWrap: false,
+                overflow: TextOverflow.fade,
+              ),
+            ),
+          ),
         ],
       ),
     );
