@@ -387,33 +387,29 @@ class DatabaseService {
     if (answer == null || answer == '') {
       return;
     }
-    late String _address;
     if (QuestionId == '00_DepartureLocation' ||
         QuestionId == '01_DesiredDestination') {
       //split on ,
-      print(answer.split(','));
       String latitude = answer.split(',')[0];
       String longtude = answer.split(',')[1];
-      String _address = await _googleCloudService.coordinatesToAddress(
-          double.parse(latitude), double.parse(longtude));
+      Map<String, String> _address = await _googleCloudService
+          .coordinatesToAddress(double.parse(latitude), double.parse(longtude));
 
       if (QuestionId == '00_DepartureLocation') {
         return await travelsCollection.doc(TravelID).set({
-          QuestionId: _address,
+          QuestionId: _address["city"]! + ',' + _address["country"]!,
           'lastUpdatedQuestionId': QuestionId,
           'lastUpdate': DateTime.now(),
           'departureLocationGeoPoint': answer,
         }, SetOptions(merge: true));
       } else {
         return await travelsCollection.doc(TravelID).set({
-          QuestionId: _address,
+          QuestionId: _address["city"]! + ',' + _address["country"]!,
           'lastUpdatedQuestionId': QuestionId,
           'lastUpdate': DateTime.now(),
           'desiredDestinationGeoPoint': answer,
         }, SetOptions(merge: true));
       }
-    } else {
-      _address = '';
     }
     Map<String, dynamic> updateData = {};
 

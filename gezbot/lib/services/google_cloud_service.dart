@@ -55,7 +55,7 @@ class GoogleCloudService {
     return data;
   }
 
-  Future<dynamic> coordinatesToAddress(double lat, double lng,
+  Future<Map<String, String>> coordinatesToAddress(double lat, double lng,
       {String language = "en", bool detailed = false}) async {
     String url = "https://maps.googleapis.com/maps/api/geocode/json";
     Map<String, String> params = {
@@ -66,22 +66,35 @@ class GoogleCloudService {
 
     final result = await _getFunction(url, params, limit: true);
     if (result is String) {
-      // Error message
-      return result;
+      // Error message, return an empty map or handle accordingly
+      return {'error': result};
     }
 
-    if (detailed && result.isNotEmpty) {
-      print("formated " + result[0]["formatted_address"].trim());
-      return result[0]["formatted_address"].trim();
-    } else {
-      if (result[0]["plus_code"]["compound_code"] == null) {
-        return "Unknown Location";
+    String city = '';
+    String country = '';
+    for (var address in result) {
+      for (var component in address['address_components']) {
+        if (component['types'].contains('locality') && city.isEmpty) {
+          city = component['long_name'];
+        } else if (component['types'].contains('country') && country.isEmpty) {
+          country = component['long_name'];
+        }
       }
-      var address = result[0]["long_name"];
-      print("address " + result.toString());
-      int firstSpaceIndex = address.indexOf(" ");
-      return address.substring(firstSpaceIndex + 1).trim();
+
+      // Once both city and country are found, no need to continue
+      if (city.isNotEmpty && country.isNotEmpty) {
+        break;
+      }
     }
+
+    // Handle case where city or country might not be found
+    if (city.isEmpty || country.isEmpty) {
+      // Log error, return an empty map, or handle as needed
+      print('Could not find both city and country in the results.');
+      return {};
+    }
+
+    return {'city': city, 'country': country};
   }
 
   Future<dynamic> fetchPlacesNearby(String location, List<String> types,
