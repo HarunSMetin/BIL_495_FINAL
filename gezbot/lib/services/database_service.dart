@@ -4,6 +4,7 @@ import 'package:gezbot/models/message.model.dart';
 import 'package:gezbot/models/question.model.dart';
 import 'package:gezbot/models/travel.model.dart';
 import 'package:gezbot/models/user.model.dart';
+import 'package:gezbot/services/google_cloud_service.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class DatabaseService {
@@ -17,6 +18,7 @@ class DatabaseService {
       FirebaseFirestore.instance.collection('travelOptions');
   final CollectionReference friendRequestsCollection =
       FirebaseFirestore.instance.collection('friendRequests');
+  final GoogleCloudService _googleCloudService = GoogleCloudService();
 
   void printError(e) {
     print('\x1B[31m$e\x1B[0m');
@@ -352,9 +354,9 @@ class DatabaseService {
       'lastUpdate': DateTime.now(),
       'members': [userID],
       '00_DepartureLocation': '',
-      '02_DepartureDate': DateTime(1010, 10, 10),
-      '03_ReturnDate': DateTime(1010, 10, 10),
       '01_DesiredDestination': '',
+      '02_DepartureDate': DateTime.now(),
+      '03_ReturnDate': DateTime.now().add(Duration(days: 1)),
       '04_TravelTransportation': '',
       '06_PurposeOfVisit': '',
       '05_EstimatedBudget': '',
@@ -364,8 +366,8 @@ class DatabaseService {
       '10_TravelingWithOthers': '',
       '11_SpecialComment': '',
       '12_LocalRecommendations': '',
-      'departureLocationGeoPoint': const LatLng(0, 0),
-      'desiredDestinationGeoPoint': const LatLng(0, 0),
+      'departureLocationGeoPoint': '',
+      'desiredDestinationGeoPoint': '',
     });
     //create messages collection
     await travelsCollection
@@ -382,17 +384,36 @@ class DatabaseService {
 
   Future UpdateTravel(
       String TravelID, String QuestionId, dynamic answer) async {
-    if (answer == null) {
+    if (answer == null || answer == '') {
       return;
     }
+    late String _address;
     if (QuestionId == '00_DepartureLocation' ||
         QuestionId == '01_DesiredDestination') {
-      return await travelsCollection.doc(TravelID).set({
-        QuestionId: answer,
-        'lastUpdatedQuestionId': QuestionId,
-        'lastUpdate': DateTime.now(),
-        'departureLocationGeoPoint': answer,
-      }, SetOptions(merge: true));
+      //split on ,
+      print(answer.split(','));
+      String latitude = answer.split(',')[0];
+      String longtude = answer.split(',')[1];
+      String _address = await _googleCloudService.coordinatesToAddress(
+          double.parse(latitude), double.parse(longtude));
+
+      if (QuestionId == '00_DepartureLocation') {
+        return await travelsCollection.doc(TravelID).set({
+          QuestionId: _address,
+          'lastUpdatedQuestionId': QuestionId,
+          'lastUpdate': DateTime.now(),
+          'departureLocationGeoPoint': answer,
+        }, SetOptions(merge: true));
+      } else {
+        return await travelsCollection.doc(TravelID).set({
+          QuestionId: _address,
+          'lastUpdatedQuestionId': QuestionId,
+          'lastUpdate': DateTime.now(),
+          'desiredDestinationGeoPoint': answer,
+        }, SetOptions(merge: true));
+      }
+    } else {
+      _address = '';
     }
     Map<String, dynamic> updateData = {};
 

@@ -24,8 +24,8 @@ class Travel {
   final String specialComment;
   final String localRecommendations;
   final String lastUpdatedQuestionId;
-  final LatLng? departureLocationGeoPoint;
-  final LatLng? desiredDestinationGeoPoint;
+  final String departureLocationGeoPoint;
+  final String desiredDestinationGeoPoint;
 
   Travel({
     required this.id,
@@ -50,8 +50,8 @@ class Travel {
     required this.specialComment,
     required this.localRecommendations,
     required this.lastUpdatedQuestionId,
-    this.departureLocationGeoPoint,
-    this.desiredDestinationGeoPoint,
+    required this.departureLocationGeoPoint,
+    required this.desiredDestinationGeoPoint,
   });
 
   factory Travel.fromMap(Map<String, dynamic> map) {
@@ -136,8 +136,8 @@ class Travel {
       specialComment: 'empty',
       localRecommendations: 'empty',
       lastUpdatedQuestionId: 'empty',
-      departureLocationGeoPoint: null,
-      desiredDestinationGeoPoint: null,
+      departureLocationGeoPoint: "empty",
+      desiredDestinationGeoPoint: "empty",
     );
   }
   dynamic fieldFromQuestionId(String questionId) {

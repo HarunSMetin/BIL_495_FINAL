@@ -112,7 +112,7 @@ class _QuestionWidgetState extends State<QuestionWidget> {
       case QuestionType.location:
         if (widget.question.userAnswer != null) {
           return SizedBox(
-            height: queryData.size.height / 3,
+            height: queryData.size.height * 2 / 3,
             child: PlaceSelectorWidget(
               onAnswerChanged: widget.onAnswerChanged,
             ),

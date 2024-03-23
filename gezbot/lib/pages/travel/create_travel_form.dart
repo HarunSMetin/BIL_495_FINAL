@@ -70,6 +70,14 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
     TravelQuestion currentQuestion = _questions[_currentQuestionIndex];
     dynamic firestoreAnswer = _currentAnswer;
     if (!currentQuestion.isUserChanged) {
+      setState(() {
+        _currentQuestionIndex++;
+        _currentAnswer = _questions[_currentQuestionIndex].userAnswer;
+        _currentAnswer ??= '';
+        _currentQuestionType = QuestionType.values.firstWhere((type) =>
+            type.toString() ==
+            'QuestionType.${_questions[_currentQuestionIndex].questionType}');
+      });
       return;
     } else {
       print(
