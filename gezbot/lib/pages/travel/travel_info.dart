@@ -13,7 +13,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class TravelInformation extends StatefulWidget {
   final Travel travel;
 
-  TravelInformation({required this.travel});
+  const TravelInformation({super.key, required this.travel});
 
   @override
   State<TravelInformation> createState() => _TravelInformationState();
@@ -21,14 +21,13 @@ class TravelInformation extends StatefulWidget {
 
 class _TravelInformationState extends State<TravelInformation> {
   late Future<List<UserModel>> _membersFuture;
-  Future<String> _uidFuture = _fetchUID();
+  final Future<String> _uidFuture = _fetchUID();
 
   static Future<String> _fetchUID() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('uid') ?? '';
+    return (await SharedPreferences.getInstance()).getString('uid') ?? '';
   }
 
-  UserService _userService = UserService();
+  final UserService _userService = UserService();
 
   @override
   void initState() {
@@ -50,17 +49,16 @@ class _TravelInformationState extends State<TravelInformation> {
     MediaQueryData queryData;
     queryData = MediaQuery.of(context);
     LatLng initialPosition =
-        LatLng(37.77483, -122.41942); // Example: San Francisco
+        const LatLng(37.77483, -122.41942); // Example: San Francisco
     List<LatLng> pointsToMark = [
-      LatLng(37.80243, -122.4058), // Coit Tower
-      LatLng(37.76904, -122.4835), // Golden Gate Park
-      LatLng(37.80766, -122.4759), // Alcatraz Island
-      LatLng(37.73471236244232, -122.47743497106345), // Alcatraz Island
+      const LatLng(37.80243, -122.4058), // Coit Tower
+
+      const LatLng(37.73471236244232, -122.47743497106345), // Alcatraz Island
     ];
     return Scaffold(
       appBar: AppBar(title: Text(widget.travel.name)),
       body: Padding(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
@@ -70,15 +68,15 @@ class _TravelInformationState extends State<TravelInformation> {
                 ),
                 elevation: 5,
                 child: Padding(
-                  padding: EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      Text("Travel Ticket",
+                      const Text("Travel Ticket",
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.bold)),
-                      Divider(),
+                      const Divider(),
                       ticketDetail("Name", widget.travel.name),
                       ticketDetail("Departure Date",
                           widget.travel.departureDate.toString()),
@@ -86,9 +84,9 @@ class _TravelInformationState extends State<TravelInformation> {
                           "Return Date", widget.travel.returnDate.toString()),
                       ticketDetail("Desired Destination",
                           widget.travel.desiredDestination),
-                      SizedBox(height: 10),
+                      const SizedBox(height: 10),
                       ExpansionTile(
-                        title: Text("Members",
+                        title: const Text("Members",
                             style: TextStyle(
                                 fontSize: 18, fontWeight: FontWeight.bold)),
                         children: <Widget>[
@@ -97,14 +95,14 @@ class _TravelInformationState extends State<TravelInformation> {
                             builder: (context, snapshot) {
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
-                                return Center(
+                                return const Center(
                                     child: CircularProgressIndicator());
                               } else if (snapshot.hasError) {
                                 return Text('Error: ${snapshot.error}');
                               } else if (snapshot.hasData) {
                                 return ListView.builder(
                                   shrinkWrap: true,
-                                  physics: NeverScrollableScrollPhysics(),
+                                  physics: const NeverScrollableScrollPhysics(),
                                   itemCount: snapshot.data!.length,
                                   itemBuilder: (context, index) {
                                     UserModel member = snapshot.data![index];
@@ -113,7 +111,7 @@ class _TravelInformationState extends State<TravelInformation> {
                                       builder: (context, uidSnapshot) {
                                         if (uidSnapshot.connectionState ==
                                             ConnectionState.waiting) {
-                                          return CircularProgressIndicator();
+                                          return const CircularProgressIndicator();
                                         } else if (uidSnapshot.hasError) {
                                           return Text(
                                               'Error: ${uidSnapshot.error}');
@@ -140,20 +138,20 @@ class _TravelInformationState extends State<TravelInformation> {
                                             },
                                           );
                                         } else {
-                                          return Text('UID not found');
+                                          return const Text('UID not found');
                                         }
                                       },
                                     );
                                   },
                                 );
                               } else {
-                                return Text('No members found');
+                                return const Text('No members found');
                               }
                             },
                           ),
                         ],
                       ),
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       SizedBox(
                         height: queryData.size.height / 3,
                         child: MapWidget(
@@ -161,16 +159,16 @@ class _TravelInformationState extends State<TravelInformation> {
                           pointsToMark: pointsToMark,
                         ),
                       ),
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
                     ],
                   ),
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Center(
                 child: ElevatedButton(
                   onPressed: () => _openChatScreen(context, widget.travel.id),
-                  child: Text('Chat about this travel'),
+                  child: const Text('Chat about this travel'),
                 ),
               ),
             ],
@@ -182,10 +180,10 @@ class _TravelInformationState extends State<TravelInformation> {
 
   Widget ticketDetail(String label, String value) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
         children: <Widget>[
-          Text("$label: ", style: TextStyle(fontWeight: FontWeight.bold)),
+          Text("$label: ", style: const TextStyle(fontWeight: FontWeight.bold)),
           Text(value),
         ],
       ),

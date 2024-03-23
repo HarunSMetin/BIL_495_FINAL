@@ -7,10 +7,10 @@ import 'package:gezbot/models/question.model.dart';
 import 'package:gezbot/components/Question.dart';
 
 class TravelQuestionService {
-  final _database_service = DatabaseService();
+  final databaseService = DatabaseService();
 
-  Future<List<TravelQuestion>> fetchQuestions(String UserID, String TravelID) {
-    return _database_service.GetTravelQuestions(UserID, TravelID);
+  Future<List<TravelQuestion>> fetchQuestions(String userID, String travelID) {
+    return databaseService.GetTravelQuestions(userID, travelID);
   }
 }
 
@@ -24,6 +24,7 @@ class TravelQuestionnaireForm extends StatefulWidget {
       required this.travelName,
       required this.uid});
   @override
+  // ignore: library_private_types_in_public_api
   _TravelQuestionnaireFormState createState() =>
       _TravelQuestionnaireFormState();
 }
@@ -42,12 +43,8 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
     _loadQuestions();
   }
 
-  void printWarning(e) {
-    print('\x1B[33m$e\x1B[0m');
-  }
-
   void _loadTravel() async {
-    travel = await _service._database_service.GetTravelOfUser(widget.travelId);
+    travel = await _service.databaseService.GetTravelOfUser(widget.travelId);
 
     setState(() {
       int? parsedValue =
@@ -62,11 +59,7 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
 
   void _loadQuestions() async {
     var questions = await _service.fetchQuestions(widget.uid, widget.travelId);
-    printWarning(widget.travelName);
-    questions.forEach((element) {
-      printWarning(element.questionId);
-      printWarning(element.userAnswer);
-    });
+
     setState(() {
       _questions = questions;
     });
@@ -76,20 +69,27 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
   void _nextQuestion() async {
     TravelQuestion currentQuestion = _questions[_currentQuestionIndex];
     dynamic firestoreAnswer = _currentAnswer;
-    printWarning(_questions[_currentQuestionIndex].isUserChanged);
     if (!currentQuestion.isUserChanged) {
+      return;
     } else {
-      printWarning(_currentAnswer);
-      if (_currentQuestionType == QuestionType.date) {
-        firestoreAnswer = Timestamp.fromDate(_currentAnswer);
-      } else if (_currentQuestionType == QuestionType.yesNo) {
-        firestoreAnswer = _currentAnswer ? 'Yes' : 'No';
-      } else if (_currentQuestionType == QuestionType.numberInput) {
-        firestoreAnswer = _currentAnswer.toString();
-      } else if (_currentQuestionType == QuestionType.multipleChoice) {
-        firestoreAnswer = _currentAnswer.toString();
+      print(
+          'Updating question ${currentQuestion.questionId}, answer: $firestoreAnswer, type: $_currentQuestionType');
+      if (_currentAnswer != null) {
+        if (_currentQuestionType == QuestionType.date) {
+          firestoreAnswer = Timestamp.fromDate(_currentAnswer);
+        } else if (_currentQuestionType == QuestionType.yesNo) {
+          firestoreAnswer = _currentAnswer ? 'Yes' : 'No';
+        } else if (_currentQuestionType == QuestionType.numberInput) {
+          firestoreAnswer = _currentAnswer.toString();
+        } else if (_currentQuestionType == QuestionType.multipleChoice) {
+          firestoreAnswer = _currentAnswer.toString();
+        } else if (_currentQuestionType == QuestionType.location) {
+          firestoreAnswer = _currentAnswer.toString();
+        }
+      } else {
+        firestoreAnswer = '';
       }
-      await _service._database_service.UpdateTravel(
+      await _service.databaseService.UpdateTravel(
           widget.travelId, currentQuestion.questionId, firestoreAnswer);
     }
 
@@ -103,7 +103,7 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
             'QuestionType.${_questions[_currentQuestionIndex].questionType}');
       });
     } else {
-      _service._database_service.CompleteTravel(widget.travelId).then((travel) {
+      _service.databaseService.CompleteTravel(widget.travelId).then((travel) {
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -131,6 +131,9 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
       case QuestionType.yesNo:
         formattedAnswer = (answer == 'Yes');
         break;
+      case QuestionType.location:
+        formattedAnswer = answer;
+        break;
       default:
         formattedAnswer = answer;
     }
@@ -142,10 +145,7 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
 
   void _previousQuestion() async {
     var questions = await _service.fetchQuestions(widget.uid, widget.travelId);
-    questions.forEach((element) {
-      printWarning(element.questionId);
-      printWarning(element.userAnswer);
-    });
+
     setState(() {
       _questions = questions;
     });
@@ -163,7 +163,7 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
   Widget build(BuildContext context) {
     bool isLastQuestion = _currentQuestionIndex == _questions.length - 1;
     return Scaffold(
-      appBar: AppBar(title: Text('${widget.travelName}')),
+      appBar: AppBar(title: Text(widget.travelName)),
       body: _questions.isNotEmpty
           ? Column(
               children: <Widget>[
@@ -178,7 +178,7 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
                   value: (_currentQuestionIndex + 1) / _questions.length,
                 ),
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10),
+                  padding: const EdgeInsets.symmetric(vertical: 10),
                   child: Text(
                       '${_currentQuestionIndex + 1} of ${_questions.length} questions'),
                 ),
@@ -188,7 +188,7 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
                     if (_currentQuestionIndex > 0)
                       ElevatedButton(
                         onPressed: _previousQuestion,
-                        child: Text('Back'),
+                        child: const Text('Back'),
                       ),
                     ElevatedButton(
                       onPressed: _nextQuestion,
@@ -198,7 +198,7 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
                 ),
               ],
             )
-          : CircularProgressIndicator(),
+          : const CircularProgressIndicator(),
     );
   }
 }

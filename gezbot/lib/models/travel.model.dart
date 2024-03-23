@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class Travel {
   final String id;
@@ -23,6 +24,8 @@ class Travel {
   final String specialComment;
   final String localRecommendations;
   final String lastUpdatedQuestionId;
+  final LatLng? departureLocationGeoPoint;
+  final LatLng? desiredDestinationGeoPoint;
 
   Travel({
     required this.id,
@@ -47,11 +50,9 @@ class Travel {
     required this.specialComment,
     required this.localRecommendations,
     required this.lastUpdatedQuestionId,
+    this.departureLocationGeoPoint,
+    this.desiredDestinationGeoPoint,
   });
-
-  static void printErrorRed(e) {
-    print('\x1B[31m$e\x1B[0m');
-  }
 
   factory Travel.fromMap(Map<String, dynamic> map) {
     return Travel(
@@ -64,9 +65,9 @@ class Travel {
       lastUpdate: (map['lastUpdate'] as Timestamp).toDate(),
       members: List<String>.from(map['members']),
       departureLocation: map['00_DepartureLocation'],
-      departureDate: (map['01_DepartureDate'] as Timestamp).toDate(),
-      returnDate: (map['02_ReturnDate'] as Timestamp).toDate(),
-      desiredDestination: map['03_DesiredDestination'],
+      departureDate: (map['02_DepartureDate'] as Timestamp).toDate(),
+      returnDate: (map['03_ReturnDate'] as Timestamp).toDate(),
+      desiredDestination: map['01_DesiredDestination'],
       travelTransportation: map['04_TravelTransportation'],
       purposeOfVisit: map['06_PurposeOfVisit'],
       estimatedBudget: map['05_EstimatedBudget'],
@@ -77,6 +78,8 @@ class Travel {
       specialComment: map['11_SpecialComment'],
       localRecommendations: map['12_LocalRecommendations'],
       lastUpdatedQuestionId: map['lastUpdatedQuestionId'],
+      departureLocationGeoPoint: map['departureLocationGeoPoint'],
+      desiredDestinationGeoPoint: map['desiredDestinationGeoPoint'],
     );
   }
 
@@ -104,6 +107,8 @@ class Travel {
       'specialComment': specialComment,
       'localRecommendations': localRecommendations,
       'lastUpdatedQuestionId': lastUpdatedQuestionId,
+      'departureLocationGeoPoint': departureLocationGeoPoint,
+      'desiredDestinationGeoPoint': desiredDestinationGeoPoint,
     };
   }
 
@@ -131,42 +136,48 @@ class Travel {
       specialComment: 'empty',
       localRecommendations: 'empty',
       lastUpdatedQuestionId: 'empty',
+      departureLocationGeoPoint: null,
+      desiredDestinationGeoPoint: null,
     );
   }
   dynamic fieldFromQuestionId(String questionId) {
     switch (questionId) {
       case '00_DepartureLocation':
-        return this.departureLocation;
-      case '01_DepartureDate':
-        return this.departureDate;
-      case '02_ReturnDate':
-        return this.returnDate;
-      case '03_DesiredDestination':
-        return this.desiredDestination;
+        return departureLocation;
+      case '02_DepartureDate':
+        return departureDate;
+      case '03_ReturnDate':
+        return returnDate;
+      case '01_DesiredDestination':
+        return desiredDestination;
       case '04_TravelTransportation':
-        return this.travelTransportation;
+        return travelTransportation;
       case '05_EstimatedBudget':
-        return this.estimatedBudget;
+        return estimatedBudget;
       case '06_PurposeOfVisit':
-        return this.purposeOfVisit;
+        return purposeOfVisit;
       case '07_AccommodationPreferences':
-        return this.accommodationPreferences;
+        return accommodationPreferences;
       case '08_ActivitiesPreferences':
-        return this.activitiesPreferences;
+        return activitiesPreferences;
       case '09_DietaryRestrictions':
-        return this.dietaryRestrictions;
+        return dietaryRestrictions;
       case '10_TravelingWithOthers':
-        return this.travelingWithOthers;
+        return travelingWithOthers;
       case '11_SpecialComment':
-        return this.specialComment;
+        return specialComment;
       case '12_LocalRecommendations':
-        return this.localRecommendations;
+        return localRecommendations;
+      case 'departureLocationGeoPoint':
+        return departureLocationGeoPoint;
+      case 'desiredDestinationGeoPoint':
+        return desiredDestinationGeoPoint;
       default:
         return null;
     }
   }
 
   String toString() {
-    return 'Travel: {id: $id, name: $name, description: $description, creatorId: $creatorId, isPublic: $isPublic, isCompleted: $isCompleted, lastUpdate: $lastUpdate, members: $members, departureLocation: $departureLocation, departureDate: $departureDate, returnDate: $returnDate, desiredDestination: $desiredDestination, travelTransportation: $travelTransportation, purposeOfVisit: $purposeOfVisit, estimatedBudget: $estimatedBudget, accommodationPreferences: $accommodationPreferences, activitiesPreferences: $activitiesPreferences, dietaryRestrictions: $dietaryRestrictions, travelingWithOthers: $travelingWithOthers, specialComment: $specialComment, localRecommendations: $localRecommendations, lastUpdatedQuestionId: $lastUpdatedQuestionId}';
+    return 'Travel: {id: $id, name: $name, description: $description, creatorId: $creatorId, isPublic: $isPublic, isCompleted: $isCompleted, lastUpdate: $lastUpdate, members: $members, departureLocation: $departureLocation, departureDate: $departureDate, returnDate: $returnDate, desiredDestination: $desiredDestination, travelTransportation: $travelTransportation, purposeOfVisit: $purposeOfVisit, estimatedBudget: $estimatedBudget, accommodationPreferences: $accommodationPreferences, activitiesPreferences: $activitiesPreferences, dietaryRestrictions: $dietaryRestrictions, travelingWithOthers: $travelingWithOthers, specialComment: $specialComment, localRecommendations: $localRecommendations, lastUpdatedQuestionId: $lastUpdatedQuestionId} departureLocationGeoPoint: $departureLocationGeoPoint, desiredDestinationGeoPoint: $desiredDestinationGeoPoint}';
   }
 }

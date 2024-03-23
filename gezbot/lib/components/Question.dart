@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gezbot/components/PlaceSelectorWidget.dart';
 import 'package:gezbot/models/question.model.dart';
 
 enum QuestionType {
@@ -29,9 +30,6 @@ class _QuestionWidgetState extends State<QuestionWidget> {
   bool yesSelected = false;
   bool noSelected = false;
   final TextEditingController _textController = TextEditingController();
-  void printError(String error) {
-    print('\x1B[31m$error\x1B[0m');
-  }
 
   @override
   void dispose() {
@@ -74,6 +72,8 @@ class _QuestionWidgetState extends State<QuestionWidget> {
 
   // Builds the answer field based on the question type.
   Widget _buildAnswerField(QuestionType type) {
+    MediaQueryData queryData;
+    queryData = MediaQuery.of(context);
     switch (type) {
       case QuestionType.openEnded:
         if (widget.question.userAnswer != null) {
@@ -108,6 +108,19 @@ class _QuestionWidgetState extends State<QuestionWidget> {
           return _buildYesNoToggle();
         } else {
           return _buildYesNoToggle();
+        }
+      case QuestionType.location:
+        if (widget.question.userAnswer != null) {
+          return SizedBox(
+            height: queryData.size.height / 3,
+            child: PlaceSelectorWidget(
+              onAnswerChanged: widget.onAnswerChanged,
+            ),
+          );
+        } else {
+          return PlaceSelectorWidget(
+            onAnswerChanged: widget.onAnswerChanged,
+          );
         }
       default:
         return Container();
@@ -150,9 +163,9 @@ class _QuestionWidgetState extends State<QuestionWidget> {
 
   Widget _buildYesNoToggle() {
     return ToggleButtons(
-      children: const <Widget>[Text('Yes'), Text('No')],
       isSelected: [yesSelected, noSelected],
       onPressed: (int index) => _onYesNoChanged(index),
+      children: const <Widget>[Text('Yes'), Text('No')],
     );
   }
 
