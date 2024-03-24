@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 class HotelWidget extends StatelessWidget {
   final String hotelName;
@@ -92,7 +93,7 @@ class HotelWidget extends StatelessWidget {
               padding: const EdgeInsets.all(8),
               child: TextButton(
                 onPressed: () {
-                  // Handle See More Details button tap
+                  launchUrlString(hrefAttribute);
                 },
                 child: const Text('See More Details'),
               ),
