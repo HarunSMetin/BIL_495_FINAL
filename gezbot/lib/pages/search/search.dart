@@ -26,8 +26,8 @@ class SearchPage extends StatelessWidget {
               ],
             ),
           ),
-          body: TabBarView(
-            children: [SearchView(), TravelView(), const DestinationView()],
+          body: const TabBarView(
+            children: [SearchView(), TravelView(), DestinationView()],
           ),
         ),
       ),

@@ -81,7 +81,7 @@ class _ProfileActionButtonsState extends State<ProfileActionButtons> {
                 if (widget.userId == widget.viewerId) {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => EditProfilePage()),
+                    MaterialPageRoute(builder: (context) => const EditProfilePage()),
                   );
                 } else {
                   // Implement message functionality

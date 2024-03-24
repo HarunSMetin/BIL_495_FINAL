@@ -208,8 +208,9 @@ class GoogleCloudService {
     if (departureTime != null) params["departure_time"] = departureTime;
     if (arrivalTime != null) params["arrival_time"] = arrivalTime;
     if (transitMode != null) params["transit_mode"] = transitMode;
-    if (transitRoutingPreference != null)
+    if (transitRoutingPreference != null) {
       params["transit_routing_preference"] = transitRoutingPreference;
+    }
     if (trafficModel != null) params["traffic_model"] = trafficModel;
 
     return await _getFunction(url, params);
