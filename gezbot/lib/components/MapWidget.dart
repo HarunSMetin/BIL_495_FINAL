@@ -10,19 +10,21 @@ class MapWidget extends StatefulWidget {
   final LatLng initialPosition;
   final List<LatLng> pointsToMark;
 
-  MapWidget({
+  const MapWidget({
+    super.key,
     this.initialPosition = const LatLng(45.521563, -122.677433),
     this.pointsToMark = const [],
   });
 
   @override
+  // ignore: library_private_types_in_public_api
   _MapWidgetState createState() => _MapWidgetState();
 }
 
 class _MapWidgetState extends State<MapWidget> {
   late GoogleMapController mapController;
 
-  Set<Polyline> _polylines = <Polyline>{};
+  final Set<Polyline> _polylines = <Polyline>{};
 
   void _onMapCreated(GoogleMapController controller) async {
     mapController = controller;
@@ -30,13 +32,8 @@ class _MapWidgetState extends State<MapWidget> {
     _drawRoute(route);
   }
 
-  void printErrorRed(e) {
-    print('\x1B[31m$e\x1B[0m');
-  }
-
   Future<String> _getRoute(List<LatLng> waypoints) async {
     final String apiKey = dotenv.env['API_KEY']!;
-    ;
     final String waypointsString = waypoints
         .map((point) => '${point.latitude},${point.longitude}')
         .join('|');
@@ -56,7 +53,7 @@ class _MapWidgetState extends State<MapWidget> {
 
   void _drawRoute(String route) {
     _polylines.add(Polyline(
-      polylineId: PolylineId('route'),
+      polylineId: const PolylineId('route'),
       points: _convertToLatLng(_decodePoly(route)),
       width: 4,
       color: Colors.blue,
@@ -95,7 +92,9 @@ class _MapWidgetState extends State<MapWidget> {
       var result1 = (result >> 1) * 0.00001;
       lList.add(result1);
     } while (index < len);
-    for (var i = 2; i < lList.length; i++) lList[i] += lList[i - 2];
+    for (var i = 2; i < lList.length; i++) {
+      lList[i] += lList[i - 2];
+    }
     return lList;
   }
 

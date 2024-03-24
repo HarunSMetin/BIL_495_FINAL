@@ -6,6 +6,7 @@ import 'package:gezbot/models/travel.model.dart';
 import 'package:gezbot/models/user.model.dart';
 import 'package:gezbot/services/google_cloud_service.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'dart:developer' as developer;
 
 class DatabaseService {
   final CollectionReference userCollection =
@@ -20,53 +21,41 @@ class DatabaseService {
       FirebaseFirestore.instance.collection('friendRequests');
   final GoogleCloudService _googleCloudService = GoogleCloudService();
 
-  void printError(e) {
-    print('\x1B[31m$e\x1B[0m');
-  }
-
-  void printWarning(e) {
-    print('\x1B[33m$e\x1B[0m');
-  }
-
-  void printOkey(e) {
-    print('\x1B[32m$e\x1B[0m');
-  }
-
   void printInlinedJson(Map<String, dynamic> jsonData, {String indent = ''}) {
     jsonData.forEach((key, value) {
       if (value is Map<String, dynamic>) {
-        print('$indent$key: {');
+        developer.log('$indent$key: {');
         printInlinedJson(value, indent: '$indent  ');
-        print('$indent}');
+        developer.log('$indent}');
       } else if (value is List) {
-        print('$indent$key: [');
+        developer.log('$indent[');
         for (var item in value) {
           if (item is Map<String, dynamic>) {
             printInlinedJson(item, indent: '$indent  ');
           } else {
-            print('$indent  $item,');
+            developer.log('$indent $item,');
           }
         }
-        print('$indent]');
+        developer.log('$indent]');
       } else {
-        print('$indent$key: $value,');
+        developer.log('$indent$key: $value,');
       }
     });
   }
 
-  Future<List<UserModel>> GetAllUsers() async {
+  Future<List<UserModel>> getAllUsers() async {
     QuerySnapshot querySnapshot = await userCollection.get();
-    List<UserModel> Users = List.empty(growable: true);
+    List<UserModel> users = List.empty(growable: true);
     await Future.forEach(querySnapshot.docs, (result) async {
       Map<String, dynamic> temp = result.data() as Map<String, dynamic>;
       temp['id'] = result.id;
-      Users.add(UserModel.fromMap(temp));
+      users.add(UserModel.fromMap(temp));
     });
-    return Users;
+    return users;
   }
 
-  Future<UserModel> GetUser(String UserID) async {
-    DocumentSnapshot doc = await userCollection.doc(UserID).get();
+  Future<UserModel> getUser(String userID) async {
+    DocumentSnapshot doc = await userCollection.doc(userID).get();
     Map<String, dynamic> docData = doc.data() as Map<String, dynamic>;
     docData['id'] = doc.id;
 
@@ -75,7 +64,7 @@ class DatabaseService {
     return user;
   }
 
-  Future<Map<String, dynamic>> GetUserQuestions() async {
+  Future<Map<String, dynamic>> getUserQuestions() async {
     QuerySnapshot querySnapshot = await userOptionsCollection.get();
     Map<String, dynamic> jsonData = {};
     await Future.forEach(querySnapshot.docs, (result) async {
@@ -86,8 +75,8 @@ class DatabaseService {
 
 /*
   Future AddQuestionToUser(
-      String QuestionID, String Question, List<String> Answers) async {
-    return await userOptionsCollection.doc(QuestionID).set({
+      String questionID, String Question, List<String> Answers) async {
+    return await userOptionsCollection.doc(questionID).set({
       'question': Question,
       'answers': Answers,
     });
@@ -106,8 +95,8 @@ class DatabaseService {
   }
 
   Future AddQuestionToTravel(
-      String QuestionID, String Question, List<String> Answers) async {
-    return await travelOptionsCollection.doc(QuestionID).set({
+      String questionID, String Question, List<String> Answers) async {
+    return await travelOptionsCollection.doc(questionID).set({
       'question': Question,
       'answers': Answers,
     });
@@ -130,19 +119,19 @@ class DatabaseService {
 
 //USER_OPTIONS
 
-  Future SetUserOptions(String UserID, String QuestionID, String Answer) async {
-    return userCollection.doc(UserID).set({
-      'userOptions': {QuestionID.substring(3): Answer},
+  Future setUserOptions(String userID, String questionID, String answer) async {
+    return userCollection.doc(userID).set({
+      'userOptions': {questionID.substring(3): answer},
     }, SetOptions(merge: true));
   }
 
-  Future GetUserOptions(String UserID) async {
-    return (await userCollection.doc(UserID).get())['userOptions'];
+  Future getUserOptions(String userID) async {
+    return (await userCollection.doc(userID).get())['userOptions'];
   }
 
 //CHAT
 
-  Future<Map<String, Chat>> GetUserAllChats(String UserID) async {
+  Future<Map<String, Chat>> getUserAllChats(String userID) async {
     //nested collection structure
     Map<String, Chat> chats = {};
 
@@ -150,7 +139,7 @@ class DatabaseService {
     await Future.forEach(querySnapshot.docs, (result) async {
       Map<String, dynamic> travelData = result.data() as Map<String, dynamic>;
       List<String> members = travelData['members'] as List<String>;
-      if (members.contains(UserID)) {
+      if (members.contains(userID)) {
         QuerySnapshot nestedQuerySnapshot = await travelsCollection
             .doc(result.id)
             .collection('messages')
@@ -176,9 +165,9 @@ class DatabaseService {
     return chats;
   }
 
-  Future<Chat> GetChat(String TravelID) async {
+  Future<Chat> getChat(String travelID) async {
     QuerySnapshot querySnapshot = await travelsCollection
-        .doc(TravelID)
+        .doc(travelID)
         .collection('messages')
         .orderBy('time', descending: false)
         .get();
@@ -191,29 +180,29 @@ class DatabaseService {
       messages.add(messageData);
     }
     Chat chat = Chat(
-        id: TravelID,
+        id: travelID,
         messages: messages,
         members: List<String>.from(
-            (await travelsCollection.doc(TravelID).get())['members']));
+            (await travelsCollection.doc(travelID).get())['members']));
     return chat;
   }
 
-  Future SendMessage(String TravelID, String Message, String SenderID) async {
+  Future sendMessage(String travelID, String message, String senderID) async {
     // travel Members check
-    return await travelsCollection.doc(TravelID).get().then((value) async {
+    return await travelsCollection.doc(travelID).get().then((value) async {
       List<String> members = List<String>.from(value['members']);
-      if (members.contains(SenderID)) {
-        await travelsCollection.doc(TravelID).set({
+      if (members.contains(senderID)) {
+        await travelsCollection.doc(travelID).set({
           'lastUpdate': DateTime.now(),
         }, SetOptions(merge: true));
         // Chat Message Add
-        travelsCollection.doc(TravelID).collection('messages').add({
-          'message': Message,
-          'sender': SenderID,
+        travelsCollection.doc(travelID).collection('messages').add({
+          'message': message,
+          'sender': senderID,
           'time': DateTime.now(),
         }).then((value2) {
           travelsCollection
-              .doc(TravelID)
+              .doc(travelID)
               .collection('messages')
               .doc(value2.id)
               .set({
@@ -226,9 +215,9 @@ class DatabaseService {
 
 //TRAVELS
 
-  Future<List<Travel>> _getAllTravelsOfUser(String UserID) async {
+  Future<List<Travel>> _getAllTravelsOfUser(String userID) async {
     QuerySnapshot querySnapshot =
-        await travelsCollection.where('members', arrayContains: UserID).get();
+        await travelsCollection.where('members', arrayContains: userID).get();
     List<Travel> travels = [];
     await Future.forEach(querySnapshot.docs, (result) async {
       Map<String, dynamic> travelData = result.data() as Map<String, dynamic>;
@@ -238,9 +227,9 @@ class DatabaseService {
     return travels;
   }
 
-  Future<List<Travel>> GetAllPublicTravelsOfUser(String UserID) async {
+  Future<List<Travel>> getAllPublicTravelsOfUser(String userID) async {
     QuerySnapshot querySnapshot = await travelsCollection
-        .where('members', arrayContains: UserID)
+        .where('members', arrayContains: userID)
         .where('isPublic', isEqualTo: true)
         .get();
     List<Travel> travels = [];
@@ -252,34 +241,34 @@ class DatabaseService {
     return travels;
   }
 
-  Future<List<Travel>> GetAllTravelsOfUserByShowStatus(String TargetUserID,
-      [String RequesterUserID = 'empty']) async {
-    if (TargetUserID == RequesterUserID ||
-        await IsFriend(TargetUserID, RequesterUserID) ||
-        RequesterUserID == 'empty') {
-      return _getAllTravelsOfUser(TargetUserID);
+  Future<List<Travel>> getAllTravelsOfUserByShowStatus(String targetUserID,
+      [String requesterUserID = 'empty']) async {
+    if (targetUserID == requesterUserID ||
+        await isFriend(targetUserID, requesterUserID) ||
+        requesterUserID == 'empty') {
+      return _getAllTravelsOfUser(targetUserID);
     } else {
-      return GetAllPublicTravelsOfUser(TargetUserID);
+      return getAllPublicTravelsOfUser(targetUserID);
     }
   }
 
-  Future<int?> GetNumberOfTravelsOfUser(String UserID) async {
+  Future<int?> getNumberOfTravelsOfUser(String userID) async {
     AggregateQuerySnapshot count = await travelsCollection
-        .where('members', arrayContains: UserID)
+        .where('members', arrayContains: userID)
         .count()
         .get();
     return count.count;
   }
 
-  Future<Travel> GetTravelOfUser(String TravelID) async {
-    DocumentSnapshot doc = await travelsCollection.doc(TravelID).get();
+  Future<Travel> getTravelOfUser(String travelID) async {
+    DocumentSnapshot doc = await travelsCollection.doc(travelID).get();
     Map<String, dynamic> travelData = doc.data() as Map<String, dynamic>;
     travelData['id'] = doc.id;
     return Travel.fromMap(travelData);
   }
 
-  Future<List<TravelQuestion>> GetTravelQuestions(
-      String UserID, String TravelID) async {
+  Future<List<TravelQuestion>> getTravelQuestions(
+      String userID, String travelID) async {
     QuerySnapshot querySnapshot = await travelOptionsCollection.get();
     List<TravelQuestion> questions = [];
     await Future.forEach(querySnapshot.docs, (result) async {
@@ -287,39 +276,38 @@ class DatabaseService {
       temp['questionId'] = result.id;
       questions.add(TravelQuestion.fromMap(temp));
     });
-    await GetTravelAnswersOfUser(UserID, TravelID).then((value) {
-      questions.forEach((element) {
+    await getTravelAnswersOfUser(userID, travelID).then((value) {
+      for (var element in questions) {
         if (value[value.keys.toList().first].containsKey(element.questionId)) {
-          dynamic _userAnswer =
+          dynamic userAnswer =
               value[value.keys.toList().first][element.questionId];
           /*if (_userAnswer != "") {
             element.userAnswer = _userAnswer;
           }*/
-          if (_userAnswer != null) {
-            element.userAnswer = _userAnswer;
+          if (userAnswer != null) {
+            element.userAnswer = userAnswer;
           }
         }
-      });
+      }
     });
     return questions;
   }
 
-  Future<Map<String, dynamic>> GetTravelAnswersOfUser(
-      String UserID, String TravelID) async {
+  Future<Map<String, dynamic>> getTravelAnswersOfUser(
+      String userID, String travelID) async {
     //['01_DepartureDate','02_ReturnDate','03_DesiredDestination','04_TravelTransportation','06_PurposeOfVisit','05_EstimatedBudget','07_AccommodationPreferences','08_ActivitiesPreferences','09_DietaryRestrictions','10_TravelingWithOthers','11_SpecialComment','12_LocalRecommendations']
 
     Map<String, dynamic> jsonData = {};
-    //get doc with id equals to TravelID
-    DocumentSnapshot doc = await travelsCollection.doc(TravelID).get();
+    //get doc with id equals to travelID
+    DocumentSnapshot doc = await travelsCollection.doc(travelID).get();
     Map<String, dynamic> travelData = doc.data() as Map<String, dynamic>;
     travelData['id'] = doc.id;
-    jsonData[TravelID] = travelData;
+    jsonData[travelID] = travelData;
 
-    printOkey(jsonData);
     return jsonData;
   }
 
-  Future<Travel?> GetLastNotCompletedTravelOfUser(String userId) async {
+  Future<Travel?> getLastNotCompletedTravelOfUser(String userId) async {
     QuerySnapshot querySnapshot = await travelsCollection
         .where('creatorId', isEqualTo: userId)
         .where('isCompleted', isEqualTo: false)
@@ -335,15 +323,15 @@ class DatabaseService {
     return Travel.fromMap(travelData);
   }
 
-  Future<Travel> CompleteTravel(String TravelID) async {
-    await travelsCollection.doc(TravelID).set({
+  Future<Travel> completeTravel(String travelID) async {
+    await travelsCollection.doc(travelID).set({
       'isCompleted': true,
     }, SetOptions(merge: true));
-    return await GetTravelOfUser(TravelID);
+    return await getTravelOfUser(travelID);
   }
-  //Get lastCompletedQuestionOfTravel database contaions: lastUpdatedQuestionId on travels
+  //get lastCompletedQuestionOfTravel database contains: lastUpdatedQuestionId on travels
 
-  Future CreateTravel(String userID, String travelName) async {
+  Future createTravel(String userID, String travelName) async {
     var documentReference = await travelsCollection.add({
       'lastUpdatedQuestionId': '',
       'creatorId': userID,
@@ -356,7 +344,7 @@ class DatabaseService {
       '00_DepartureLocation': '',
       '01_DesiredDestination': '',
       '02_DepartureDate': DateTime.now(),
-      '03_ReturnDate': DateTime.now().add(Duration(days: 1)),
+      '03_ReturnDate': DateTime.now().add(const Duration(days: 1)),
       '04_TravelTransportation': '',
       '06_PurposeOfVisit': '',
       '05_EstimatedBudget': '',
@@ -382,13 +370,13 @@ class DatabaseService {
     return documentReference.id;
   }
 
-  Future UpdateTravel(
-      String TravelID, String QuestionId, dynamic answer) async {
+  Future updateTravel(
+      String travelID, String questionId, dynamic answer) async {
     if (answer == null || answer == '') {
       return;
     }
-    if (QuestionId == '00_DepartureLocation' ||
-        QuestionId == '01_DesiredDestination') {
+    if (questionId == '00_DepartureLocation' ||
+        questionId == '01_DesiredDestination') {
       //split on ,
       String latitude = answer.split(',')[0];
       String longtude = answer.split(',')[1];
@@ -396,22 +384,21 @@ class DatabaseService {
           .coordinatesToAddress(double.parse(latitude), double.parse(longtude),
               detailed: true);
 
-      print(address);
       String allAddress = "";
       for (var item in address.values) {
         allAddress += '$item,';
       }
-      if (QuestionId == '00_DepartureLocation') {
-        return await travelsCollection.doc(TravelID).set({
-          QuestionId: allAddress,
-          'lastUpdatedQuestionId': QuestionId,
+      if (questionId == '00_DepartureLocation') {
+        return await travelsCollection.doc(travelID).set({
+          questionId: allAddress,
+          'lastUpdatedQuestionId': questionId,
           'lastUpdate': DateTime.now(),
           'departureLocationGeoPoint': answer,
         }, SetOptions(merge: true));
       } else {
-        return await travelsCollection.doc(TravelID).set({
-          QuestionId: allAddress,
-          'lastUpdatedQuestionId': QuestionId,
+        return await travelsCollection.doc(travelID).set({
+          questionId: allAddress,
+          'lastUpdatedQuestionId': questionId,
           'lastUpdate': DateTime.now(),
           'desiredDestinationGeoPoint': answer,
         }, SetOptions(merge: true));
@@ -419,54 +406,54 @@ class DatabaseService {
     }
     Map<String, dynamic> updateData = {};
 
-    updateData[QuestionId] = answer;
-    updateData['lastUpdatedQuestionId'] = QuestionId;
+    updateData[questionId] = answer;
+    updateData['lastUpdatedQuestionId'] = questionId;
     updateData['lastUpdate'] = DateTime.now();
 
     return await travelsCollection
-        .doc(TravelID)
+        .doc(travelID)
         .set(updateData, SetOptions(merge: true));
   }
 
-  Future getLastQuestionOfTravel(String TravelID) async {
+  Future getLastQuestionOfTravel(String travelID) async {
     return (await travelsCollection
-        .doc(TravelID)
+        .doc(travelID)
         .get())['lastUpdatedQuestionId'];
   }
 
-  Future getAnswerOfQuestionOfTravel(String TravelID, String QuestionID) async {
-    return (await travelsCollection.doc(TravelID).get())[QuestionID];
+  Future getAnswerOfQuestionOfTravel(String travelID, String questionID) async {
+    return (await travelsCollection.doc(travelID).get())[questionID];
   }
 
-  Future AddFriendToTravel(
-      String TravelID, String UserID, String FriendID) async {
-    if (UserID == (await travelsCollection.doc(TravelID).get())['creatorId'] &&
-        await IsFriend(UserID, FriendID)) {
+  Future addFriendToTravel(
+      String travelID, String userID, String friendID) async {
+    if (userID == (await travelsCollection.doc(travelID).get())['creatorId'] &&
+        await isFriend(userID, friendID)) {
       //add to travel
-      await travelsCollection.doc(TravelID).set({
-        'members': FieldValue.arrayUnion([FriendID])
+      await travelsCollection.doc(travelID).set({
+        'members': FieldValue.arrayUnion([friendID])
       }, SetOptions(merge: true));
     }
   }
 
-  Future RemoveFriendFromTravel(
-      String TravelID, String UserID, String FriendID) async {
-    if (UserID == (await travelsCollection.doc(TravelID).get())['creatorId']) {
+  Future removeFriendFromTravel(
+      String travelID, String userID, String friendID) async {
+    if (userID == (await travelsCollection.doc(travelID).get())['creatorId']) {
       //remove from travel
-      await travelsCollection.doc(TravelID).set({
-        'members': FieldValue.arrayRemove([FriendID])
+      await travelsCollection.doc(travelID).set({
+        'members': FieldValue.arrayRemove([friendID])
       });
     }
   }
 
-  Future DeleteTravel(String TravelID) async {
-    await travelsCollection.doc(TravelID).delete();
+  Future deleteTravel(String travelID) async {
+    await travelsCollection.doc(travelID).delete();
   }
 
 //FRIENDS
-  Future<List<UserModel>> GetFollowingsOfUser(String UserID) async {
+  Future<List<UserModel>> getFollowingsOfUser(String userID) async {
     QuerySnapshot querySnapshot = await friendRequestsCollection
-        .where('senderId', isEqualTo: UserID)
+        .where('senderId', isEqualTo: userID)
         .where('status', isEqualTo: 'accepted')
         .get();
 
@@ -483,9 +470,9 @@ class DatabaseService {
     return followings;
   }
 
-  Future<List<UserModel>> GetFollowersOfUser(String UserID) async {
+  Future<List<UserModel>> getFollowersOfUser(String userID) async {
     QuerySnapshot querySnapshot = await friendRequestsCollection
-        .where('receiverId', isEqualTo: UserID)
+        .where('receiverId', isEqualTo: userID)
         .where('status', isEqualTo: 'accepted')
         .get();
 
@@ -504,10 +491,10 @@ class DatabaseService {
 
 //(GET) FRIEND REQUESTS (SENT)
 
-  Future<List<UserModel>> GetAcceptedFriendRequestsSentByUser(
-      String UserID) async {
+  Future<List<UserModel>> getAcceptedFriendRequestsSentByUser(
+      String userID) async {
     QuerySnapshot querySnapshot = await friendRequestsCollection
-        .where('senderId', isEqualTo: UserID)
+        .where('senderId', isEqualTo: userID)
         .where('status', isEqualTo: 'accepted')
         .get();
 
@@ -522,10 +509,10 @@ class DatabaseService {
     return users;
   }
 
-  Future<List<UserModel>> GetAcceptedFriendRequestsRecivedByUser(
-      String UserID) async {
+  Future<List<UserModel>> getAcceptedFriendRequestsRecivedByUser(
+      String userID) async {
     QuerySnapshot querySnapshot = await friendRequestsCollection
-        .where('receiverId', isEqualTo: UserID)
+        .where('receiverId', isEqualTo: userID)
         .where('status', isEqualTo: 'accepted')
         .get();
 
@@ -540,11 +527,11 @@ class DatabaseService {
     return users;
   }
 
-  Future<Map<String, dynamic>> GetAllFriendRequestsSentByUser(
-      String UserID) async //Sent friend requests
+  Future<Map<String, dynamic>> getAllFriendRequestsSentByUser(
+      String userID) async //Sent friend requests
   {
     QuerySnapshot querySnapshot = await friendRequestsCollection
-        .where('senderId', isEqualTo: UserID)
+        .where('senderId', isEqualTo: userID)
         .get();
     Map<String, dynamic> jsonData = {};
     await Future.forEach(querySnapshot.docs, (result) async {
@@ -553,22 +540,22 @@ class DatabaseService {
     return jsonData;
   }
 
-  Future<int?> GetNumberOfPendingFriendRequestsSentByUser(
-      String UserID) async //Sent friend requests
+  Future<int?> getNumberOfPendingFriendRequestsSentByUser(
+      String userID) async //Sent friend requests
   {
     AggregateQuerySnapshot count = await friendRequestsCollection
-        .where('senderId', isEqualTo: UserID)
+        .where('senderId', isEqualTo: userID)
         .where('status', isEqualTo: 'pending')
         .count()
         .get();
     return count.count;
   }
 
-  Future<Map<String, dynamic>> GetPendingFriendRequestSentByUser(
-      String UserID) async // sent friend requests
+  Future<Map<String, dynamic>> getPendingFriendRequestSentByUser(
+      String userID) async // sent friend requests
   {
     QuerySnapshot querySnapshot = await friendRequestsCollection
-        .where('senderId', isEqualTo: UserID)
+        .where('senderId', isEqualTo: userID)
         .where('status', isEqualTo: 'pending')
         .get();
     Map<String, dynamic> jsonData = {};
@@ -578,33 +565,33 @@ class DatabaseService {
     return jsonData;
   }
 
-  Future<int?> GetNumberOfAcceptedFriendRequestsSentByUser(
-      String UserID) async // sent friend requests
+  Future<int?> getNumberOfAcceptedFriendRequestsSentByUser(
+      String userID) async // sent friend requests
   {
     AggregateQuerySnapshot count = await friendRequestsCollection
-        .where('senderId', isEqualTo: UserID)
+        .where('senderId', isEqualTo: userID)
         .where('status', isEqualTo: 'accepted')
         .count()
         .get();
     return count.count;
   }
 
-  Future<int?> GetNumberOfDeclinedFriendRequestsSentByUser(
-      String UserID) async // sent friend requests
+  Future<int?> getNumberOfDeclinedFriendRequestsSentByUser(
+      String userID) async // sent friend requests
   {
     AggregateQuerySnapshot count = await friendRequestsCollection
-        .where('senderId', isEqualTo: UserID)
+        .where('senderId', isEqualTo: userID)
         .where('status', isEqualTo: 'declined')
         .count()
         .get();
     return count.count;
   }
 
-  Future<Map<String, dynamic>> GetDeclinedFriendRequestsSentByUser(
-      String UserID) async // sent friend requests
+  Future<Map<String, dynamic>> getDeclinedFriendRequestsSentByUser(
+      String userID) async // sent friend requests
   {
     QuerySnapshot querySnapshot = await friendRequestsCollection
-        .where('senderId', isEqualTo: UserID)
+        .where('senderId', isEqualTo: userID)
         .where('status', isEqualTo: 'declined')
         .get();
     Map<String, dynamic> jsonData = {};
@@ -615,11 +602,11 @@ class DatabaseService {
   }
 
 //(GET) FRIEND REQUESTS (RECIVED)
-  Future<Map<String, dynamic>> GetAllFriendRequestsRecivedByUser(
-      String UserID) async // coming friend requests
+  Future<Map<String, dynamic>> getAllFriendRequestsRecivedByUser(
+      String userID) async // coming friend requests
   {
     QuerySnapshot querySnapshot = await friendRequestsCollection
-        .where('receiverId', isEqualTo: UserID)
+        .where('receiverId', isEqualTo: userID)
         .get();
     Map<String, dynamic> jsonData = {};
     await Future.forEach(querySnapshot.docs, (result) async {
@@ -628,21 +615,21 @@ class DatabaseService {
     return jsonData;
   }
 
-  Future<int?> GetNumberOfPendingFriendRequestsRecivedByUser(
-      String UserID) async // coming friend requests
+  Future<int?> getNumberOfPendingFriendRequestsRecivedByUser(
+      String userID) async // coming friend requests
   {
     AggregateQuerySnapshot count = await friendRequestsCollection
-        .where('receiverId', isEqualTo: UserID)
+        .where('receiverId', isEqualTo: userID)
         .where('status', isEqualTo: 'pending')
         .count()
         .get();
     return count.count;
   }
 
-  Future<Map<String, dynamic>> GetPendingFriendRequestsRecivedByUser(
-      String UserID) async {
+  Future<Map<String, dynamic>> getPendingFriendRequestsRecivedByUser(
+      String userID) async {
     QuerySnapshot querySnapshot = await friendRequestsCollection
-        .where('receiverId', isEqualTo: UserID)
+        .where('receiverId', isEqualTo: userID)
         .where('status', isEqualTo: 'pending')
         .get();
     Map<String, dynamic> jsonData = {};
@@ -652,32 +639,32 @@ class DatabaseService {
     return jsonData;
   }
 
-  Future<int?> GetNumberOfAcceptedFriendRequestsRecivedByUser(
-      String UserID) async {
+  Future<int?> getNumberOfAcceptedFriendRequestsRecivedByUser(
+      String userID) async {
     AggregateQuerySnapshot count = await friendRequestsCollection
-        .where('receiverId', isEqualTo: UserID)
+        .where('receiverId', isEqualTo: userID)
         .where('status', isEqualTo: 'accepted')
         .count()
         .get();
     return count.count;
   }
 
-  Future<int?> GetNumberOfDeclinedFriendRequestsRecivedByUser(
-      String UserID) async // coming friend requests
+  Future<int?> getNumberOfDeclinedFriendRequestsRecivedByUser(
+      String userID) async // coming friend requests
   {
     AggregateQuerySnapshot count = await friendRequestsCollection
-        .where('receiverId', isEqualTo: UserID)
+        .where('receiverId', isEqualTo: userID)
         .where('status', isEqualTo: 'declined')
         .count()
         .get();
     return count.count;
   }
 
-  Future<Map<String, dynamic>> GetDeclinedFriendRequestsRecivedByUser(
-      String UserID) async // coming friend requests
+  Future<Map<String, dynamic>> getDeclinedFriendRequestsRecivedByUser(
+      String userID) async // coming friend requests
   {
     QuerySnapshot querySnapshot = await friendRequestsCollection
-        .where('receiverId', isEqualTo: UserID)
+        .where('receiverId', isEqualTo: userID)
         .where('status', isEqualTo: 'declined')
         .get();
     Map<String, dynamic> jsonData = {};
@@ -688,30 +675,30 @@ class DatabaseService {
   }
 //(GET) SUM FRIEND REQ COUNTS
 
-  Future<Map<String, dynamic>> GetUserSummary(String UserID) async {
+  Future<Map<String, dynamic>> getUserSummary(String userID) async {
     Map<String, dynamic> jsonData = {};
     jsonData['pendingSent'] =
-        await GetNumberOfPendingFriendRequestsSentByUser(UserID);
+        await getNumberOfPendingFriendRequestsSentByUser(userID);
     jsonData['acceptedSent'] =
-        await GetNumberOfAcceptedFriendRequestsSentByUser(UserID);
+        await getNumberOfAcceptedFriendRequestsSentByUser(userID);
     jsonData['declinedSent'] =
-        await GetNumberOfDeclinedFriendRequestsSentByUser(UserID);
+        await getNumberOfDeclinedFriendRequestsSentByUser(userID);
     jsonData['pendingReceived'] =
-        await GetNumberOfPendingFriendRequestsRecivedByUser(UserID);
+        await getNumberOfPendingFriendRequestsRecivedByUser(userID);
     jsonData['acceptedReceived'] =
-        await GetNumberOfAcceptedFriendRequestsRecivedByUser(UserID);
+        await getNumberOfAcceptedFriendRequestsRecivedByUser(userID);
     jsonData['declinedReceived'] =
-        await GetNumberOfDeclinedFriendRequestsRecivedByUser(UserID);
-    jsonData['travels'] = await GetNumberOfTravelsOfUser(UserID);
+        await getNumberOfDeclinedFriendRequestsRecivedByUser(userID);
+    jsonData['travels'] = await getNumberOfTravelsOfUser(userID);
     return jsonData;
   }
 
 //(POST) FRIEND REQUESTS
-  Future<String> SendFriendRequest(String SenderID, String ReceiverID) async {
+  Future<String> sendFriendRequest(String senderID, String receiverID) async {
     try {
       var querySnapshot = await friendRequestsCollection
-          .where('senderId', isEqualTo: SenderID)
-          .where('receiverId', isEqualTo: ReceiverID)
+          .where('senderId', isEqualTo: senderID)
+          .where('receiverId', isEqualTo: receiverID)
           .limit(1)
           .get();
 
@@ -725,8 +712,8 @@ class DatabaseService {
         return documentId;
       } else {
         var documentReference = await friendRequestsCollection.add({
-          'senderId': SenderID,
-          'receiverId': ReceiverID,
+          'senderId': senderID,
+          'receiverId': receiverID,
           'status': 'pending',
           'sentAt': DateTime.now(),
           'statusChangedAt': DateTime.now(),
@@ -734,12 +721,12 @@ class DatabaseService {
         return documentReference.id;
       }
     } catch (e) {
-      print("Error in sending friend request: $e");
+      developer.log("Error in sending friend request: $e");
       return '';
     }
   }
 
-  Future<bool> CancelFriendRequest(String senderId, String receiverId) async {
+  Future<bool> cancelFriendRequest(String senderId, String receiverId) async {
     try {
       var querySnapshot = await friendRequestsCollection
           .where('senderId', isEqualTo: senderId)
@@ -758,12 +745,12 @@ class DatabaseService {
         return false; // No such request found
       }
     } catch (e) {
-      print("Error cancelling friend request: $e");
+      developer.log("Error cancelling friend request: $e");
       return false; // An error occurred
     }
   }
 
-  Future<bool> DeclineFriendRequest(String senderId, String receiverId) async {
+  Future<bool> declineFriendRequest(String senderId, String receiverId) async {
     try {
       var querySnapshot = await friendRequestsCollection
           .where('senderId', isEqualTo: senderId)
@@ -782,64 +769,64 @@ class DatabaseService {
         return false; // No such request found
       }
     } catch (e) {
-      print("Error declining friend request: $e");
+      developer.log("Error declining friend request: $e");
       return false; // An error occurred
     }
   }
 
-  Future AcceptFriendRequest(String RequestID) async {
-    return await friendRequestsCollection.doc(RequestID).set({
+  Future acceptFriendRequest(String requestID) async {
+    return await friendRequestsCollection.doc(requestID).set({
       'status': 'accepted',
       'statusChangedAt': DateTime.now(),
     }, SetOptions(merge: true));
   }
 
-  /*Future DeclineFriendRequest(String RequestID) async {
-    return await friendRequestsCollection.doc(RequestID).set({
+  /*Future DeclineFriendRequest(String requestID) async {
+    return await friendRequestsCollection.doc(requestID).set({
       'status': 'declined',
       'statusChangedAt': DateTime.now(),
     }, SetOptions(merge: true));
   }*/
 
-  Future removeFollower(String UserID, String FollowerID) async {
+  Future removeFollower(String userID, String followerID) async {
     return await friendRequestsCollection
-        .where('senderId', isEqualTo: FollowerID)
-        .where('receiverId', isEqualTo: UserID)
+        .where('senderId', isEqualTo: followerID)
+        .where('receiverId', isEqualTo: userID)
         .get()
         .then((value) async {
-      if (value.docs.length > 0) {
+      if (value.docs.isNotEmpty) {
         await friendRequestsCollection.doc(value.docs[0].id).delete();
       }
     });
   }
 
-  Future removeFollowing(String UserID, String FollowingID) async {
+  Future removeFollowing(String userID, String followingID) async {
     return await friendRequestsCollection
-        .where('senderId', isEqualTo: UserID)
-        .where('receiverId', isEqualTo: FollowingID)
+        .where('senderId', isEqualTo: userID)
+        .where('receiverId', isEqualTo: followingID)
         .get()
         .then((value) async {
-      if (value.docs.length > 0) {
+      if (value.docs.isNotEmpty) {
         await friendRequestsCollection.doc(value.docs[0].id).delete();
       }
     });
   }
 
-  Future<bool> IsFriend(String UserID, String FriendID) async {
+  Future<bool> isFriend(String userID, String friendID) async {
     QuerySnapshot querySnapshot = await friendRequestsCollection
-        .where('senderId', isEqualTo: UserID)
-        .where('receiverId', isEqualTo: FriendID)
+        .where('senderId', isEqualTo: userID)
+        .where('receiverId', isEqualTo: friendID)
         .where('status', isEqualTo: 'accepted')
         .get();
-    if (querySnapshot.docs.length > 0) {
+    if (querySnapshot.docs.isNotEmpty) {
       return true;
     }
     querySnapshot = await friendRequestsCollection
-        .where('senderId', isEqualTo: FriendID)
-        .where('receiverId', isEqualTo: UserID)
+        .where('senderId', isEqualTo: friendID)
+        .where('receiverId', isEqualTo: userID)
         .where('status', isEqualTo: 'accepted')
         .get();
-    if (querySnapshot.docs.length > 0) {
+    if (querySnapshot.docs.isNotEmpty) {
       return true;
     }
     return false;
@@ -876,20 +863,20 @@ class DatabaseService {
     return users;
   }
 
-  Future<List<UserModel>> SearchByUserNameAndEmail(String query) async {
+  Future<List<UserModel>> searchByUserNameAndEmail(String query) async {
     List<UserModel> users = [];
     List<UserModel> email = await _searchUsersByEmail(query);
 
     users.addAll(await _searchUsersByUserName(query));
-    for (var emailsearchuser in email) {
+    for (var emailSearchUser in email) {
       bool isExist = false;
       for (var user in users) {
-        if (user.id == emailsearchuser.id) {
+        if (user.id == emailSearchUser.id) {
           isExist = true;
         }
       }
       if (!isExist) {
-        users.add(emailsearchuser);
+        users.add(emailSearchUser);
       }
     }
     return users;
@@ -917,7 +904,7 @@ class DatabaseService {
         'pointsToMark': pointsToMark,
       };
     } catch (e) {
-      print("Error fetching recommended places: $e");
+      developer.log("Error fetching recommended places: $e");
       return {};
     }
   }
@@ -929,8 +916,8 @@ class DatabaseService {
     return LatLng(latitude, longitude);
   }
 
-  Future<List<Travel>> SearchTravelsByTravelName(String query,
-      [String SenderID = "empty"]) async {
+  Future<List<Travel>> searchTravelsByTravelName(String query,
+      [String senderID = "empty"]) async {
     QuerySnapshot querySnapshot = await travelsCollection
         .where('name', isGreaterThanOrEqualTo: query)
         .where('name', isLessThanOrEqualTo: '${query.trim()}\uf8ff')
@@ -946,7 +933,7 @@ class DatabaseService {
   }
 
   Future<List<Travel>> _searchTravelsByUserEmail(String query,
-      [String SenderID = "empty"]) async {
+      [String senderID = "empty"]) async {
     //find Travel creator id then match search id with creator id then get all travels of that user
     QuerySnapshot querySnapshot = await userCollection
         .where('email', isGreaterThanOrEqualTo: query.trim())
@@ -954,20 +941,20 @@ class DatabaseService {
         .limit(5)
         .get();
     List<Travel> travels = [];
-    if (SenderID == "empty") {
+    if (senderID == "empty") {
       for (var doc in querySnapshot.docs) {
-        travels.addAll(await GetAllPublicTravelsOfUser(doc.id));
+        travels.addAll(await getAllPublicTravelsOfUser(doc.id));
       }
     } else {
       for (var doc in querySnapshot.docs) {
-        travels.addAll(await GetAllTravelsOfUserByShowStatus(doc.id, SenderID));
+        travels.addAll(await getAllTravelsOfUserByShowStatus(doc.id, senderID));
       }
     }
     return travels;
   }
 
   Future<List<Travel>> _searchTravelsByUserName(String query,
-      [String SenderID = "empty"]) async {
+      [String senderID = "empty"]) async {
     //find Travel creator id then match search id with creator id then get all travels of that user
     QuerySnapshot querySnapshot = await userCollection
         .where('userName', isGreaterThanOrEqualTo: query.trim())
@@ -975,46 +962,44 @@ class DatabaseService {
         .limit(5)
         .get();
     List<Travel> travels = [];
-    if (SenderID == "empty") {
+    if (senderID == "empty") {
       for (var doc in querySnapshot.docs) {
-        travels.addAll(await GetAllPublicTravelsOfUser(doc.id));
+        travels.addAll(await getAllPublicTravelsOfUser(doc.id));
       }
     } else {
       for (var doc in querySnapshot.docs) {
-        travels.addAll(await GetAllTravelsOfUserByShowStatus(doc.id, SenderID));
+        travels.addAll(await getAllTravelsOfUserByShowStatus(doc.id, senderID));
       }
     }
     return travels;
   }
 
-  Future<List<Travel>> SearchTravelsByUserNameAndEmail(String query,
-      [String SenderID = 'empty']) async {
+  Future<List<Travel>> searchTravelsByUserNameAndEmail(String query,
+      [String senderID = 'empty']) async {
     List<Travel> travels = [];
-    List<Travel> name = await _searchTravelsByUserName(query, SenderID);
-    travels.addAll(await _searchTravelsByUserEmail(query, SenderID));
-    for (var namesearchtravel in name) {
+    List<Travel> name = await _searchTravelsByUserName(query, senderID);
+    travels.addAll(await _searchTravelsByUserEmail(query, senderID));
+    for (var nameSearchTravel in name) {
       bool isExist = false;
       for (var travel in travels) {
-        if (travel.id == namesearchtravel.id) {
+        if (travel.id == nameSearchTravel.id) {
           isExist = true;
         }
       }
       if (!isExist) {
-        travels.add(namesearchtravel);
+        travels.add(nameSearchTravel);
       }
     }
     return travels;
   }
 
-  Future<List<Travel>> SearchTravelsByDestination(String query) async {
-    print(query);
+  Future<List<Travel>> searchTravelsByDestination(String query) async {
     QuerySnapshot querySnapshot = await travelsCollection
         .where('03_DesiredDestination', isGreaterThanOrEqualTo: query.trim())
         .where('03_DesiredDestination',
             isLessThanOrEqualTo: '${query.trim()}\uf8ff')
         .where('isPublic', isEqualTo: true)
         .get();
-    print(querySnapshot.docs.length);
     List<Travel> travels = [];
     for (var doc in querySnapshot.docs) {
       Map<String, dynamic> travelData = doc.data() as Map<String, dynamic>;

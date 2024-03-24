@@ -7,7 +7,10 @@ import 'package:gezbot/services/user_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NotificationsWidget extends StatefulWidget {
+  const NotificationsWidget({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _NotificationsWidgetState createState() => _NotificationsWidgetState();
 }
 
@@ -31,7 +34,7 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
   void _fetchPendingRequests() async {
     if (userId.isNotEmpty) {
       pendingRequests =
-          await DatabaseService().GetPendingFriendRequestsRecivedByUser(userId);
+          await DatabaseService().getPendingFriendRequestsRecivedByUser(userId);
       setState(() {
         isLoading = false;
       });
@@ -84,7 +87,7 @@ class _NotificationsWidgetState extends State<NotificationsWidget> {
                       },
                       showAcceptButton: true,
                       onAccept: () async {
-                        await DatabaseService().AcceptFriendRequest(entry.key);
+                        await DatabaseService().acceptFriendRequest(entry.key);
                         setState(() {
                           pendingRequests.remove(entry.key);
                         });

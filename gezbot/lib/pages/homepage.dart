@@ -7,7 +7,10 @@ import 'package:gezbot/pages/login_screen/components/center_widget/center_widget
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _HomePageState createState() => _HomePageState();
 }
 
@@ -16,7 +19,7 @@ class _HomePageState extends State<HomePage>
   late AnimationController _animationController;
   late Animation<Offset> _topAnimation;
   late Animation<Offset> _bottomAnimation;
-  Future<String> _uidFuture = _fetchUID(); // Initialize immediately
+  final Future<String> _uidFuture = _fetchUID(); // Initialize immediately
 
   static Future<String> _fetchUID() async {
     final prefs = await SharedPreferences.getInstance();
@@ -105,7 +108,7 @@ class _HomePageState extends State<HomePage>
   Widget build(BuildContext context) {
     Size screenSize = getScreenSize(context);
 
-    final List<Widget> _widgetOptions = [
+    final List<Widget> widgetOptions = [
       Stack(
         children: [
           AnimatedBuilder(
@@ -129,20 +132,20 @@ class _HomePageState extends State<HomePage>
             },
           ),
           CenterWidget(size: screenSize), // Use screenSize here
-          Text('Home Tab'),
+          const Text('Home Tab'),
         ],
       ),
-      SearchPage(),
+      const SearchPage(),
       FutureBuilder<String>(
         future: _uidFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
+            return const CircularProgressIndicator();
           }
           if (snapshot.hasError ||
               !snapshot.hasData ||
               snapshot.data!.isEmpty) {
-            return Text('Error fetching user data');
+            return const Text('Error fetching user data');
           }
           return TravelsScreen(userId: snapshot.data!);
         },
@@ -151,12 +154,12 @@ class _HomePageState extends State<HomePage>
         future: _uidFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
+            return const CircularProgressIndicator();
           }
           if (snapshot.hasError ||
               !snapshot.hasData ||
               snapshot.data!.isEmpty) {
-            return Text('Error fetching user data');
+            return const Text('Error fetching user data');
           }
           return ProfilePage(
               userId: snapshot
@@ -168,7 +171,7 @@ class _HomePageState extends State<HomePage>
 
     return Scaffold(
       body: Center(
-        child: _widgetOptions.elementAt(_selectedIndex),
+        child: widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[

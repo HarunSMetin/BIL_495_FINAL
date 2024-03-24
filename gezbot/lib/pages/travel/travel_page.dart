@@ -5,11 +5,13 @@ import 'package:gezbot/pages/travel/travel_info.dart';
 import 'package:gezbot/pages/travel/pre_create_travel.dart';
 import 'package:gezbot/models/travel.model.dart';
 
+// ignore: must_be_immutable
 class TravelsScreen extends StatefulWidget {
   String userId;
   String viwerId;
-  TravelsScreen({required this.userId, this.viwerId = 'empty'});
+  TravelsScreen({super.key, required this.userId, this.viwerId = 'empty'});
   @override
+  // ignore: library_private_types_in_public_api
   _TravelsScreenState createState() => _TravelsScreenState();
 }
 
@@ -18,6 +20,7 @@ class _TravelsScreenState extends State<TravelsScreen> {
   Future<List<Travel>>? travelsFuture;
   final ScrollController _scrollController = ScrollController();
   bool isFetchingMore = false;
+  // ignore: prefer_typing_uninitialized_variables
   late final prefs;
 
   @override
@@ -37,7 +40,7 @@ class _TravelsScreenState extends State<TravelsScreen> {
   Future<List<Travel>> _fetchTravels() async {
     prefs = await SharedPreferences.getInstance();
 
-    List<Travel> travelsData = await dbService.GetAllTravelsOfUserByShowStatus(
+    List<Travel> travelsData = await dbService.getAllTravelsOfUserByShowStatus(
         widget.userId, widget.viwerId);
     return travelsData;
   }
@@ -48,18 +51,14 @@ class _TravelsScreenState extends State<TravelsScreen> {
         !isFetchingMore) {}
   }
 
-  void printError(e) {
-    print('\x1B[31m$e\x1B[0m');
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Travels')),
+      appBar: AppBar(title: const Text('Travels')),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          await dbService.GetLastNotCompletedTravelOfUser(
-                  prefs.getString('uid'))
+          await dbService
+              .getLastNotCompletedTravelOfUser(prefs.getString('uid'))
               .then((value) {
             showDialog(
               context: context,
@@ -81,17 +80,17 @@ class _TravelsScreenState extends State<TravelsScreen> {
             );
           });
         },
-        child: Icon(Icons.add),
         tooltip: 'Add Travel',
+        child: const Icon(Icons.add),
       ),
       body: FutureBuilder<List<Travel>>(
         future: travelsFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
           if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No Travels Found'));
+            return const Center(child: Text('No Travels Found'));
           }
           if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));

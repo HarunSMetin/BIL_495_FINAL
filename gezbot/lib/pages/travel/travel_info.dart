@@ -85,8 +85,8 @@ class _TravelInformationState extends State<TravelInformation> {
                           "Return Date", widget.travel.returnDate.toString()),
                       ticketDetail("Desired Destination",
                           widget.travel.desiredDestination),
-                      SizedBox(height: 10),
-                      HotelWidget(
+                      const SizedBox(height: 10),
+                      const HotelWidget(
                         hotelName: "Vois Hotel",
                         startingPrice: 1301,
                         amenities: [

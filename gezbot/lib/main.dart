@@ -24,7 +24,7 @@ void main() async {
 class MyApp extends StatefulWidget {
   final bool isLoggedIn;
 
-  MyApp({required this.isLoggedIn});
+  const MyApp({super.key, required this.isLoggedIn});
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -40,10 +40,10 @@ class _MyAppState extends State<MyApp> {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: widget.isLoggedIn ? HomePage() : LoginScreen(),
+        home: widget.isLoggedIn ? const HomePage() : const LoginScreen(),
         routes: {
-          '/login': (context) => LoginScreen(),
-          '/home': (context) => HomePage(),
+          '/login': (context) => const LoginScreen(),
+          '/home': (context) => const HomePage(),
           '/chatInfo': (context) => ChatInfo(
                 travelInfo:
                     ModalRoute.of(context)!.settings.arguments as Travel? ??

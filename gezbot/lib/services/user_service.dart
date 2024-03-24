@@ -71,6 +71,7 @@ class UserService {
       await prefs.setString('photoUrl', defaultProfilePicUrl);
       await prefs.setBool('isLoggedIn', true);
 
+      // ignore: use_build_context_synchronously
       Navigator.pushReplacementNamed(context, '/home');
       return userCredential;
     } on FirebaseAuthException catch (e) {
@@ -168,6 +169,7 @@ class UserService {
         final prefs = await SharedPreferences.getInstance();
         await prefs.setBool('isLoggedIn', true);
         await fetchAndStoreUserDetails(user.uid);
+        // ignore: use_build_context_synchronously
         Navigator.pushReplacementNamed(context, '/home');
       }
     } on FirebaseAuthException catch (e) {
@@ -193,18 +195,6 @@ class UserService {
       idToken: googleAuth.idToken,
     );
 
-    Future<void> updateUserGender({
-      required String userId,
-      required Gender gender,
-    }) async {
-      await _firestore.collection('users').doc(userId).update({
-        'gender': gender.toString().split('.').last,
-      });
-
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('gender', gender.toString().split('.').last);
-    }
-
     UserCredential userCredential =
         await _auth.signInWithCredential(credential);
     User? user = userCredential.user;
@@ -217,7 +207,7 @@ class UserService {
         var uuid = const Uuid();
         String defaultUsername = 'User_${uuid.v4()}';
         Timestamp defaultBirthDate = Timestamp.fromDate(DateTime.now());
-        String defaultGender = Gender.Other.toString().split('.').last;
+        String defaultGender = Gender.other.toString().split('.').last;
 
         await _firestore.collection('users').doc(user.uid).set({
           'email': user.email ?? '',
@@ -242,6 +232,7 @@ class UserService {
 
       // Update login status
       await prefs.setBool('isLoggedIn', true);
+      // ignore: use_build_context_synchronously
       Navigator.pushReplacementNamed(context, '/home');
     }
   }
@@ -269,6 +260,7 @@ class UserService {
         final docSnapshot =
             await _firestore.collection('users').doc(user.uid).get();
         if (!docSnapshot.exists) {
+          // ignore: use_build_context_synchronously
           await signUpWithGoogle(
               context: context, showErrorDialog: showErrorDialog);
         } else {
@@ -276,6 +268,7 @@ class UserService {
           await prefs.setBool('isLoggedIn', true);
           await prefs.setString('userEmail', user.email ?? '');
           await fetchAndStoreUserDetails(user.uid);
+          // ignore: use_build_context_synchronously
           Navigator.pushReplacementNamed(context, '/home');
         }
       }
@@ -291,10 +284,8 @@ class UserService {
     if (userDoc.exists) {
       Map<String, dynamic> userDetails = userDoc.data() as Map<String, dynamic>;
       final prefs = await SharedPreferences.getInstance();
-      await prefs.setString(
-          'birthDate',
-          (userDetails['birthDate'] as Timestamp).toDate().toIso8601String() ??
-              'Not available');
+      await prefs.setString('birthDate',
+          (userDetails['birthDate'] as Timestamp).toDate().toIso8601String());
       await prefs.setString('gender', userDetails['gender'] ?? 'Not available');
       await prefs.setString('photoUrl', userDetails['photoUrl'] ?? '');
       await prefs.setString(
@@ -311,7 +302,7 @@ class UserService {
     if (userDoc.exists) {
       Map<String, dynamic> userDetails = userDoc.data() as Map<String, dynamic>;
       userDetails['id'] = userDoc.id;
-      print(userDetails);
+
       return UserModel.fromMap(userDetails);
     } else {
       return UserModel.empty();
@@ -355,4 +346,4 @@ class UserService {
   }
 }
 
-enum Gender { Male, Female, Other }
+enum Gender { male, female, other }

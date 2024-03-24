@@ -5,6 +5,8 @@ import 'package:gezbot/pages/profile/profile_page.dart';
 import 'package:gezbot/pages/search/helperSearchFunc.dart';
 
 class SearchView extends StatefulWidget {
+  const SearchView({super.key});
+
   @override
   State<SearchView> createState() => _SearchViewState();
 }
@@ -12,32 +14,31 @@ class SearchView extends StatefulWidget {
 class _SearchViewState extends State<SearchView> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          buildSearchForm(context),
-          SearchView(),
-        ],
-      ),
+    return Column(
+      children: [
+        buildSearchForm(context),
+        searchView(),
+      ],
     );
   }
 
-  Widget SearchView() {
+  Widget searchView() {
     return BlocBuilder<SearchBloc, SearchState>(
       builder: (context, state) {
         if (state == SearchState.loading) {
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(),
           );
         } else if (state == SearchState.loaded) {
           // Render the list of users
           return buildSearchResults();
         } else if (state == SearchState.error) {
-          return Center(
+          return const Center(
             child: Text('Error fetching users. Please try again.'),
           );
-        } else
-          return Text('Please enter a query to begin');
+        } else {
+          return const Text('Please enter a query to begin');
+        }
       },
     );
   }
@@ -59,7 +60,7 @@ class _SearchViewState extends State<SearchView> {
             decoration: InputDecoration(
               hintText: 'Search for users',
               suffixIcon: IconButton(
-                icon: Icon(Icons.search),
+                icon: const Icon(Icons.search),
                 onPressed: () {
                   // Trigger the search using the entered query
                   final query = searchController.text;
