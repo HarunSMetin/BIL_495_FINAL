@@ -144,6 +144,16 @@ app.*.map.json
 /gezbot/android/app/release
 
 #/gezbot/lib/firebase_options.dart
+
+gezbot/linux/flutter/generated_plugin_registrant.cc
+gezbot/linux/flutter/generated_plugin_registrant.h
+gezbot/linux/flutter/generated_plugins.cmake
+gezbot/macos/Flutter/GeneratedPluginRegistrant.swift
+gezbot/windows/flutter/generated_plugin_registrant.cc
+gezbot/windows/flutter/generated_plugin_registrant.h
+gezbot/windows/flutter/generated_plugins.cmake
+
+
 *key.properties
 *.env 
 

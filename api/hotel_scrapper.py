@@ -12,6 +12,9 @@ from time import sleep
 from bs4 import BeautifulSoup
 import json
 
+from googleApi import GoogleApi
+import asyncio
+
 class HotelType(Enum):
     spa = 0
     hostel = 1
@@ -47,12 +50,14 @@ class HotelOptions(Enum):
 
 class Hotel_Api:
 
+
     #USAGE : 
     #findHotel("Istanbul" , "2024-05-18", "2024-06-01", stars=[4,5], hotelType=['spa', 'hostel'], hotelOptions=['free_wifi', 'free_breakfast'], adults=2, childeren= 0)
-    def __init__(self):
+    def __init__(self): 
+        self.google_api = GoogleApi()
         pass 
     
-    def findHotel( self, queryString:str ,checkin:str , checkout:str,stars =[] , hotelType =[] ,hotelOptions = [], adults = 1, childeren = 0):
+    async def  findHotel( self, queryString:str ,checkin:str , checkout:str,stars =[] , hotelType =[] ,hotelOptions = [], adults = 1, childeren = 0):
         URL = "https://www.google.com/travel" 
 
         if(queryString  != ""):
@@ -88,52 +93,108 @@ class Hotel_Api:
                     )
                 ) 
                 hotelIndex=0
-
+                counter = 0
                 for h in hotels: 
                     hotelIndex = hotelIndex + 1
                     if h.get_attribute("jsrenderer") == "hAbFdb": 
                         HTMLInner = h.get_attribute('innerHTML')
                         soup = BeautifulSoup(HTMLInner, 'html.parser')
-                        hotel_name = soup.find("h2", class_="BgYkof").text.strip()
+                        icons=["0"]
+                        adress = "NOT FOUND"
+                        coordinates = [0.1,0.1]
+                        
+                        try: 
+                            hotel_name = soup.find("h2", class_="BgYkof").text.strip()
+                            if hotel_name == "":
+                                hotel_name = "NOT FOUND"
+                        except Exception as e:
+                            print(e)
+                            hotel_name = "NOT FOUND"
                         print("Hotel Name:", hotel_name)
-
-                        starting_price =int(self.remove_non_decimal_chars(soup.find("span", class_="qQOQpe").text.strip()))
+                        try: 
+                            starting_price =int(self.remove_non_decimal_chars(soup.find("span", class_="qQOQpe").text.strip()))
+                        except Exception as e:
+                            print(e)
+                            starting_price = 0
                         print("Starting Price:", starting_price)
-
-                        amenities = [item.text.strip() for item in soup.select(".RJM8Kc .XX3dkb .QYEgn")]
-                        icons=[]
+                        try:
+                            amenities = [item.text.strip() for item in soup.select(".RJM8Kc .XX3dkb .QYEgn")]
+                            if len(amenities) == 0:
+                                amenities = ["0"]
+                        except Exception as e:
+                            print(e)
+                            amenities = ["0"]
+                        print("Amenities:", amenities )
+                       
                         try:
                             icons =  [item.find("svg").find("path").get("d")  for item in soup.select(".RJM8Kc .XX3dkb .pCsNve")]
+                            if len(icons) == 0:
+                                icons = ["0"]
                         except Exception as e:
                             print(e)
-                            icons = []
-                        print("Amenities:", [amenities , icons])
-                        
+                            icons = ["0"]
+                        print("Icons:", icons)
                         try:
                             hotel_rate = float(soup.find("span", class_="KFi5wf lA0BZ").text.strip() )
-                            print("Hotel Rate:", hotel_rate)
+                            if hotel_rate == 0:
+                                hotel_rate = 0.1
                         except Exception as e:
                             print(e)
-                            hotel_rate = 0
+                            hotel_rate = 0.1
+                        print("Hotel Rate:", hotel_rate)
 
                         try:
                             hotel_review_count = int(self.remove_non_decimal_chars(soup.find("span", class_="jdzyld XLC8M").text.strip()))
-                            print("Hotel Review Count:", hotel_review_count)
                         except Exception as e:
                             print(e)
                             hotel_review_count = 0
+                        print("Hotel Review Count:", hotel_review_count)
 
-                        href_attribute = "https://www.google.com" +soup.find("div").find("a")["href"]
-                        print("Href Attribute:", href_attribute)  
+                        try:
+                            href_attribute =soup.find("div").find("a")["href"] 
+                            if href_attribute == "":
+                                href_attribute = "https://www.google.com/travel/hotels?hl=en&gl=en&un=1&ap=MABoACgAQABSAFgAYgBhAGwAaQBlAHMAKAAw"
+                            else :
+                                href_attribute = "https://www.google.com"+ href_attribute
+                        except Exception as e:
+                            print(e)
+                            href_attribute = "https://www.google.com/travel/hotels?hl=en&gl=en&un=1&ap=MABoACgAQABSAFgAYgBhAGwAaQBlAHMAKAAw" 
                         
-                        result[i][hotelIndex] = {
+                        hotelInfo = await self.google_api.fetch_places_query(hotel_name+ ' ' + queryString)
+                        try:
+                           adress = hotelInfo[0]["formatted_address"]
+                           if adress == "":
+                               adress = "NOT FOUND"
+                        except Exception as e:
+                            print(e)
+                            adress = "NOT FOUND"
+                        print("Adress:", adress)
+                        try:
+                           coordinates = [float(hotelInfo[0]["geometry"]["location"]["lat"]) ,float(hotelInfo[0][ "geometry"]["location"]["lng"]) ]
+                           if coordinates == [0,0]:
+                                 coordinates = [0.1,0.1]
+                        except Exception as e:
+                            print(e)
+                            coordinates = [0.1,0.1]
+                        print("Coordinates:", coordinates)
+                        
+
+                        stringIndex = str(counter) 
+                        if counter<10:
+                            stringIndex = "0"+str(counter) 
+
+                        result[i][stringIndex] = {
                             "hotel_name": hotel_name,
                             "starting_price": starting_price,
-                            "amenities": [amenities , icons],
+                            "adress": adress,
+                            "coordinates": coordinates,
+                            "amenities": amenities ,
+                            "icons": icons,
                             "hotel_rate": hotel_rate,
                             "hotel_review_count": hotel_review_count,
                             "href_attribute": href_attribute
                         }
+                        counter += 1
                         
                 search_index = search_index + 1 
             
@@ -264,7 +325,7 @@ class Hotel_Api:
                 )
             )
         ).text)
-        a = adults-adultsCount
+        a =int(adults)-adultsCount
         if a > 0:
             for i in range(a):
                 WebDriverWait(driver, 15).until(
@@ -297,7 +358,7 @@ class Hotel_Api:
             )
         ).text)
 
-        c = childs-childsCount
+        c = int(childs)-childsCount
         if c > 0:
             for i in range(c):
                 WebDriverWait(driver, 15).until(
@@ -544,19 +605,21 @@ class Hotel_Api:
         except ValueError:
             pass
     def remove_non_decimal_chars(self,input_string):
-        try:
-            print("remove_non_decimal_chars: ", input_string)
+        try: 
             return re.sub(r'[^\d]', '', input_string)
         except ValueError:
             return 0  
     
-    def main():
+    async def main():
         h = Hotel_Api()
-        result = h.findHotel("Istanbul" , "2024-05-18", "2024-06-01", stars=[4,5], hotelType=['spa', 'hostel'], hotelOptions=['free_wifi', 'free_breakfast'], adults=2, childeren= 0)
+        result = await h.findHotel("Istanbul" , "2024-05-18", "2024-06-01", stars=[4,5], hotelType=['spa', 'hostel'], hotelOptions=['free_wifi', 'free_breakfast'], adults=2, childeren= 0)
         with open('data.json', 'w',encoding="utf8") as f:
             json.dump(result, f)
     
 
+async def main():
+    await Hotel_Api.main()
+
 if __name__ == "__main__":
-    Hotel_Api.main()
+    asyncio.run(main())
     

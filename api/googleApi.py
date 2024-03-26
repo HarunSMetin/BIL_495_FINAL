@@ -85,6 +85,7 @@ class GoogleApi:
         params = {
             "query": queryString,
             "key": self.API_KEY,
+            "businessStatus": "OPERATIONAL",
         }
         if types != []:
             params["type"] = "|".join(types)
