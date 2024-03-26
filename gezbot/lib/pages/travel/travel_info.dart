@@ -11,7 +11,7 @@ import 'package:gezbot/services/database_service.dart';
 import 'package:gezbot/services/user_service.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:gezbot/services/gpt_service.dart';
+import 'package:gezbot/pages/travel/travelPage_new.dart';
 
 class TravelInformation extends StatefulWidget {
   final Travel travel;
@@ -65,6 +65,18 @@ class _TravelInformationState extends State<TravelInformation> {
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TravelPageNew(
+                          travel: widget.travel,
+                        ),
+                      ),
+                    );
+                  },
+                  child: const Text('New Travel Page')),
               Card(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(4.0),

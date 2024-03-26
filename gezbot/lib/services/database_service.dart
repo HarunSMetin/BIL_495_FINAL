@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gezbot/models/chat.model.dart';
 import 'package:gezbot/models/message.model.dart';
+import 'package:gezbot/models/place.model.dart';
 import 'package:gezbot/models/question.model.dart';
 import 'package:gezbot/models/travel.model.dart';
 import 'package:gezbot/models/user.model.dart';
@@ -23,6 +24,12 @@ class DatabaseService {
       FirebaseFirestore.instance.collection('friendRequests');
   final GoogleCloudService _googleCloudService = GoogleCloudService();
 
+  final List<String> categories = [
+    "relevance",
+    "lowest_price",
+    "highest_rating",
+    "most_viewed"
+  ];
   void printInlinedJson(Map<String, dynamic> jsonData, {String indent = ''}) {
     jsonData.forEach((key, value) {
       if (value is Map<String, dynamic>) {
@@ -1017,14 +1024,12 @@ class DatabaseService {
 
   ////////////////////////////  HOTELS  ////////////////////////////
 
-  Future<List<Hotel>> getHotels(String travelId) async {
+  Future<List<Hotel>> getAllHotels(String travelId) async {
     CollectionReference hotelsCollection =
         travelsCollection.doc(travelId).collection('hotels');
 
     List<Hotel> hotels = [];
-    var Cats = ["relevance", "lowest_price", "highest_rating", "most_viewed"];
-
-    for (var cat in Cats) {
+    for (var cat in categories) {
       QuerySnapshot<Map<String, dynamic>> querySnapshot =
           await hotelsCollection.doc(cat).collection('hotels').get();
       for (var doc in querySnapshot.docs) {
@@ -1034,7 +1039,6 @@ class DatabaseService {
           hotelData['id'] = doc.id;
           hotels.add(Hotel.fromMap(hotelData));
         } catch (e) {
-          print("Error on ID $cat - ${doc.id}: $e");
           continue;
         }
         hotelData['id'] = doc.id;
@@ -1045,7 +1049,7 @@ class DatabaseService {
   }
 
   Future<Hotel> getFirstHotel(String travelId) async {
-    List<Hotel> hotels = await getHotels(travelId);
+    List<Hotel> hotels = await getAllHotels(travelId);
     if (hotels.isEmpty) {
       return Hotel(
           id: "empty",
@@ -1081,5 +1085,37 @@ class DatabaseService {
     } else {
       return hotels.first;
     }
+  }
+
+  Future<Map<String, Hotel>> getRecomendedHotels(String travelId) async {
+    CollectionReference selectedHotelsCollection =
+        travelsCollection.doc(travelId).collection('selectedHotels');
+
+    Map<String, Hotel> hotels = {};
+    for (var cat in categories) {
+      DocumentSnapshot doc = await selectedHotelsCollection.doc(cat).get();
+      if (doc.exists) {
+        Map<String, dynamic> hotelData = doc.data() as Map<String, dynamic>;
+        hotelData['id'] = doc.id;
+        hotels[cat] = Hotel.fromMap(hotelData);
+      }
+    }
+    return hotels;
+  }
+
+  ////////////////////////////  PLACES  ////////////////////////////
+
+  Future<List<Place>> getSelectedPlaces(String travelId) async {
+    CollectionReference placesCollection =
+        travelsCollection.doc(travelId).collection('selectedPlaces');
+
+    QuerySnapshot selectedPlaces = await placesCollection.get();
+    List<Place> places = [];
+    for (var doc in selectedPlaces.docs) {
+      Map<String, dynamic> placeData = doc.data() as Map<String, dynamic>;
+      placeData['id'] = doc.id;
+      places.add(Place.fromMap(placeData));
+    }
+    return places;
   }
 }

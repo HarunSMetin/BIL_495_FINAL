@@ -16,6 +16,7 @@ from models import TravelModel
 
 import os 
 from fastapi.middleware.cors import CORSMiddleware
+import random
 
 
 files = [f for f in os.listdir(".") if os.path.isfile(f)]
@@ -41,6 +42,19 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+def __select_random_elements(array, num_parts=7):
+    # Calculate the length of each part
+    part_length = len(array) // num_parts
+
+    # Split the array into parts
+    parts = [array[i:i+part_length] for i in range(0, len(array), part_length)]
+
+    # Select random elements from each part
+    random_elements = []
+    for part in parts:
+        random_elements.append(random.choice(part))
+
+    return random_elements
 
 
 @app.head('/') 
@@ -74,7 +88,11 @@ async def find_places(travelModel : TravelModel):
                             places.append(p1)
                     except Exception as e:
                         print(e)
-  
+      
+        selections = __select_random_elements(places)   
+        for selection in selections:
+            db.collection("travels").document(travelModel.TravelID).collection('selectedPlaces').document(selection["place_id"]).set(selection)           
+ 
         return True
     return False
 
@@ -128,7 +146,13 @@ async def find_hotels(hotelProperties : HotelModel ):
                 db.collection("travels").document(hotelProperties.TravelID).collection('hotels').document(cat).set({"status": "pending"})  
                 for hotel in hotels[cat]: 
                     db.collection("travels").document(hotelProperties.TravelID).collection('hotels').document(cat).collection('hotels').document(hotel).set(hotels[cat][hotel])
-            
+    
+
+            for cat in cats:
+                selection = __select_random_elements(hotels[cat],1)
+                for s in selection:
+                    db.collection("travels").document(hotelProperties.TravelID).collection('selectedHotels').document(cat).set(s)
+                 
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))
         return True

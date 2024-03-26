@@ -39,7 +39,7 @@ class Hotel {
       );
     }
     return Hotel(
-      id: (map['hotel_id'] ?? '').toString(),
+      id: (map['id'] ?? '').toString(),
       name: (map['hotel_name'] ?? '').toString(),
       address: (map['hotel_address'] ?? '').toString(),
       coordinates: List<double>.from(map['coordinates'] ?? [0.0, 0.0]),

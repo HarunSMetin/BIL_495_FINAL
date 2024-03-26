@@ -49,7 +49,8 @@ class HotelWidget extends StatelessWidget {
               ),
             ],
           ),
-          childrenPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          childrenPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           children: [
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -70,8 +71,14 @@ class HotelWidget extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 10),
-                Text(
-                  hotel.address,
+                SelectableText(
+                  () {
+                    if (hotel.address.isEmpty) {
+                      return "*No address found \nCoordinates : ${hotel.coordinates.toString()}";
+                    } else {
+                      return hotel.address;
+                    }
+                  }(),
                   style: TextStyle(
                     fontSize: 16,
                     color: Colors.grey[600],
