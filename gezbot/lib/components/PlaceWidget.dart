@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gezbot/models/place.model.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class PlaceDetails {
@@ -18,7 +19,7 @@ class PlaceDetails {
 }
 
 class PlaceWidget extends StatelessWidget {
-  final PlaceDetails place;
+  final Place place;
 
   const PlaceWidget({super.key, required this.place});
 
@@ -26,28 +27,35 @@ class PlaceWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Expanded(
-          child: GoogleMap(
-            initialCameraPosition: CameraPosition(
-              target: place.location,
-              zoom: 15,
-            ),
-            markers: {
-              Marker(
-                markerId: const MarkerId('place_marker'),
-                position: place.location,
-                infoWindow: InfoWindow(
-                  title: place.name,
-                  snippet:
-                      'Rating: ${place.rating} (${place.userRatingsTotal} reviews)',
+        /*Expanded(
+            child: GoogleMap(
+              initialCameraPosition: CameraPosition(
+                target: LatLng(
+                  place.geometry?.location?.lat ?? 0.0,
+                  place.geometry?.location?.lng ?? 0.0,
                 ),
+                zoom: 15,
               ),
-            },
+              markers: {
+                Marker(
+                  markerId: const MarkerId('place_marker'),
+                  position: LatLng(
+                    place.geometry?.location?.lat ?? 0.0,
+                    place.geometry?.location?.lng ?? 0.0,
+                  ),
+                  infoWindow: InfoWindow(
+                    title: place.name,
+                    snippet:
+                        'Rating: ${place.rating} (${place.userRatingsTotal} reviews)',
+                  ),
+                ),
+              },
+            ),
           ),
-        ),
+          */
         ListTile(
-          leading: Image.network(place.icon, width: 50, height: 50),
-          title: Text(place.name),
+          leading: Image.network(place.icon ?? '', width: 50, height: 50),
+          title: Text(place.name ?? ''),
           subtitle: Text(
               'Rating: ${place.rating} (${place.userRatingsTotal} reviews)'),
           onTap: () async {

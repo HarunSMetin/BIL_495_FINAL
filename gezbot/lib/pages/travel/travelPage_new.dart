@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:gezbot/models/hotel.model.dart';
+import 'package:gezbot/models/place.model.dart';
 import 'package:side_navigation/side_navigation.dart';
 import 'package:gezbot/models/user.model.dart';
 import 'package:gezbot/pages/profile/profile_page.dart';
@@ -12,7 +13,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gezbot/pages/chat/chat_page.dart';
 import 'package:gezbot/components/HotelWidget.dart';
 import 'package:gezbot/components/PlaceWidget.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class TravelPageNew extends StatefulWidget {
   final Travel travel;
@@ -24,6 +24,15 @@ class _TravelPageNewState extends State<TravelPageNew> {
   /// Views to display
   late List<Widget>
       views; // Use 'late' because we'll initialize it in initState
+  late Future<List<Hotel>> hotelList; // Initialize the future here
+  late Future<List<Place>> placeList; // Initialize the future here
+
+  Future<void> refresh() async {
+    setState(() {
+      hotelList = DatabaseService().getRecomendedHotels(widget.travel.id);
+      placeList = DatabaseService().getRecommendedPlaces(widget.travel.id);
+    });
+  }
 
   /// The currently selected index of the bar
   int selectedIndex = 0;
@@ -32,27 +41,82 @@ class _TravelPageNewState extends State<TravelPageNew> {
   void initState() {
     super.initState();
     // Initialize your views list here
+    refresh();
     views = [
-      Center(
-        child: Text('Flights'),
-      ),
-      Center(
-        child: HotelsTile(widget.travel),
-      ),
-      Center(
-        child: PlaceWidget(
-          place: PlaceDetails(
-            name: 'Hotel Mostar',
-            rating: 3.8,
-            userRatingsTotal: 128,
-            icon:
-                'https://maps.gstatic.com/mapfiles/place_api/icons/v1/png_71/lodging-71.png',
-            location: LatLng(39.936338, 32.8566689),
-          ),
-        ),
+      Column(
+        children: [
+          Text('Flights'),
+        ],
       ),
       Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.black,
+                backgroundColor: Color.fromARGB(255, 210, 220, 252),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(1),
+                ),
+              ),
+              onPressed: () async {
+                List<Hotel> newHotels = await DatabaseService()
+                    .getDifferentHotels(widget.travel.id);
+                if (newHotels.isNotEmpty) {
+                  print('new hotels found');
+                  refresh();
+                }
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Icon(Icons.refresh, color: Colors.black),
+                  Text('Give Me Different Hotels'),
+                ],
+              ),
+            ),
+          ),
+          HotelsTile(widget.travel),
+        ],
+      ),
+      Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                foregroundColor: Colors.black,
+                backgroundColor: Color.fromARGB(255, 210, 220, 252),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(1),
+                ),
+              ),
+              onPressed: () async {
+                refresh();
+                List<Place> newPlaces = await DatabaseService()
+                    .getDifferentPlaces(widget.travel.id);
+                if (newPlaces.isNotEmpty) {
+                  print('new places found');
+                  refresh();
+                }
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Icon(Icons.refresh, color: Colors.black),
+                  Text('Give Me Different Places'),
+                ],
+              ),
+            ),
+          ),
+          PlacesTile(widget.travel),
+        ],
+      ),
+      Column(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           MembersTile(widget.travel),
           const SizedBox(height: 20),
@@ -147,96 +211,27 @@ class _TravelPageNewState extends State<TravelPageNew> {
 
           /// Make it take the rest of the available width
           Expanded(
-            child: views.elementAt(selectedIndex),
-          )
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: SingleChildScrollView(
+                child: views.elementAt(selectedIndex),
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 
   Widget HotelsTile(Travel travel) {
-    String formatPriceString(String input) {
-      List<String> words = input.split('_');
-      String formattedString = words
-          .map((word) => '${word[0].toUpperCase()}${word.substring(1)}')
-          .join(' ');
-
-      return formattedString;
-    }
-
-    List<String> cats = [];
-    for (String cat in DatabaseService().categories) {
-      cats.add(formatPriceString(cat));
-    }
-
-    List<ExpansionTile> tiles = [];
-    for (String cat in cats) {
-      tiles.add(
-        ExpansionTile(
-          initiallyExpanded: true,
-          backgroundColor: Colors.blue[100],
-          iconColor: const Color.fromARGB(255, 4, 44, 77),
-          title: Text("$cat Hotels",
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-          children: <Widget>[
-            FutureBuilder(
-                future: DatabaseService().getRecomendedHotels(travel.id),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                  if (snapshot.hasError) {
-                    return Text('Error: ${snapshot.error}');
-                  } else if (snapshot.hasData) {
-                    if ((snapshot.data as Map<String, Hotel>).isEmpty) {
-                      return const Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                              'Travel Is Creating Wait A Moment... (it takes a while)'),
-                          SizedBox(height: 20),
-                          CircularProgressIndicator(color: Colors.blue),
-                          SizedBox(height: 20),
-                        ],
-                      );
-                    } else {
-                      Map<String, Hotel> hotels =
-                          snapshot.data as Map<String, Hotel>;
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: hotels.length,
-                        itemBuilder: (context, index) {
-                          Hotel hotel = hotels.values.elementAt(index);
-                          return HotelWidget(hotel: hotel);
-                        },
-                      );
-                    }
-                  } else {
-                    return const Text(
-                        'Travel ERROR : No hotels found for this travel');
-                  }
-                }),
-          ],
-        ),
-      );
-    }
-    return ListView(
-      children: tiles,
-    );
-  }
-
-/*
-  Widget Places(Travel travel) {
-    ExpansionTile(
+    return ExpansionTile(
       initiallyExpanded: true,
-      backgroundColor: Colors.blue[100],
       iconColor: const Color.fromARGB(255, 4, 44, 77),
-      title: const Text("Places",
+      title: const Text("Recommended Hotels",
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
       children: <Widget>[
         FutureBuilder(
-            future: DatabaseService().getRecomendedPlaces(travel.id),
+            future: hotelList,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
@@ -244,7 +239,7 @@ class _TravelPageNewState extends State<TravelPageNew> {
               if (snapshot.hasError) {
                 return Text('Error: ${snapshot.error}');
               } else if (snapshot.hasData) {
-                if ((snapshot.data as Map<String, Hotel>).isEmpty) {
+                if ((snapshot.data as List<Hotel>).isEmpty) {
                   return const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -256,27 +251,73 @@ class _TravelPageNewState extends State<TravelPageNew> {
                     ],
                   );
                 } else {
-                  Map<String, Hotel> hotels =
-                      snapshot.data as Map<String, Hotel>;
+                  List<Hotel> hotels = snapshot.data as List<Hotel>;
                   return ListView.builder(
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: hotels.length,
                     itemBuilder: (context, index) {
-                      Hotel hotel = hotels.values.elementAt(index);
+                      Hotel hotel = hotels[index];
                       return HotelWidget(hotel: hotel);
                     },
                   );
                 }
               } else {
-                return const Text(
-                    'Travel ERROR : No hotels found for this travel');
+                return const Text('No hotels found for this travel');
               }
             }),
       ],
     );
   }
- */
+
+  Widget PlacesTile(Travel travel) {
+    return ExpansionTile(
+      initiallyExpanded: true,
+      iconColor: const Color.fromARGB(255, 4, 44, 77),
+      title: const Text("Places",
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+      children: <Widget>[
+        FutureBuilder(
+            future: placeList,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              } else if (snapshot.hasData) {
+                if ((snapshot.data as List<Place>).isEmpty) {
+                  return const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                          'Travel Is Creating Wait A Moment... (it takes a while)'),
+                      SizedBox(height: 20),
+                      CircularProgressIndicator(color: Colors.blue),
+                      SizedBox(height: 20),
+                    ],
+                  );
+                } else {
+                  List<Place> places = snapshot.data as List<Place>;
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: places.length,
+                    itemBuilder: (context, index) {
+                      Place place = places[index];
+                      return PlaceWidget(place: place);
+                    },
+                  );
+                }
+              } else {
+                return const Text(
+                    'Travel ERROR : No places found for this travel');
+              }
+            }),
+      ],
+    );
+  }
+
   Widget MembersTile(Travel travel) {
     Future<List<UserModel>> fetchMemberDetails() async {
       List<UserModel> members = [];
@@ -293,7 +334,6 @@ class _TravelPageNewState extends State<TravelPageNew> {
 
     return ExpansionTile(
       initiallyExpanded: true,
-      backgroundColor: Colors.blue[100],
       iconColor: const Color.fromARGB(255, 4, 44, 77),
       title: const Text("Members",
           style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),

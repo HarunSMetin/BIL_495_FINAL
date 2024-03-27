@@ -20,24 +20,30 @@ class HotelWidget extends StatelessWidget {
           ),
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              AutoSizeText(
-                hotel.name,
-                style: const TextStyle(
-                  overflow: TextOverflow.ellipsis,
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                ),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  AutoSizeText(
+                    hotel.name,
+                    style: const TextStyle(
+                      overflow: TextOverflow.ellipsis,
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   const Icon(
                     Icons.star,
                     color: Colors.amber,
                     size: 14,
                   ),
-                  AutoSizeText(
+                  Text(
                     hotel.rating.toString(),
                     style: const TextStyle(
                       overflow: TextOverflow.ellipsis,

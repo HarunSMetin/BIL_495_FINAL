@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:gezbot/models/chat.model.dart';
 import 'package:gezbot/models/message.model.dart';
@@ -30,6 +32,9 @@ class DatabaseService {
     "highest_rating",
     "most_viewed"
   ];
+  List<Place> allPlaces = [];
+  List<Hotel> allHotels = [];
+
   void printInlinedJson(Map<String, dynamic> jsonData, {String indent = ''}) {
     jsonData.forEach((key, value) {
       if (value is Map<String, dynamic>) {
@@ -1045,6 +1050,7 @@ class DatabaseService {
         hotels.add(Hotel.fromMap(hotelData));
       }
     }
+    allHotels = hotels;
     return hotels;
   }
 
@@ -1087,25 +1093,57 @@ class DatabaseService {
     }
   }
 
-  Future<Map<String, Hotel>> getRecomendedHotels(String travelId) async {
+  Future<List<Hotel>> getRecomendedHotels(String travelId) async {
     CollectionReference selectedHotelsCollection =
         travelsCollection.doc(travelId).collection('selectedHotels');
 
-    Map<String, Hotel> hotels = {};
-    for (var cat in categories) {
-      DocumentSnapshot doc = await selectedHotelsCollection.doc(cat).get();
-      if (doc.exists) {
-        Map<String, dynamic> hotelData = doc.data() as Map<String, dynamic>;
-        hotelData['id'] = doc.id;
-        hotels[cat] = Hotel.fromMap(hotelData);
+    List<Hotel> hotels = [];
+    QuerySnapshot querySnapshot = await selectedHotelsCollection.get();
+    for (var doc in querySnapshot.docs) {
+      Map<String, dynamic> hotelData = doc.data() as Map<String, dynamic>;
+      hotelData['id'] = doc.id;
+      hotels.add(Hotel.fromMap(hotelData));
+    }
+
+    return hotels;
+  }
+
+  Future<List<Hotel>> getDifferentHotels(String travelId) async {
+    if (allHotels.isEmpty) {
+      allHotels = await getAllHotels(travelId);
+    }
+
+    List<Hotel> randomHotels = [];
+    if (allHotels.length <= 7) {
+      randomHotels = allHotels;
+    } else {
+      for (var i = 0; i < 7; i++) {
+        var num = random(0, allHotels.length);
+        randomHotels.add(allHotels[num]);
       }
     }
-    return hotels;
+
+    QuerySnapshot allOfHotels = await travelsCollection
+        .doc(travelId)
+        .collection('selectedHotels')
+        .get();
+
+    for (var doc in allOfHotels.docs) {
+      doc.reference.delete();
+    }
+    for (var hotel in randomHotels) {
+      await travelsCollection
+          .doc(travelId)
+          .collection('selectedHotels')
+          .add(hotel.toMap());
+    }
+
+    return randomHotels;
   }
 
   ////////////////////////////  PLACES  ////////////////////////////
 
-  Future<List<Place>> getSelectedPlaces(String travelId) async {
+  Future<List<Place>> getRecommendedPlaces(String travelId) async {
     CollectionReference placesCollection =
         travelsCollection.doc(travelId).collection('selectedPlaces');
 
@@ -1117,5 +1155,57 @@ class DatabaseService {
       places.add(Place.fromMap(placeData));
     }
     return places;
+  }
+
+  Future<List<Place>> getAllPlaces(String travelId) async {
+    CollectionReference placesCollection =
+        travelsCollection.doc(travelId).collection('places');
+
+    QuerySnapshot allOfPlaces = await placesCollection.get();
+    List<Place> places = [];
+    for (var doc in allOfPlaces.docs) {
+      Map<String, dynamic> placeData = doc.data() as Map<String, dynamic>;
+      placeData['id'] = doc.id;
+      places.add(Place.fromMap(placeData));
+    }
+    allPlaces = places;
+    return places;
+  }
+
+  Future<List<Place>> getDifferentPlaces(String travelId) async {
+    if (allPlaces.isEmpty) {
+      allPlaces = await getAllPlaces(travelId);
+    }
+
+    List<Place> randomPlaces = [];
+    if (allPlaces.length <= 7) {
+      randomPlaces = allPlaces;
+    } else {
+      for (var i = 0; i < 7; i++) {
+        var num = random(0, allPlaces.length);
+        randomPlaces.add(allPlaces[num]);
+      }
+    }
+
+    QuerySnapshot allOfPlaces = await travelsCollection
+        .doc(travelId)
+        .collection('selectedPlaces')
+        .get();
+
+    for (var doc in allOfPlaces.docs) {
+      doc.reference.delete();
+    }
+    for (var place in randomPlaces) {
+      await travelsCollection
+          .doc(travelId)
+          .collection('selectedPlaces')
+          .add(place.toMap(place));
+    }
+
+    return randomPlaces;
+  }
+
+  int random(int min, int max) {
+    return min + Random().nextInt(max - min);
   }
 }

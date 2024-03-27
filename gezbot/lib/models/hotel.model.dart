@@ -41,18 +41,33 @@ class Hotel {
     return Hotel(
       id: (map['id'] ?? '').toString(),
       name: (map['hotel_name'] ?? '').toString(),
-      address: (map['hotel_address'] ?? '').toString(),
+      address: (map['address'] ?? '').toString(),
       coordinates: List<double>.from(map['coordinates'] ?? [0.0, 0.0]),
       price: map['starting_price'] ?? 0,
       amenities: List<String>.from(map['amenities'] ?? ['']),
       icons: List<String>.from(map['icons'] ?? ['']),
-      rating: map['hotel_rate'] ?? 0.0,
+      rating: map['rating'] ?? 0.0,
       reviewCount: map['hotel_review_count'] ?? 0,
       link: (map['href_attribute'] ??
               'https://www.google.com/travel/hotels?hl=en&gl=en&un=1&ap=MABoACgAQABSAFgAYgBhAGwAaQBlAHMAKAAw')
           .toString(),
     );
   }
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'hotel_name': name,
+      'address': address,
+      'coordinates': coordinates,
+      'starting_price': price,
+      'amenities': amenities,
+      'icons': icons,
+      'rating': rating,
+      'hotel_review_count': reviewCount,
+      'href_attribute': link,
+    };
+  }
+
   @override
   String toString() {
     return 'Hotel(name: $name, address: $address, coordinates: $coordinates, price: $price, amenities: $amenities, icons: $icons, rating: $rating, reviewCount: $reviewCount, link: $link)';

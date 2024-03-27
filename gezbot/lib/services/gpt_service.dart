@@ -91,7 +91,7 @@ class GPTService {
   String out =
       '{"place": "#destination","checkin": "yyyy-mm-dd","checkout": "yyyy-mm-dd","stars": [4, 5],"hotel_types": ["hostel", "boutique", "bed_and_breakfast"],"hotel_options": ["free_wifi", "room_service", "pool", "air_conditioned"],"adults": 1,"children": 0}';
   String _createHotelPrompt(Travel travel) {
-    return "You are backend of AI TRAVEL PLANNER, You can return just Json. Travel details: ${travel.toString()}. You should select best and most relevant Tags for this travel, based on given informations. Here is list for domains you should select only given domains : $domains You will Provide JUST structure FOR EXAMPLE :  $out  . Provide ONE suggestion in JSON FORMAT. You must return JUST json.";
+    return "You are backend of AI TRAVEL PLANNER, You can return just Json. Travel details: ${travel.toString()} . 02_DepartureDate = checkin . 03_ReturnDate = checkout. You should select best and most relevant Tags for this travel, based on given informations. Here is list for domains you should select only given domains : $domains You will Provide JUST structure FOR EXAMPLE :  $out  . Provide ONE suggestion in JSON FORMAT. You must return JUST json.";
   }
 
   AICreatedTravel _parseAIResponse(String response, String travelId) {

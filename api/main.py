@@ -13,6 +13,7 @@ from firebase_admin import credentials
 from firebase_admin import firestore
 from models import HotelModel
 from models import TravelModel
+import uvicorn
 
 import os 
 from fastapi.middleware.cors import CORSMiddleware
@@ -32,8 +33,7 @@ db = firestore.client()
 app = FastAPI()
 googleApi = GoogleApi()
 GPTAPI = gpt_api()
-HotelAPI = Hotel_Api() 
-
+HotelAPI = Hotel_Api()  
 
 app.add_middleware(
     CORSMiddleware,
@@ -41,7 +41,11 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
-)
+) 
+
+if __name__ == "__main__":
+    uvicorn.run(app, host="10.3.192.79", port=8000)
+
 def __select_random_elements(array, num_parts=7):
     # Calculate the length of each part
     part_length = len(array) // num_parts
@@ -57,8 +61,8 @@ def __select_random_elements(array, num_parts=7):
     return random_elements
 
 
-@app.head('/') 
-async  def main():
+@app.get('/') 
+async  def read_root():
     return {"gezBot": "Backend"} 
 
 @app.post("/find_places")
@@ -135,7 +139,7 @@ async def flights(from_: str, to: str, departure_date: str, return_date: str):
 @app.post("/find_hotels")
 async def find_hotels(hotelProperties : HotelModel ):
     hotels = await HotelAPI.findHotel(
-        hotelProperties.place, hotelProperties.checkin, hotelProperties.checkout, 
+         hotelProperties.place, hotelProperties.checkin, hotelProperties.checkout, 
         hotelProperties.stars, hotelProperties.hotel_types, hotelProperties.hotel_options, hotelProperties.adults,
         hotelProperties.children
     )
@@ -147,11 +151,14 @@ async def find_hotels(hotelProperties : HotelModel ):
                 for hotel in hotels[cat]: 
                     db.collection("travels").document(hotelProperties.TravelID).collection('hotels').document(cat).collection('hotels').document(hotel).set(hotels[cat][hotel])
     
-
-            for cat in cats:
-                selection = __select_random_elements(hotels[cat],1)
-                for s in selection:
-                    db.collection("travels").document(hotelProperties.TravelID).collection('selectedHotels').document(cat).set(s)
+            try: 
+                for cat in cats:
+                    selection = __select_random_elements(list(hotels[cat].values()), num_parts=2)
+                    for s in selection:
+                        db.collection("travels").document(hotelProperties.TravelID).collection('selectedHotels').add(s) 
+            except Exception as e:
+                print(e) 
+        
                  
         except Exception as e:
             raise HTTPException(status_code=500, detail=str(e))

@@ -100,7 +100,7 @@ class Hotel_Api:
                         HTMLInner = h.get_attribute('innerHTML')
                         soup = BeautifulSoup(HTMLInner, 'html.parser')
                         icons=["0"]
-                        adress = "NOT FOUND"
+                        address = "NOT FOUND"
                         coordinates = [0.1,0.1]
                         
                         try: 
@@ -162,13 +162,13 @@ class Hotel_Api:
                         
                         hotelInfo = await self.google_api.fetch_places_query(hotel_name+ ' ' + queryString)
                         try:
-                           adress = hotelInfo[0]["formatted_address"]
-                           if adress == "":
-                               adress = "NOT FOUND"
+                           address = hotelInfo[0]["formatted_address"]
+                           if address == "":
+                               address = "NOT FOUND"
                         except Exception as e:
                             print(e)
-                            adress = "NOT FOUND"
-                        print("Adress:", adress)
+                            address = "NOT FOUND"
+                        print("Address:", address)
                         try:
                            coordinates = [float(hotelInfo[0]["geometry"]["location"]["lat"]) ,float(hotelInfo[0][ "geometry"]["location"]["lng"]) ]
                            if coordinates == [0,0]:
@@ -186,11 +186,11 @@ class Hotel_Api:
                         result[i][stringIndex] = {
                             "hotel_name": hotel_name,
                             "starting_price": starting_price,
-                            "adress": adress,
+                            "address": address,
                             "coordinates": coordinates,
                             "amenities": amenities ,
                             "icons": icons,
-                            "hotel_rate": hotel_rate,
+                            "rating": hotel_rate,
                             "hotel_review_count": hotel_review_count,
                             "href_attribute": href_attribute
                         }
@@ -247,17 +247,21 @@ class Hotel_Api:
                 )
             )
         )  
-        matchday = str(checkinDay)
+        matchday = str(checkinDay) 
         for week in weeks:
             days = week.find_elements(By.XPATH, "div") 
             COUNT_WEEK = 1
             for day in days:
                 COUNT_DAY = 1
-                for singleday in day.find_elements(By.XPATH, "div"):
-                    if singleday.text.strip() == matchday:
+                for singleday in day.find_elements(By.XPATH, "div"): 
+                    if singleday.text == matchday: 
+                        singleday.click()
                         dayList = day.find_elements(By.XPATH, "div")
                         if dayList:
+                            sleep(1)
                             dayList[-1].click()
+                            sleep(1)
+                            dayList[-1].click() 
                         break 
                     COUNT_DAY += 1
                 COUNT_WEEK += 1
@@ -414,25 +418,25 @@ class Hotel_Api:
                 )
             )
             for element in hotelType:
-                if element == HotelType.spa.name:
+                if element == HotelType.spa.name and len(hotelTypesList) >= 1:
                     hotelTypesList[0].click()
-                elif element == HotelType.hostel.name:
+                elif element == HotelType.hostel.name and len(hotelTypesList) >= 2:
                     hotelTypesList[1].click()
-                elif element == HotelType.boutique.name:
+                elif element == HotelType.boutique.name and len(hotelTypesList) >= 3:
                     hotelTypesList[2].click()
-                elif element == HotelType.bed_and_breakfast.name:
+                elif element == HotelType.bed_and_breakfast.name and len(hotelTypesList) >= 4:
                     hotelTypesList[3].click()
-                elif element == HotelType.beach.name:
+                elif element == HotelType.beach.name and len(hotelTypesList) >= 5:
                     hotelTypesList[4].click()
-                elif element == HotelType.motel.name:
+                elif element == HotelType.motel.name and len(hotelTypesList) >= 6:
                     hotelTypesList[5].click()
-                elif element == HotelType.apartment.name:
+                elif element == HotelType.apartment.name and len(hotelTypesList) >= 7:
                     hotelTypesList[6].click()
-                elif element == HotelType.inn.name:
+                elif element == HotelType.inn.name and len(hotelTypesList) >= 8:
                     hotelTypesList[7].click()
-                elif element == HotelType.resort.name:
+                elif element == HotelType.resort.name and len(hotelTypesList) >= 9:
                     hotelTypesList[8].click()
-                elif element == HotelType.other.name:
+                elif element == HotelType.other.name and len(hotelTypesList) >= 10:
                     hotelTypesList[9].click()
 
         if len(hotelOptions)!= 0:
@@ -445,45 +449,45 @@ class Hotel_Api:
                 )
             ) 
             for element in hotelOptions:
-                if element == HotelOptions.free_wifi.name:
+                if element == HotelOptions.free_wifi.name and len(hotelOptionsList) >= 1:
                     hotelOptionsList[0].click()
-                elif element == HotelOptions.free_breakfast.name:
+                elif element == HotelOptions.free_breakfast.name and len(hotelOptionsList) >= 2:
                     hotelOptionsList[1].click()
-                elif element == HotelOptions.restaurant.name:
+                elif element == HotelOptions.restaurant.name and len(hotelOptionsList) >= 3:
                     hotelOptionsList[2].click()
-                elif element == HotelOptions.bar.name:
+                elif element == HotelOptions.bar.name and len(hotelOptionsList) >= 4:
                     hotelOptionsList[3].click()
-                elif element == HotelOptions.kid_friendly.name:
+                elif element == HotelOptions.kid_friendly.name and len(hotelOptionsList) >= 5:
                     hotelOptionsList[4].click()
-                elif element == HotelOptions.pet_friendly.name:
+                elif element == HotelOptions.pet_friendly.name and len(hotelOptionsList) >= 6:
                     hotelOptionsList[5].click()
-                elif element == HotelOptions.free_parking.name:
+                elif element == HotelOptions.free_parking.name and len(hotelOptionsList) >= 7:
                     hotelOptionsList[6].click()
-                elif element == HotelOptions.parking.name:
+                elif element == HotelOptions.parking.name and len(hotelOptionsList) >= 8:
                     hotelOptionsList[7].click()
-                elif element == HotelOptions.ev_charger.name:
+                elif element == HotelOptions.ev_charger.name and len(hotelOptionsList) >= 9:
                     hotelOptionsList[8].click()
-                elif element == HotelOptions.room_service.name:
+                elif element == HotelOptions.room_service.name and len(hotelOptionsList) >= 10:
                     hotelOptionsList[9].click()
-                elif element == HotelOptions.fitness_center.name:
+                elif element == HotelOptions.fitness_center.name and len(hotelOptionsList) >= 11:
                     hotelOptionsList[10].click()
-                elif element == HotelOptions.spa.name:
+                elif element == HotelOptions.spa.name and len(hotelOptionsList) >= 12:
                     hotelOptionsList[11].click()
-                elif element == HotelOptions.pool.name:
+                elif element == HotelOptions.pool.name and len(hotelOptionsList) >= 13:
                     hotelOptionsList[12].click()
-                elif element == HotelOptions.indoor_pool.name:
+                elif element == HotelOptions.indoor_pool.name and len(hotelOptionsList) >= 14:
                     hotelOptionsList[13].click()
-                elif element == HotelOptions.outdoor_pool.name:
+                elif element == HotelOptions.outdoor_pool.name and len(hotelOptionsList) >= 15:
                     hotelOptionsList[14].click()
-                elif element == HotelOptions.air_conditioned.name:
+                elif element == HotelOptions.air_conditioned.name and len(hotelOptionsList) >= 16:
                     hotelOptionsList[15].click()
-                elif element == HotelOptions.wheelchair_accessible.name:
+                elif element == HotelOptions.wheelchair_accessible.name and len(hotelOptionsList) >= 17:
                     hotelOptionsList[16].click()
-                elif element == HotelOptions.beach_access.name:
+                elif element == HotelOptions.beach_access.name and len(hotelOptionsList) >= 18:
                     hotelOptionsList[17].click()
-                elif element == HotelOptions.all_inclusive_available.name:
+                elif element == HotelOptions.all_inclusive_available.name and len(hotelOptionsList) >= 19:
                     hotelOptionsList[18].click()
-
+                    
         starsList = WebDriverWait(driver, 15).until(
             EC.presence_of_all_elements_located(
                 (

@@ -13,7 +13,7 @@ class BackendService {
     URL = dotenv.env['BACKEND_URL'] ?? 'http://127.0.0.1:8000';
   }
 
-  Future<bool> findHotels({int tryCount = 0}) async {
+  Future<bool> findHotels() async {
     Map<String, dynamic> JsonSuggestion =
         await GPTService(apiKey: GPT_API_KEY).getHotelRecommendations(travel);
     if (JsonSuggestion['place'] != null &&
@@ -46,8 +46,6 @@ class BackendService {
       } else {
         throw Exception('Failed to load hotels');
       }
-    } else if (tryCount < 5) {
-      return findHotels(tryCount: tryCount + 1);
     } else {
       return false;
     }
