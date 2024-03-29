@@ -5,7 +5,7 @@ import 'package:gezbot/pages/chatInfo/chatInfo.dart';
 import 'firebase_options.dart';
 import 'pages/login_screen/login_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'pages/homepage.dart';
+import 'pages/home/homepage.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
