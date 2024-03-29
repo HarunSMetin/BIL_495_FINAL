@@ -135,7 +135,7 @@ class _HomePageState extends State<HomePage>
           const Text('Home Tab'),
         ],
       ),
-      const SearchPage(),
+      const SearchPage(), // Assuming TravelPageNew accepts a Travel parameter
       FutureBuilder<String>(
         future: _uidFuture,
         builder: (context, snapshot) {

@@ -67,6 +67,17 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
   }
 
   void _nextQuestion() async {
+    if (_currentQuestionIndex >= _questions.length) {
+      _service.databaseService.completeTravel(widget.travelId).then((travel) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TravelInformation(travel: travel),
+          ),
+        );
+      });
+      return;
+    }
     TravelQuestion currentQuestion = _questions[_currentQuestionIndex];
     dynamic firestoreAnswer = _currentAnswer;
     if (!currentQuestion.isUserChanged) {
