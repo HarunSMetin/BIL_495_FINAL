@@ -48,28 +48,23 @@ class _SearchViewState extends State<SearchView> {
 
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: Column(
-        children: [
-          TextField(
-            controller: searchController,
-            onChanged: (value) {
-              // Trigger the search using the entered query
-              final query = searchController.text;
-              context.read<SearchBloc>().searchUsers(query);
-            },
-            decoration: InputDecoration(
-              hintText: 'Search for users',
-              suffixIcon: IconButton(
-                icon: const Icon(Icons.search),
-                onPressed: () {
-                  // Trigger the search using the entered query
-                  final query = searchController.text;
-                  context.read<SearchBloc>().searchUsers(query);
-                },
-              ),
-            ),
+      child: TextField(
+        controller: searchController,
+        onChanged: (value) => context.read<SearchBloc>().searchUsers(value),
+        decoration: InputDecoration(
+          hintText: 'Search for users',
+          filled: true,
+          fillColor: const Color.fromARGB(222, 222, 222, 222),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30),
+            borderSide: BorderSide.none,
           ),
-        ],
+          suffixIcon: IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: () =>
+                context.read<SearchBloc>().searchUsers(searchController.text),
+          ),
+        ),
       ),
     );
   }

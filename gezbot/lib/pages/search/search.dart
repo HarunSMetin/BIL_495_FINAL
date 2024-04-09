@@ -16,11 +16,21 @@ class SearchPage extends StatelessWidget {
         length: 3,
         child: Scaffold(
           appBar: AppBar(
+            flexibleSpace: Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.blue.shade300, Colors.green.shade300],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
+            ),
             bottom: const TabBar(
+              indicatorColor: Colors.white,
               tabs: [
                 Tab(
                     icon: Icon(Icons.supervised_user_circle_sharp),
-                    text: 'Search Users'),
+                    text: 'Users'),
                 Tab(icon: Icon(Icons.airplanemode_active), text: 'Travel'),
                 Tab(icon: Icon(Icons.map), text: 'Destination'),
               ],

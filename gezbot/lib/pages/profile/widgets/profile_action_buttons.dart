@@ -81,7 +81,8 @@ class _ProfileActionButtonsState extends State<ProfileActionButtons> {
                 if (widget.userId == widget.viewerId) {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const EditProfilePage()),
+                    MaterialPageRoute(
+                        builder: (context) => const EditProfilePage()),
                   );
                 } else {
                   // Implement message functionality
@@ -115,7 +116,7 @@ class _ProfileActionButtonsState extends State<ProfileActionButtons> {
       {required String text, required VoidCallback onPressed}) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        backgroundColor: Theme.of(context).primaryColor,
+        backgroundColor: Theme.of(context).dividerColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.0),
         ),

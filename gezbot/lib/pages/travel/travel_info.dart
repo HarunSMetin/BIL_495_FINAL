@@ -3,6 +3,7 @@ import 'package:gezbot/components/HotelWidget.dart';
 import 'package:gezbot/components/MapWidget.dart';
 import 'package:gezbot/components/UserTile.dart';
 import 'package:gezbot/models/hotel.model.dart';
+import 'package:gezbot/models/place.model.dart';
 import 'package:gezbot/models/user.model.dart';
 import 'package:gezbot/pages/chat/chat_page.dart';
 import 'package:gezbot/models/travel.model.dart';
@@ -26,6 +27,7 @@ class _TravelInformationState extends State<TravelInformation> {
   late Future<List<UserModel>> _membersFuture;
   final Future<String> _uidFuture = _fetchUID();
 
+  late List<Place>? placeList; // Initialize the future here
   static Future<String> _fetchUID() async {
     return (await SharedPreferences.getInstance()).getString('uid') ?? '';
   }
@@ -36,6 +38,12 @@ class _TravelInformationState extends State<TravelInformation> {
   void initState() {
     super.initState();
     _membersFuture = _fetchMemberDetails();
+    _initializePlaces();
+  }
+
+  Future<void> _initializePlaces() async {
+    placeList = await DatabaseService().getRecommendedPlaces(widget.travel.id);
+    setState(() {});
   }
 
   Future<List<UserModel>> _fetchMemberDetails() async {
@@ -44,6 +52,7 @@ class _TravelInformationState extends State<TravelInformation> {
       UserModel user = await _userService.fetchUserDetails(memberId);
       members.add(user);
     }
+
     return members;
   }
 
@@ -51,13 +60,27 @@ class _TravelInformationState extends State<TravelInformation> {
   Widget build(BuildContext context) {
     MediaQueryData queryData;
     queryData = MediaQuery.of(context);
-    LatLng initialPosition =
-        const LatLng(37.77483, -122.41942); // Example: San Francisco
-    List<LatLng> pointsToMark = [
-      const LatLng(37.80243, -122.4058), // Coit Tower
 
-      const LatLng(37.73471236244232, -122.47743497106345), // Alcatraz Island
-    ];
+    // Check if placeList is null, if it is, show a loading indicator
+    if (placeList == null) {
+      return Scaffold(
+        appBar: AppBar(title: Text(widget.travel.name)),
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
+
+    // If placeList is not null, proceed with building the page content
+    LatLng initialPosition = LatLng(
+        placeList!.isNotEmpty ? placeList![0].geometry?.location?.lat ?? 0 : 0,
+        placeList!.isNotEmpty ? placeList![0].geometry?.location?.lng ?? 0 : 0);
+    List<LatLng> pointsToMark = [];
+    if (placeList!.isNotEmpty) {
+      for (Place place in placeList!) {
+        pointsToMark.add(LatLng(place.geometry?.location?.lat ?? 0,
+            place.geometry?.location?.lng ?? 0));
+      }
+    }
+
     return Scaffold(
       appBar: AppBar(title: Text(widget.travel.name)),
       body: Padding(
@@ -65,18 +88,27 @@ class _TravelInformationState extends State<TravelInformation> {
         child: SingleChildScrollView(
           child: Column(
             children: <Widget>[
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => TravelPageNew(
-                          travel: widget.travel,
+              SizedBox(
+                width: 300,
+                child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.amberAccent,
+                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => TravelPageNew(
+                            travel: widget.travel,
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                  child: const Text('New Travel Page')),
+                      );
+                    },
+                    child: const Text(
+                      'Travel Details Page',
+                      style: TextStyle(fontSize: 16),
+                    )),
+              ),
               Card(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(4.0),

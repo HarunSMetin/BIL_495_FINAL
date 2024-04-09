@@ -14,29 +14,26 @@ class DestinationView extends StatefulWidget {
 class _DestinationViewState extends State<DestinationView> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        buildSearchForm(context),
-        SearchView(),
-      ],
+    return Container(
+      child: Column(
+        children: [
+          buildSearchForm(context),
+          SearchView(),
+        ],
+      ),
     );
   }
 
-  // ignore: non_constant_identifier_names
   Widget SearchView() {
     return BlocBuilder<SearchBloc, SearchState>(
       builder: (context, state) {
         if (state == SearchState.loading) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
+          return const Center(child: CircularProgressIndicator());
         } else if (state == SearchState.loaded) {
-          // Render the list of users
           return buildSearchResults();
         } else if (state == SearchState.error) {
           return const Center(
-            child: Text('Error fetching Travels. Please try again.'),
-          );
+              child: Text('Error fetching destinations. Please try again.'));
         } else {
           return const Text('Please enter a query to begin');
         }
@@ -49,28 +46,25 @@ class _DestinationViewState extends State<DestinationView> {
 
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: Column(
-        children: [
-          TextField(
-            controller: searchController,
-            onChanged: (value) {
-              // Trigger the search using the entered query
-              final query = searchController.text;
-              context.read<SearchBloc>().searchTravelByDestination(query);
-            },
-            decoration: InputDecoration(
-              hintText: 'Search for destinations',
-              suffixIcon: IconButton(
-                icon: const Icon(Icons.search),
-                onPressed: () {
-                  // Trigger the search using the entered query
-                  final query = searchController.text;
-                  context.read<SearchBloc>().searchTravelByDestination(query);
-                },
-              ),
-            ),
+      child: TextField(
+        controller: searchController,
+        onChanged: (value) =>
+            context.read<SearchBloc>().searchTravelByDestination(value),
+        decoration: InputDecoration(
+          hintText: 'Search for destinations',
+          filled: true,
+          fillColor: const Color.fromARGB(222, 222, 222, 222),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(30),
+            borderSide: BorderSide.none,
           ),
-        ],
+          suffixIcon: IconButton(
+            icon: const Icon(Icons.search),
+            onPressed: () => context
+                .read<SearchBloc>()
+                .searchTravelByDestination(searchController.text),
+          ),
+        ),
       ),
     );
   }
@@ -82,19 +76,20 @@ class _DestinationViewState extends State<DestinationView> {
         itemBuilder: (context, index) {
           Travel travel =
               context.read<SearchBloc>().travelsByDestinationSearch[index];
-          return ListTile(
-            title: Text(travel.name),
-            subtitle: Text(travel.desiredDestination),
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => TravelInformation(
-                    travel: travel,
-                  ),
-                ),
-              );
-            },
+          return Card(
+            margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+            child: ListTile(
+              title: Text(travel.name,
+                  style: TextStyle(color: Colors.blueGrey.shade800)),
+              subtitle: Text(travel.desiredDestination,
+                  style: TextStyle(color: Colors.blueGrey.shade600)),
+              onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => TravelInformation(travel: travel))),
+            ),
           );
         },
       ),

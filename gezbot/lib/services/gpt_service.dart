@@ -100,4 +100,40 @@ class GPTService {
       additionalNotes: response,
     );
   }
+
+  String createChatBotPrompt(String message, Travel travel) {
+    String prompt =
+        "You are traveller app assistant chat bot. You can only answer to the questions. You can provide information about the travel, provide suggestions for flights, accommodations, and activities. You can also provide general information about the destination.YOU MUST ANSWER JUST ABOUT TRAVEL RELATED QUESTIONS. Here is travel structure :  ${travel.toString()} . Provide suggestions for flights, accommodations, and activities. Here is the given question or chat to response :  $message";
+    return prompt;
+  }
+
+  Future<String> getChatBotResponse(String message, Travel travel) async {
+    String prompt = createChatBotPrompt(message, travel);
+    final response = await http
+        .post(
+          Uri.parse(apiUrl),
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer $apiKey',
+          },
+          body: jsonEncode({
+            'model': 'gpt-3.5-turbo-1106',
+            'messages': [
+              {'role': 'user', 'content': prompt}
+            ],
+            'temperature': 0.7,
+            'max_tokens': 500,
+          }),
+        )
+        .timeout(const Duration(seconds: 60));
+    if (response.statusCode == 200) {
+      var responseBody = utf8.decode(response.bodyBytes);
+      var jsonResponse = jsonDecode(responseBody);
+      // Assuming 'content' contains the JSON data you want to return
+      return jsonResponse['choices'][0]['message']['content'];
+    } else {
+      developer.log('Failed to load chatbot response');
+      return '';
+    }
+  }
 }

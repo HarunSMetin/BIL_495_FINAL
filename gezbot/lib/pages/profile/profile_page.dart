@@ -39,26 +39,38 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void _logout() async {
     final prefs = await SharedPreferences.getInstance();
-    final GoogleSignIn googleSignIn = GoogleSignIn(
-        clientId:
-            "1027985224810-jeioofe75dtanigd4r1vtgv4v4glemis.apps.googleusercontent.com");
+    final GoogleSignIn googleSignIn = GoogleSignIn(clientId: "YOUR_CLIENT_ID");
     await FirebaseAuth.instance.signOut();
     await prefs.clear();
     await googleSignIn.signOut();
-    // ignore: use_build_context_synchronously
     Navigator.of(context).pushReplacementNamed('/login');
   }
 
   void _navigateToNotifications() {
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => const NotificationsWidget()),
-    );
+        MaterialPageRoute(builder: (context) => const NotificationsWidget()));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color.fromARGB(255, 174, 169, 248),
+                Color.fromARGB(255, 183, 217, 245),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.topRight,
+            ),
+          ),
+        ),
+        title: const Text(
+          'Profile',
+          style: TextStyle(color: Colors.white),
+        ),
         actions: [
           if (widget.userId == _viewerID)
             IconButton(
@@ -72,32 +84,52 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
         ],
       ),
-      body: FutureBuilder<UserModel>(
-        future: userDetailsFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator();
-          } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          } else if (snapshot.hasData) {
-            return _buildProfilePage(snapshot.data!);
-          } else {
-            return const Text('No data available');
-          }
-        },
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            colors: [Colors.blue.shade100, Colors.green.shade100],
+          ),
+        ),
+        child: FutureBuilder<UserModel>(
+          future: userDetailsFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else if (snapshot.hasData) {
+              return _buildProfilePage(snapshot.data!);
+            } else {
+              return const Text('No data available');
+            }
+          },
+        ),
       ),
     );
   }
 
   Widget _buildProfilePage(UserModel user) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          UserProfileHeader(user: user),
-          UserStats(userId: _viewerID, user: user),
-          ProfileActionButtons(userId: widget.userId, viewerId: _viewerID),
-        ],
-      ),
+    return Stack(
+      children: [
+        SingleChildScrollView(
+          child: Column(
+            children: [
+              UserProfileHeader(user: user), // User profile header
+              UserStats(userId: _viewerID, user: user), // User stats
+              const SizedBox(
+                  height:
+                      80), // Add some space before the action buttons at the bottom
+            ],
+          ),
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child:
+              ProfileActionButtons(userId: widget.userId, viewerId: _viewerID),
+        ),
+      ],
     );
   }
 }

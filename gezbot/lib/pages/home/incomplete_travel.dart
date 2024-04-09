@@ -6,18 +6,24 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class IncompleteTravel extends StatefulWidget {
   final Future<Travel?> lastIncompleteTravel;
-  double top;
-  double height;
-  double width;
+  final double top;
+  final double height;
+  final double width;
 
-  IncompleteTravel({super.key, required this.lastIncompleteTravel, required this.top, required this.height, required this.width});
+  IncompleteTravel(
+      {Key? key,
+      required this.lastIncompleteTravel,
+      required this.top,
+      required this.height,
+      required this.width})
+      : super(key: key);
 
   @override
   IncompleteTravelState createState() => IncompleteTravelState();
 }
 
 class IncompleteTravelState extends State<IncompleteTravel> {
-  late final prefs;
+  late SharedPreferences prefs;
 
   @override
   void initState() {
@@ -25,8 +31,7 @@ class IncompleteTravelState extends State<IncompleteTravel> {
     getPrefs();
   }
 
-  void getPrefs() async
-  {
+  void getPrefs() async {
     prefs = await SharedPreferences.getInstance();
   }
 
@@ -40,37 +45,46 @@ class IncompleteTravelState extends State<IncompleteTravel> {
           return Padding(
             padding: EdgeInsets.only(top: widget.top),
             child: Container(
-              height: widget.height,
+              decoration: BoxDecoration(
+                color: Colors.white70,
+                borderRadius: BorderRadius.circular(50),
+              ),
               width: widget.width,
+              height: widget.height / 3,
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  CenteredMiniTitle(title: 'Your incomplete travels', top: widget.top, width: widget.width),
-                  Container(
-                    width: widget.width * 0.7, // Adjust the width as needed (e.g., 80% of screen width)
-                    child: const Text(
-                      'Apparently, you didn\'t complete creating your last travel.',
-                      textAlign: TextAlign.center, // Center the text within the container
-                    ),
-                  ),
-                  const SizedBox(height: 15),
+                  CenteredMiniTitle(
+                      title: 'Your incomplete travels',
+                      top: widget.top,
+                      width: widget.width),
+                  const SizedBox(height: 20),
+                  const Text(
+                      'Apparently, you didn\'t complete\n creating your last travel.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 14),
+                      overflow: TextOverflow.ellipsis),
+                  const SizedBox(height: 30),
                   ElevatedButton(
-                    onPressed: () { //if tapped, travel page is loaded
+                    onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => TravelsScreen(userId: prefs.getString('uid'))),
+                        MaterialPageRoute(
+                            builder: (context) => TravelsScreen(
+                                userId: prefs.getString('uid') ?? '')),
                       );
                     },
-                    child: const Text('Continue'),
+                    child: Text('Continue to ${lastTravel.name}'),
                   ),
                 ],
               ),
             ),
           );
-        } 
-        else {
+        } else {
           return Container();
         }
-      }
+      },
     );
   }
 }

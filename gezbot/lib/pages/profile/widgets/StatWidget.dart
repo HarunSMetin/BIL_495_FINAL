@@ -25,11 +25,12 @@ class _UserStatsState extends State<UserStats> {
       future: _databaseService.getUserSummary(widget.user.id),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
+          return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
-          return const Text('Error fetching data');
+          return const Center(child: Text('Error fetching data'));
         } else if (snapshot.hasData) {
-          return Padding(
+          return Container(
+            //color: Colors.white, // White background
             padding: const EdgeInsets.all(16.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -44,7 +45,7 @@ class _UserStatsState extends State<UserStats> {
             ),
           );
         } else {
-          return const Text('No data available');
+          return const Center(child: Text('No data available'));
         }
       },
     );
@@ -52,52 +53,55 @@ class _UserStatsState extends State<UserStats> {
 
   Widget _buildStatItem(BuildContext context, String label, String value) {
     return GestureDetector(
-      onTap: () {
-        if (label == "Travels") {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => TravelsScreen(
-                      userId: widget.user.id,
-                      viwerId: widget.userId,
-                    )),
-          );
-        }
-        if (label == "Followers") {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => FollowersScreen(userId: widget.user.id)),
-          );
-        }
-        if (label == "Following") {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => FollowingsScreen(userId: widget.user.id)),
-          );
-        }
-      },
+      onTap: () => _navigateToScreen(context, label),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             value,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 20.0,
               fontWeight: FontWeight.bold,
+              color: Colors.black.withOpacity(
+                  0.7), // Slightly subdued text color for modern feel
             ),
           ),
           const SizedBox(height: 4),
           Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 16.0,
-              color: Colors.grey,
+              color: Colors.grey
+                  .shade600, // Grey color for labels to differentiate from values
             ),
           ),
         ],
       ),
     );
+  }
+
+  void _navigateToScreen(BuildContext context, String label) {
+    switch (label) {
+      case "Travels":
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => TravelsScreen(
+                    userId: widget.user.id, viewerId: widget.userId)));
+        break;
+      case "Followers":
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => FollowersScreen(userId: widget.user.id)));
+        break;
+      case "Following":
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    FollowingsScreen(userId: widget.user.id)));
+        break;
+    }
   }
 }

@@ -44,10 +44,10 @@ app.add_middleware(
 ) 
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="10.2.133.35", port=8000)
+    uvicorn.run(app, host="10.5.64.108", port=8000)
 
-# uvicorn main:app --reload  --host 10.2.133.35 --port 8000
-# https://10.2.133.35:8000
+# uvicorn main:app --reload  --host 10.5.64.108 --port 8000
+# http://10.5.64.108:8000
 
 def __select_random_elements(array, num_parts=7):
     # Calculate the length of each part

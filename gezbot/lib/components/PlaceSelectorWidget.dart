@@ -13,8 +13,8 @@ class PlaceSelectorWidget extends StatefulWidget {
 
 class _PlaceSelectorWidgetState extends State<PlaceSelectorWidget> {
   late GoogleMapController mapController;
-  final LatLng _initialLocation = const LatLng(
-      37.42796133580664, -122.085749655962); // Default or fetched user location
+  final LatLng _initialLocation =
+      const LatLng(39.9248866, 32.8345037); // Default or fetched user location
   Set<Marker> _markers = {};
 
   @override

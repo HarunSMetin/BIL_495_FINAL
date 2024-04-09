@@ -95,42 +95,38 @@ class _TravelViewState extends State<TravelView> {
     final searchController = TextEditingController();
 
     return Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: FutureBuilder<String>(
-          future: _fetchUID(),
-          builder: (context, uID) =>
-              //if snapshot has data, then build the form
-              uID.hasData
-                  ? Column(
-                      children: [
-                        TextField(
-                          controller: searchController,
-                          onChanged: (value) {
-                            // Trigger the search using the entered query
-                            final query = searchController.text;
-                            context
-                                .read<SearchBloc>()
-                                .searchTravel(query, uID.data!);
-                          },
-                          decoration: InputDecoration(
-                            hintText:
-                                'Search for travels (User Name, Travel Name) ',
-                            suffixIcon: IconButton(
-                              icon: const Icon(Icons.search),
-                              onPressed: () {
-                                // Trigger the search using the entered query
-                                final query = searchController.text;
-                                context
-                                    .read<SearchBloc>()
-                                    .searchTravel(query, uID.data!);
-                              },
-                            ),
-                          ),
-                        ),
-                      ],
-                    )
-                  : const Center(child: CircularProgressIndicator()),
-        ));
+      padding: const EdgeInsets.all(16.0),
+      child: FutureBuilder<String>(
+        future: _fetchUID(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return TextField(
+              controller: searchController,
+              onChanged: (value) => context
+                  .read<SearchBloc>()
+                  .searchTravel(value, snapshot.data!),
+              decoration: InputDecoration(
+                hintText: 'Search for travels',
+                filled: true,
+                fillColor: const Color.fromARGB(222, 222, 222, 222),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30),
+                  borderSide: BorderSide.none,
+                ),
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.search),
+                  onPressed: () => context
+                      .read<SearchBloc>()
+                      .searchTravel(searchController.text, snapshot.data!),
+                ),
+              ),
+            );
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
+        },
+      ),
+    );
   }
 
   Widget buildSearchResults() {

@@ -9,9 +9,11 @@ import 'package:gezbot/models/travel.model.dart';
 import 'package:gezbot/models/user.model.dart';
 import 'package:gezbot/services/backend.service.dart';
 import 'package:gezbot/services/google_cloud_service.dart';
+import 'package:gezbot/services/gpt_service.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:developer' as developer;
 import 'package:gezbot/models/hotel.model.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class DatabaseService {
   final CollectionReference userCollection =
@@ -34,6 +36,8 @@ class DatabaseService {
   ];
   List<Place> allPlaces = [];
   List<Hotel> allHotels = [];
+
+  GPTService gptService = GPTService(apiKey: dotenv.env['GPT_API_KEY'] ?? '');
 
   void printInlinedJson(Map<String, dynamic> jsonData, {String indent = ''}) {
     jsonData.forEach((key, value) {
@@ -206,6 +210,7 @@ class DatabaseService {
     return await travelsCollection.doc(travelID).get().then((value) async {
       List<String> members = List<String>.from(value['members']);
       if (members.contains(senderID)) {
+        // Travel Update
         await travelsCollection.doc(travelID).set({
           'lastUpdate': DateTime.now(),
         }, SetOptions(merge: true));
@@ -223,6 +228,27 @@ class DatabaseService {
             'id': value2.id,
           }, SetOptions(merge: true));
         });
+
+        if (message.toLowerCase().startsWith("@chatbot")) {
+          //TODO GPT RESPONSE CHATBOT
+          Travel t = await getTravelOfUser(travelID);
+          String response = await gptService.getChatBotResponse(message, t);
+          if (response != '') {
+            travelsCollection.doc(travelID).collection('messages').add({
+              'message': response,
+              'sender': dotenv.env['CHAT_BOT_UID'],
+              'time': DateTime.now(),
+            }).then((value2) {
+              travelsCollection
+                  .doc(travelID)
+                  .collection('messages')
+                  .doc(value2.id)
+                  .set({
+                'id': value2.id,
+              }, SetOptions(merge: true));
+            });
+          }
+        }
       }
     });
   }

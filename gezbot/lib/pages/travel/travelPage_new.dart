@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:gezbot/models/hotel.model.dart';
 import 'package:gezbot/models/place.model.dart';
 import 'package:side_navigation/side_navigation.dart';
@@ -43,7 +42,7 @@ class _TravelPageNewState extends State<TravelPageNew> {
     // Initialize your views list here
     refresh();
     views = [
-      Column(
+      const Column(
         children: [
           Text('Flights'),
         ],
