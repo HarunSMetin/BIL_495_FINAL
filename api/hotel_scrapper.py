@@ -248,20 +248,21 @@ class Hotel_Api:
             )
         )  
         matchday = str(checkinDay) 
+        print("matchday in", matchday)
         for week in weeks:
             days = week.find_elements(By.XPATH, "div") 
             COUNT_WEEK = 1
             for day in days:
-                COUNT_DAY = 1
-                for singleday in day.find_elements(By.XPATH, "div"): 
-                    if singleday.text == matchday: 
-                        singleday.click()
+                COUNT_DAY = 1 
+                for singleday in day.find_elements(By.XPATH, "div"):
+                    if singleday.text.strip() == matchday:
                         dayList = day.find_elements(By.XPATH, "div")
                         if dayList:
                             sleep(1)
-                            dayList[-1].click()
+                            singleday.click()
                             sleep(1)
-                            dayList[-1].click() 
+                            singleday.click()
+
                         break 
                     COUNT_DAY += 1
                 COUNT_WEEK += 1
@@ -276,7 +277,7 @@ class Hotel_Api:
                         "/html/body/c-wiz[2]/div/c-wiz/div[1]/div[1]/div[1]/c-wiz/div/div/div[1]/div/div[1]/div[2]/div/div[2]/div/div[2]/div[3]/div[1]/div/div/div[3]/div/div/button",
                     )
                 )
-            ).click()
+            ).click() 
         monthsXPATH = "/html/body/c-wiz[2]/div/c-wiz/div[1]/div[1]/div[1]/c-wiz/div/div/div[1]/div/div[1]/div[2]/div/div[2]/div/div[2]/div[3]/div[1]/div/div/div[1]/div/div[{}]".format(months_difference_start_now + months_difference_end_start+1)+"/div[3]"
  
         weeks = WebDriverWait(driver, 15).until(
@@ -288,6 +289,7 @@ class Hotel_Api:
             )
         ) 
         matchday= str(checkoutDay)
+        print("matchday out", matchday)
         for week in weeks:
             days = week.find_elements(By.XPATH, "div") 
             COUNT_WEEK = 1
@@ -297,7 +299,9 @@ class Hotel_Api:
                     if singleday.text.strip() == matchday:
                         dayList = day.find_elements(By.XPATH, "div")
                         if dayList:  
-                            dayList[-1].click()
+                            sleep(1)
+                            print("checkout", dayList[-1].text)
+                            singleday.click()
                         break 
                     COUNT_DAY += 1
                 COUNT_WEEK += 1

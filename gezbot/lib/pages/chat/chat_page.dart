@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:gezbot/models/chat.model.dart';
 import 'package:gezbot/models/travel.model.dart';
@@ -222,20 +224,46 @@ class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
                 },
               ),
             ),
+            SizedBox(
+              width: double.infinity,
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Container(
+                  padding: const EdgeInsets.all(8.0),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.8),
+                    borderRadius: BorderRadius.circular(25.0),
+                  ),
+                  child: Text(
+                    '* Ask question to AI, start message with @chatbot ',
+                    textWidthBasis: TextWidthBasis.longestLine,
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 12.0,
+                    ),
+                  ),
+                ),
+              ),
+            ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding:
+                  const EdgeInsets.only(bottom: 4.0, left: 2.0, right: 2.0),
               child: Row(
                 children: <Widget>[
                   Expanded(
-                    child: TextField(
-                      onSubmitted: (_) => _sendMessage(),
-                      controller: _messageController,
-                      decoration: InputDecoration(
-                        labelText: 'Type a message...',
-                        filled: true,
-                        fillColor: Colors.white,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(25.0),
+                    child: SizedBox(
+                      height: 50, // Adjust the height as desired
+                      child: TextField(
+                        onSubmitted: (_) => _sendMessage(),
+                        controller: _messageController,
+                        decoration: InputDecoration(
+                          labelText: 'Type a message...',
+                          filled: true,
+                          fillColor: Colors.white,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(25.0),
+                          ),
                         ),
                       ),
                     ),

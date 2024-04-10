@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:gezbot/components/HotelWidget.dart';
 import 'package:gezbot/components/MapWidget.dart';
@@ -94,34 +95,33 @@ class _TravelInformationState extends State<TravelInformation> {
             }
 
             return Scaffold(
-              appBar: AppBar(title: Text(widget.travel.name)),
-              body: Padding(
-                padding: const EdgeInsets.all(4.0),
+              appBar: AppBar(
+                  flexibleSpace: Container(
+                    decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Color.fromARGB(255, 174, 169, 248),
+                          Color.fromARGB(255, 183, 217, 245),
+                        ],
+                        begin: Alignment.topLeft,
+                        end: Alignment.topRight,
+                      ),
+                    ),
+                  ),
+                  title: Text(widget.travel.name)),
+              body: Container(
+                width: queryData.size.width,
+                height: queryData.size.height,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topRight,
+                    end: Alignment.bottomLeft,
+                    colors: [Colors.blue.shade100, Colors.green.shade100],
+                  ),
+                ),
                 child: SingleChildScrollView(
                   child: Column(
                     children: <Widget>[
-                      SizedBox(
-                        width: 300,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.amberAccent,
-                          ),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => TravelPageNew(
-                                  travel: widget.travel,
-                                ),
-                              ),
-                            );
-                          },
-                          child: const Text(
-                            'Travel Details Page',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ),
-                      ),
                       Card(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(4.0),
@@ -133,16 +133,51 @@ class _TravelInformationState extends State<TravelInformation> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
-                              const Text("Travel Ticket",
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold)),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: <Widget>[
+                                  const Text("Travel Ticket",
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.bold)),
+                                  SizedBox(
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.amberAccent,
+                                      ),
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => TravelPageNew(
+                                              travel: widget.travel,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      child: const Text(
+                                        'Travel Details Page',
+                                        style: TextStyle(fontSize: 16),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                               const Divider(),
                               ticketDetail("Name", widget.travel.name),
-                              ticketDetail("Departure Date",
-                                  widget.travel.departureDate.toString()),
-                              ticketDetail("Return Date",
-                                  widget.travel.returnDate.toString()),
+                              ticketDetail(
+                                  "Departure Date",
+                                  widget.travel.departureDate
+                                      .toLocal()
+                                      .toString()
+                                      .split(' ')[0]),
+                              ticketDetail(
+                                  "Return Date",
+                                  widget.travel.returnDate
+                                      .toLocal()
+                                      .toString()
+                                      .split(' ')[0]),
                               ticketDetail("Desired Destination",
                                   widget.travel.desiredDestination),
                               const SizedBox(height: 10),
@@ -164,7 +199,17 @@ class _TravelInformationState extends State<TravelInformation> {
                                   }
                                 },
                               ),
+                              const SizedBox(height: 10),
+                              SizedBox(
+                                height: queryData.size.height / 3,
+                                child: MapWidget(
+                                  initialPosition: initialPosition,
+                                  pointsToMark: pointsToMark,
+                                ),
+                              ),
+                              const SizedBox(height: 5),
                               ExpansionTile(
+                                initiallyExpanded: true,
                                 title: const Text("Members",
                                     style: TextStyle(
                                         fontSize: 18,
@@ -240,15 +285,6 @@ class _TravelInformationState extends State<TravelInformation> {
                                   ),
                                 ],
                               ),
-                              const SizedBox(height: 20),
-                              SizedBox(
-                                height: queryData.size.height / 3,
-                                child: MapWidget(
-                                  initialPosition: initialPosition,
-                                  pointsToMark: pointsToMark,
-                                ),
-                              ),
-                              const SizedBox(height: 5),
                             ],
                           ),
                         ),
@@ -279,10 +315,10 @@ class _TravelInformationState extends State<TravelInformation> {
           Flexible(
             child: FittedBox(
               fit: BoxFit.scaleDown,
-              child: Text(
+              child: AutoSizeText(
                 value,
                 softWrap: false,
-                overflow: TextOverflow.fade,
+                overflow: TextOverflow.clip,
               ),
             ),
           ),

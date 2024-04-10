@@ -381,7 +381,7 @@ class DatabaseService {
     }, SetOptions(merge: true));
     Travel travel = await getTravelOfUser(travelID);
     BackendService(travel: travel).findHotels();
-    BackendService(travel: travel).findPlaces();
+    //BackendService(travel: travel).findPlaces();
     return travel;
   }
   //get lastCompletedQuestionOfTravel database contains: lastUpdatedQuestionId on travels

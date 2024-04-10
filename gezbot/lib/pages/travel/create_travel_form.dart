@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gezbot/models/travel.model.dart';
 import 'package:gezbot/pages/travel/travel_info.dart';
+import 'package:gezbot/pages/travel/travel_page.dart';
 import 'package:gezbot/services/database_service.dart';
 import 'package:gezbot/models/question.model.dart';
 import 'package:gezbot/components/Question.dart';
@@ -72,8 +73,9 @@ class _TravelQuestionnaireFormState extends State<TravelQuestionnaireForm> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => TravelInformation(travel: travel),
-          ),
+              builder: (context) => TravelsScreen(
+                    userId: widget.uid,
+                  )),
         );
       });
       return;
