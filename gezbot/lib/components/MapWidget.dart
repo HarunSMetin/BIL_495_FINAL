@@ -26,6 +26,19 @@ class _MapWidgetState extends State<MapWidget> {
 
   final Set<Polyline> _polylines = <Polyline>{};
 
+  final Set<Marker> _markers = <Marker>{};
+
+  @override
+  void initState() {
+    super.initState();
+    _markers.addAll(widget.pointsToMark.map((point) => Marker(
+          markerId: MarkerId(point.toString()),
+          position: point,
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+          infoWindow: InfoWindow(title: 'Waypoint'),
+        )));
+  }
+
   void _onMapCreated(GoogleMapController controller) async {
     mapController = controller;
     final String route = await _getRoute(widget.pointsToMark);
@@ -52,12 +65,30 @@ class _MapWidgetState extends State<MapWidget> {
   }
 
   void _drawRoute(String route) {
-    _polylines.add(Polyline(
-      polylineId: const PolylineId('route'),
-      points: _convertToLatLng(_decodePoly(route)),
-      width: 4,
-      color: Colors.blue,
-    ));
+    List<LatLng> routePoints = _convertToLatLng(_decodePoly(route));
+
+    // Add polyline for the route
+    if (routePoints.isNotEmpty) {
+      _polylines.add(Polyline(
+        polylineId: const PolylineId('route'),
+        points: routePoints,
+        width: 4,
+        color: Colors.blue,
+      ));
+    } else {
+      print('Route points are empty or invalid.');
+    }
+
+    // Add markers for waypoints
+    for (LatLng point in widget.pointsToMark) {
+      _markers.add(Marker(
+        markerId: MarkerId(point.toString()),
+        position: point,
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+        infoWindow: InfoWindow(title: 'Waypoint'),
+      ));
+    }
+
     setState(() {});
   }
 
@@ -107,6 +138,7 @@ class _MapWidgetState extends State<MapWidget> {
         zoom: 11.0,
       ),
       polylines: _polylines,
+      markers: _markers,
       gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
         Factory<OneSequenceGestureRecognizer>(
           () => EagerGestureRecognizer(),

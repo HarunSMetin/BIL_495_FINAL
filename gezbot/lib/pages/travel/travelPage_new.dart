@@ -34,7 +34,7 @@ class _TravelPageNewState extends State<TravelPageNew> {
   }
 
   /// The currently selected index of the bar
-  int selectedIndex = 0;
+  int selectedIndex = 1;
 
   @override
   void initState() {
