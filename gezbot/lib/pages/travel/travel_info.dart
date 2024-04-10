@@ -41,9 +41,9 @@ class _TravelInformationState extends State<TravelInformation> {
     _initializePlaces();
   }
 
-  Future<void> _initializePlaces() async {
+  Future<List<Place>?> _initializePlaces() async {
     placeList = await DatabaseService().getRecommendedPlaces(widget.travel.id);
-    setState(() {});
+    return placeList;
   }
 
   Future<List<UserModel>> _fetchMemberDetails() async {
@@ -61,185 +61,213 @@ class _TravelInformationState extends State<TravelInformation> {
     MediaQueryData queryData;
     queryData = MediaQuery.of(context);
 
-    // Check if placeList is null, if it is, show a loading indicator
-    if (placeList == null) {
-      return Scaffold(
-        appBar: AppBar(title: Text(widget.travel.name)),
-        body: Center(child: CircularProgressIndicator()),
-      );
-    }
+    return FutureBuilder(
+        future: _initializePlaces(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            // While waiting for the places to initialize, show a loading indicator
+            return Scaffold(
+              appBar: AppBar(title: Text(widget.travel.name)),
+              body: Center(child: CircularProgressIndicator()),
+            );
+          } else if (snapshot.hasError) {
+            // If there's an error during initialization, show an error message
+            return Scaffold(
+              appBar: AppBar(title: Text(widget.travel.name)),
+              body: Center(child: Text('Error: ${snapshot.error}')),
+            );
+          } else {
+            // If initialization is successful, build the page content
+            LatLng initialPosition = LatLng(0, 0);
+            if (placeList != null && placeList!.isNotEmpty) {
+              initialPosition = LatLng(
+                placeList![0].geometry?.location?.lat ?? 0,
+                placeList![0].geometry?.location?.lng ?? 0,
+              );
+            }
+            List<LatLng> pointsToMark = [];
+            for (Place place in placeList!) {
+              pointsToMark.add(LatLng(
+                place.geometry?.location?.lat ?? 0,
+                place.geometry?.location?.lng ?? 0,
+              ));
+            }
 
-    // If placeList is not null, proceed with building the page content
-    LatLng initialPosition = LatLng(
-        placeList!.isNotEmpty ? placeList![0].geometry?.location?.lat ?? 0 : 0,
-        placeList!.isNotEmpty ? placeList![0].geometry?.location?.lng ?? 0 : 0);
-    List<LatLng> pointsToMark = [];
-    if (placeList!.isNotEmpty) {
-      for (Place place in placeList!) {
-        pointsToMark.add(LatLng(place.geometry?.location?.lat ?? 0,
-            place.geometry?.location?.lng ?? 0));
-      }
-    }
-
-    return Scaffold(
-      appBar: AppBar(title: Text(widget.travel.name)),
-      body: Padding(
-        padding: const EdgeInsets.all(4.0),
-        child: SingleChildScrollView(
-          child: Column(
-            children: <Widget>[
-              SizedBox(
-                width: 300,
-                child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.amberAccent,
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => TravelPageNew(
-                            travel: widget.travel,
+            return Scaffold(
+              appBar: AppBar(title: Text(widget.travel.name)),
+              body: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: <Widget>[
+                      SizedBox(
+                        width: 300,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.amberAccent,
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => TravelPageNew(
+                                  travel: widget.travel,
+                                ),
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            'Travel Details Page',
+                            style: TextStyle(fontSize: 16),
                           ),
                         ),
-                      );
-                    },
-                    child: const Text(
-                      'Travel Details Page',
-                      style: TextStyle(fontSize: 16),
-                    )),
-              ),
-              Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(4.0),
-                ),
-                elevation: 5,
-                child: Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      const Text("Travel Ticket",
-                          style: TextStyle(
-                              fontSize: 20, fontWeight: FontWeight.bold)),
-                      const Divider(),
-                      ticketDetail("Name", widget.travel.name),
-                      ticketDetail("Departure Date",
-                          widget.travel.departureDate.toString()),
-                      ticketDetail(
-                          "Return Date", widget.travel.returnDate.toString()),
-                      ticketDetail("Desired Destination",
-                          widget.travel.desiredDestination),
-                      const SizedBox(height: 10),
-                      FutureBuilder(
-                          future:
-                              DatabaseService().getFirstHotel(widget.travel.id),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return const Center(
-                                  child: CircularProgressIndicator());
-                            } else if (snapshot.hasError) {
-                              return Text('Error: ${snapshot.error}');
-                            } else if (snapshot.hasData) {
-                              Hotel hotel = snapshot.data as Hotel;
-                              return HotelWidget(hotel: hotel);
-                            } else {
-                              return const Text('No hotel found');
-                            }
-                          }),
-                      ExpansionTile(
-                        title: const Text("Members",
-                            style: TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold)),
-                        children: <Widget>[
-                          FutureBuilder<List<UserModel>>(
-                            future: _membersFuture,
-                            builder: (context, snapshot) {
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return const Center(
-                                    child: CircularProgressIndicator());
-                              } else if (snapshot.hasError) {
-                                return Text('Error: ${snapshot.error}');
-                              } else if (snapshot.hasData) {
-                                return ListView.builder(
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  itemCount: snapshot.data!.length,
-                                  itemBuilder: (context, index) {
-                                    UserModel member = snapshot.data![index];
-                                    return FutureBuilder<String>(
-                                      future: _uidFuture,
-                                      builder: (context, uidSnapshot) {
-                                        if (uidSnapshot.connectionState ==
-                                            ConnectionState.waiting) {
-                                          return const CircularProgressIndicator();
-                                        } else if (uidSnapshot.hasError) {
-                                          return Text(
-                                              'Error: ${uidSnapshot.error}');
-                                        } else if (uidSnapshot.hasData) {
-                                          bool canDelete = uidSnapshot.data ==
-                                              widget.travel.creatorId;
-                                          return UserTile(
-                                            user: member,
-                                            currentUserId: uidSnapshot.data!,
-                                            showAcceptButton: false,
-                                            onAccept: () {},
-                                            canDeleteUser: canDelete,
-                                            databaseService: DatabaseService(),
-                                            onTap: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      ProfilePage(
-                                                    userId: member.id,
-                                                  ),
-                                                ),
-                                              );
-                                            },
-                                          );
-                                        } else {
-                                          return const Text('UID not found');
-                                        }
-                                      },
-                                    );
-                                  },
-                                );
-                              } else {
-                                return const Text('No members found');
-                              }
-                            },
+                      ),
+                      Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(4.0),
+                        ),
+                        elevation: 5,
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              const Text("Travel Ticket",
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold)),
+                              const Divider(),
+                              ticketDetail("Name", widget.travel.name),
+                              ticketDetail("Departure Date",
+                                  widget.travel.departureDate.toString()),
+                              ticketDetail("Return Date",
+                                  widget.travel.returnDate.toString()),
+                              ticketDetail("Desired Destination",
+                                  widget.travel.desiredDestination),
+                              const SizedBox(height: 10),
+                              FutureBuilder(
+                                future: DatabaseService()
+                                    .getFirstHotel(widget.travel.id),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return const Center(
+                                        child: CircularProgressIndicator());
+                                  } else if (snapshot.hasError) {
+                                    return Text('Error: ${snapshot.error}');
+                                  } else if (snapshot.hasData) {
+                                    Hotel hotel = snapshot.data as Hotel;
+                                    return HotelWidget(hotel: hotel);
+                                  } else {
+                                    return const Text('No hotel found');
+                                  }
+                                },
+                              ),
+                              ExpansionTile(
+                                title: const Text("Members",
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold)),
+                                children: <Widget>[
+                                  FutureBuilder<List<UserModel>>(
+                                    future: _membersFuture,
+                                    builder: (context, snapshot) {
+                                      if (snapshot.connectionState ==
+                                          ConnectionState.waiting) {
+                                        return const Center(
+                                            child: CircularProgressIndicator());
+                                      } else if (snapshot.hasError) {
+                                        return Text('Error: ${snapshot.error}');
+                                      } else if (snapshot.hasData) {
+                                        return ListView.builder(
+                                          shrinkWrap: true,
+                                          physics:
+                                              const NeverScrollableScrollPhysics(),
+                                          itemCount: snapshot.data!.length,
+                                          itemBuilder: (context, index) {
+                                            UserModel member =
+                                                snapshot.data![index];
+                                            return FutureBuilder<String>(
+                                              future: _uidFuture,
+                                              builder: (context, uidSnapshot) {
+                                                if (uidSnapshot
+                                                        .connectionState ==
+                                                    ConnectionState.waiting) {
+                                                  return const CircularProgressIndicator();
+                                                } else if (uidSnapshot
+                                                    .hasError) {
+                                                  return Text(
+                                                      'Error: ${uidSnapshot.error}');
+                                                } else if (uidSnapshot
+                                                    .hasData) {
+                                                  bool canDelete = uidSnapshot
+                                                          .data ==
+                                                      widget.travel.creatorId;
+                                                  return UserTile(
+                                                    user: member,
+                                                    currentUserId:
+                                                        uidSnapshot.data!,
+                                                    showAcceptButton: false,
+                                                    onAccept: () {},
+                                                    canDeleteUser: canDelete,
+                                                    databaseService:
+                                                        DatabaseService(),
+                                                    onTap: () {
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              ProfilePage(
+                                                            userId: member.id,
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                  );
+                                                } else {
+                                                  return const Text(
+                                                      'UID not found');
+                                                }
+                                              },
+                                            );
+                                          },
+                                        );
+                                      } else {
+                                        return const Text('No members found');
+                                      }
+                                    },
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 20),
+                              SizedBox(
+                                height: queryData.size.height / 3,
+                                child: MapWidget(
+                                  initialPosition: initialPosition,
+                                  pointsToMark: pointsToMark,
+                                ),
+                              ),
+                              const SizedBox(height: 5),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                       const SizedBox(height: 20),
-                      SizedBox(
-                        height: queryData.size.height / 3,
-                        child: MapWidget(
-                          initialPosition: initialPosition,
-                          pointsToMark: pointsToMark,
+                      Center(
+                        child: ElevatedButton(
+                          onPressed: () =>
+                              _openChatScreen(context, widget.travel.id),
+                          child: const Text('Chat about this travel'),
                         ),
                       ),
-                      const SizedBox(height: 5),
                     ],
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
-              Center(
-                child: ElevatedButton(
-                  onPressed: () => _openChatScreen(context, widget.travel.id),
-                  child: const Text('Chat about this travel'),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+            );
+          }
+        });
   }
 
   Widget ticketDetail(String label, String value) {
