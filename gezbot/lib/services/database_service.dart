@@ -363,6 +363,18 @@ class DatabaseService {
     return Travel.fromMap(travelData);
   }
 
+  Future<bool> deleteTravel(String travelID, String UserId) async {
+    DocumentSnapshot doc = await travelsCollection.doc(travelID).get();
+    if (doc.exists) {
+      Map<String, dynamic> travelData = doc.data() as Map<String, dynamic>;
+      if (travelData['creatorId'] == UserId) {
+        await travelsCollection.doc(travelID).delete();
+        return true;
+      }
+    }
+    return false;
+  }
+
   Future<Travel> completeTravel(String travelID) async {
     await travelsCollection.doc(travelID).set({
       'isCompleted': true,
@@ -487,10 +499,6 @@ class DatabaseService {
         'members': FieldValue.arrayRemove([friendID])
       });
     }
-  }
-
-  Future deleteTravel(String travelID) async {
-    await travelsCollection.doc(travelID).delete();
   }
 
 //FRIENDS

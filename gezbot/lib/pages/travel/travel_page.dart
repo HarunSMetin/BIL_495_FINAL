@@ -23,6 +23,8 @@ class _TravelsScreenState extends State<TravelsScreen> {
   @override
   void initState() {
     super.initState();
+    print('User ID: ${widget.userId}');
+    print('Viewer ID: ${widget.viewerId}');
     travelsFuture = _fetchTravels();
   }
 
@@ -30,6 +32,12 @@ class _TravelsScreenState extends State<TravelsScreen> {
     prefs = await SharedPreferences.getInstance();
     return dbService.getAllTravelsOfUserByShowStatus(
         widget.userId, widget.viewerId);
+  }
+
+  Future _deleteTravelReloadPage(String TravelId) async {
+    await DatabaseService().deleteTravel(TravelId, widget.userId);
+
+    setState(() {});
   }
 
   @override
@@ -115,22 +123,48 @@ class _TravelsScreenState extends State<TravelsScreen> {
                 colors: [Colors.blue.shade200, Colors.green.shade200],
               ),
             ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+            child: Stack(
               children: [
-                Text(
-                  travel.name,
-                  style: const TextStyle(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
+                Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment:
+                        CrossAxisAlignment.center, // Center width
+                    children: [
+                      Text(
+                        travel.name,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(height: 4.0),
+                      Text(
+                        travel.description,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 14.0,
+                          color: Colors.white70,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
                 ),
-                const SizedBox(height: 4.0),
-                Text(
-                  travel.description,
-                  style: const TextStyle(fontSize: 14.0, color: Colors.white70),
-                  overflow: TextOverflow.ellipsis,
-                ),
+                if (widget.viewerId == "empty" ||
+                    widget.viewerId == widget.userId) // Add this condition
+                  Align(
+                    alignment: Alignment.topRight,
+                    child: IconButton(
+                      icon: Icon(Icons.delete),
+                      color: Colors.white,
+                      onPressed: () async {
+                        await _deleteTravelReloadPage(travel.id);
+                      },
+                    ),
+                  ),
               ],
             ),
           ),
