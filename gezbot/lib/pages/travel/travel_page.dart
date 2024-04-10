@@ -142,8 +142,18 @@ class _TravelsScreenState extends State<TravelsScreen> {
                       ),
                       const SizedBox(height: 4.0),
                       Text(
-                        travel.description,
+                        travel.desiredDestination,
                         textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          fontSize: 14.0,
+                          color: Colors.white70,
+                        ),
+                        overflow: TextOverflow.clip,
+                      ),
+                      const SizedBox(height: 4.0),
+                      Text(
+                        "Departure : ${travel.departureDate.day}/${travel.departureDate.month}/${travel.departureDate.year} \nArrival : ${travel.returnDate.day}/${travel.returnDate.month}/${travel.returnDate.year}",
+                        textAlign: TextAlign.end,
                         style: const TextStyle(
                           fontSize: 14.0,
                           color: Colors.white70,
