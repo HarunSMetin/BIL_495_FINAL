@@ -381,7 +381,7 @@ class DatabaseService {
     }, SetOptions(merge: true));
     Travel travel = await getTravelOfUser(travelID);
     BackendService(travel: travel).findHotels();
-    //BackendService(travel: travel).findPlaces();
+    BackendService(travel: travel).findPlaces();
     return travel;
   }
   //get lastCompletedQuestionOfTravel database contains: lastUpdatedQuestionId on travels
@@ -1088,12 +1088,12 @@ class DatabaseService {
     return hotels;
   }
 
-  Future<Hotel> getFirstHotel(String travelId) async {
-    List<Hotel> hotels = await getAllHotels(travelId);
+  Future<Hotel> getSelectedHotelsMostRated(String travelId) async {
+    List<Hotel> hotels = await getRecomendedHotels(travelId);
     if (hotels.isEmpty) {
       return Hotel(
           id: "empty",
-          name: '2The Green Park Hotel Bostancı',
+          name: 'The Green Park Hotel Ex.',
           address:
               'İçerenköy, Ertaç Sk. No:16, 34752 Ataşehir/İstanbul, Türkiye',
           coordinates: [40.9666581, 29.1099791],
@@ -1122,9 +1122,14 @@ class DatabaseService {
           reviewCount: 3395,
           link:
               'https://www.google.com/travel/search?q=Istanbul&ved=0CCQQyvcEahgKEwiIpOjlmo2FAxUAAAAAHQAAAAAQ6QE&ts=CAESCgoCCAMKAggDEAEaXwpBEj0KCS9tLzA5OTQ5bTIlMHgxNGNhYTcwNDAwNjgwODZiOjB4ZTFjY2ZlOThiYzAxYjBkMDoJxLBzdGFuYnVsGgASGhIUCgcI6A8QBRgSEgcI6A8QBhgBGA4yAggBKhUKEQoCIwkSAgQFOgNUUllaAhIOGgA&qs=CAEyJkNoZ0k0WmVEX2JXb2laYmxBUm9MTDJjdk1YUm5iR1F4TkhRUUFROA1IAA&ap=MAE');
-    } else {
-      return hotels.first;
     }
+    Hotel mostRatedHotel = hotels[0];
+    for (var hotel in hotels) {
+      if (hotel.rating > mostRatedHotel.rating) {
+        mostRatedHotel = hotel;
+      }
+    }
+    return mostRatedHotel;
   }
 
   Future<List<Hotel>> getRecomendedHotels(String travelId) async {

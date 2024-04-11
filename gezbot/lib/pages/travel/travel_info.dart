@@ -183,7 +183,8 @@ class _TravelInformationState extends State<TravelInformation> {
                               const SizedBox(height: 10),
                               FutureBuilder(
                                 future: DatabaseService()
-                                    .getFirstHotel(widget.travel.id),
+                                    .getSelectedHotelsMostRated(
+                                        widget.travel.id),
                                 builder: (context, snapshot) {
                                   if (snapshot.connectionState ==
                                       ConnectionState.waiting) {
